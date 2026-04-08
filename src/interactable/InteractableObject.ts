@@ -1,17 +1,17 @@
-import { Actor } from "base-experience";
+import { Actor, Experience } from "base-experience";
 import type { GLTF } from "three/examples/jsm/Addons.js";
-import { findPlayerCamera } from "../utils/WorldUtils";
-import type { Camera } from "three";
+import type Player from "../player/Player";
 
 export default class InteractableObject extends Actor {
-    declare playerCamera: Camera
+    declare player: Player
     declare threshold: number
+    private isClose = false;
 
     constructor(name: string, resource: GLTF) {
         super(name, resource)
-        const player = findPlayerCamera();
+        const player = Experience.instance?.camera as Player;
         if (!player) return;
-        this.playerCamera = player
+        this.player = player
         this.threshold = 5.
     }
 
@@ -31,11 +31,17 @@ export default class InteractableObject extends Actor {
     }
 
     update(): void {
-        if (!this.playerCamera) {
+        if (!this.player) {
             return;
         }
-        const distance = this.playerCamera.position.distanceTo(this.model.position)
-        if (distance < this.threshold)
-            console.log("triggered !")
+        const distance = this.player.instance.position.distanceTo(this.model.position)
+        if (distance < this.threshold && !this.isClose) {
+            this.player.setClosestObject(this)
+            this.isClose = true;
+        }
+        else if (distance > this.threshold && this.isClose){
+            this.player.clearClosestObject(this)
+            this.isClose = false;
+        }
     }
 }
