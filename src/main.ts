@@ -1,11 +1,11 @@
 import './reset.css'
 import './style.css'
-import { FirstPersonCamera } from 'first-person-plugin'
-import { TemplateWorld } from 'base-experience'
+import { FirstPersonCameraOctree } from 'first-person-plugin'
 import { Experience } from 'base-experience'
-import { templateSources } from 'base-experience'
+import sources from './resources/sources'
 import { type InputProfile } from 'base-experience'
-import { keyboardProfile, BitControllerProfile } from 'first-person-plugin'
+import { keyboardProfile } from 'first-person-plugin'
+import BlockingWorld from './world/Blocking'
 
 const init = () => {
   const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement
@@ -16,16 +16,12 @@ const init = () => {
   
   canvas.style.width = "100%"
   canvas.style.height = "100%"
-  const camera = new FirstPersonCamera()
-  const world = new TemplateWorld()
-  const experience = new Experience(canvas, templateSources, camera, world)
-  const profiles: InputProfile[] = [keyboardProfile, BitControllerProfile]
+  const camera = new FirstPersonCameraOctree(2.)
+  const world = new BlockingWorld()
+  const experience = new Experience(canvas, sources, camera, world)
+  const profiles: InputProfile[] = [keyboardProfile]
 
   experience.inputSystem.addInputProfiles(profiles)
-  // experience.inputSystem.on("jump", (args: InputEventArgs) => {
-  //   const gamepad = args.controller as Gamepad
-  //   console.log("controller: ", gamepad.id, " triggered: ", args.type)
-  // })
 }  
 
 init()
