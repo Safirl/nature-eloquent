@@ -1,14 +1,16 @@
 import { Experience, type InputEventArgs } from "base-experience";
 import { FirstPersonCameraOctree } from "first-person-plugin";
 import type InteractableObject from "../interactable/InteractableObject";
+import OutlinerManager from "./OutlinerManager";
 
 export default class Player extends FirstPersonCameraOctree {
     declare closestObject: InteractableObject | null
+    declare outlineManager: OutlinerManager
     bindInputs(): void {
         super.bindInputs();
         if (!Experience.instance) return;
-        console.log("coucou")
         Experience.instance.inputSystem.on("interact", this.interactWithObject)
+        this.outlineManager = new OutlinerManager();
     }
 
     interactWithObject = (args: InputEventArgs) => {
@@ -19,15 +21,22 @@ export default class Player extends FirstPersonCameraOctree {
 
     setClosestObject = (object: InteractableObject) => {
         if (this.closestObject === object) return;
-
+        if (this.closestObject) {
+            const newDistance = this.instance.position.distanceTo(object.model.position)
+            const oldDistance = this.instance.position.distanceTo(this.closestObject.model.position)
+            if (newDistance > oldDistance) {
+                return;
+            }
+            this.clearClosestObject(this.closestObject)
+        }
         this.closestObject = object
-        console.log("adding", object)
+        this.outlineManager.addObjectOutline(this.closestObject.model)
     }
 
     clearClosestObject = (object: InteractableObject) => {
         if (this.closestObject !== object) return;
-        
+
         this.closestObject = null
-        console.log("removing", object)
+        this.outlineManager.removeObjectOutline(object.model)
     }
 } 

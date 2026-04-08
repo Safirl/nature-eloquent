@@ -5,18 +5,17 @@ import type Player from "../player/Player";
 export default class InteractableObject extends Actor {
     declare player: Player
     declare threshold: number
-    private isClose = false;
 
-    constructor(name: string, resource: GLTF) {
-        super(name, resource)
+    constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false) {
+        super(name, resource, makeUnique, makeMaterialsUnique)
         const player = Experience.instance?.camera as Player;
         if (!player) return;
         this.player = player
         this.threshold = 5.
     }
 
-    init() {
-    }
+    init = () => {};
+    destroy= () => {};
 
     pickObject() {
 
@@ -26,22 +25,18 @@ export default class InteractableObject extends Actor {
         return this.name;
     }
 
-    destroy() {
-
-    }
-
     update(): void {
         if (!this.player) {
             return;
         }
         const distance = this.player.instance.position.distanceTo(this.model.position)
-        if (distance < this.threshold && !this.isClose) {
+        if (distance < this.threshold) {
             this.player.setClosestObject(this)
-            this.isClose = true;
+            // this.isClose = true;
         }
-        else if (distance > this.threshold && this.isClose){
+        else if (distance > this.threshold){
             this.player.clearClosestObject(this)
-            this.isClose = false;
+            // this.isClose = false;
         }
     }
 }

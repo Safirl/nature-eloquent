@@ -11,21 +11,29 @@ export default class BlockingWorld extends World {
     declare resources: Experience["resources"];
     declare floor: Floor;
     declare levelDesign: Actor
-    declare interactableObject: InteractableObject
+    declare interactableObjects: InteractableObject[]
 
     init() {
         super.init()
         this.floor = new Floor();
         this.levelDesign = new Actor("LD", this.resources.items.levelDesignModel as GLTF)
         this.environment = new Environment();
-        this.interactableObject = new InteractableObject("interactableMushroom", this.resources.items.mushroomModel as GLTF)
-        this.interactableObject.model.scale.set(2,2,2)
+
+        this.interactableObjects = []
+        const mushroom1 = new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true)
+        const mushroom2 = new InteractableObject("interactableMushroom2", this.resources.items.mushroomModel as GLTF, true)
+        mushroom1.model.scale.set(2,2,2)
+        mushroom2.model.scale.set(2,2,2)
+        mushroom1.model.position.set(5,0,5)
+        mushroom2.model.position.set(5,0,10)
+        this.interactableObjects.push(mushroom1, mushroom2)
 
         const camera = Experience.instance?.camera as FirstPersonCameraOctree;
         if (camera.worldOctree) {
-            // camera.worldOctree.fromGraphNode(this.floor.mesh);
             const group = new THREE.Group()
-            group.add(this.interactableObject.model.clone())
+            this.interactableObjects.forEach((o) => {
+                group.add(o.model.clone())
+            })
             group.add(this.levelDesign.model.clone())
             camera.worldOctree.fromGraphNode(group);
         }
@@ -34,7 +42,9 @@ export default class BlockingWorld extends World {
     update() {
         if (this.levelDesign) {
             this.levelDesign.update()
-            this.interactableObject.update()
+            this.interactableObjects.forEach((o) => {
+                o.update()
+            })
         }
     }
 }
