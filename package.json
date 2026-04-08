@@ -1,0 +1,21 @@
+{
+  "name": "nature-eloquent",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2",
+    "vite": "^8.0.4"
+  },
+  "dependencies": {
+    "base-experience": "github:Safirl/three-base-experience",
+    "first-person-plugin": "github:Safirl/three-first-person",
+    "lil-gui": "^0.21.0",
+    "three": "^0.183.2"
+  }
+}
