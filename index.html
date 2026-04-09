@@ -1,34 +1,41 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Petit Pois</title>
-  </head>
-  <body>
-    <!-- Book canvas -->
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Petit Pois</title>
+    </head>
+    <body>
+        <!-- Book canvas -->
 
-    <div id="book-interface">
-      <!-- Book selector -->
-      <div id="book-selector-interface" class="book-panel">
-        <p>Choisi ...</p>
-        <button id="close-book-selector" class="book-close">X</button>
-        <button type="button">Object 1</button>
-        <button type="button">Object 2</button>
-      </div>
+        <div id="book-interface">
+            <!-- Book selector -->
+            <div id="book-selector-interface" class="book-panel">
+                <p>Choisi ...</p>
+                <button id="close-book-selector" class="book-close">X</button>
+                <button type="button">Object 1</button>
+                <button type="button">Object 2</button>
+            </div>
 
-      <!-- Book drawing -->
-      <div id="book-drawing-interface" class="book-panel">
-        <button id="close-book-drawing" class="book-close" type="button">
-          X
-        </button>
-        <p class="name-object-selected">Dessine ...</p>
-        <canvas id="draw-canvas"></canvas>
-      </div>
-    </div>
+            <!-- Book drawing -->
+            <div id="book-drawing-interface" class="book-panel">
+                <div class="wrap-button">
+                    <button
+                        id="close-book-drawing"
+                        class="book-close"
+                        type="button"
+                    >
+                        X
+                    </button>
+                    <button class="validate-book-drawing">OK</button>
+                </div>
+                <p class="name-object-selected">Dessine ...</p>
+                <canvas id="draw-canvas"></canvas>
+            </div>
+        </div>
 
-    <canvas id="three"></canvas>
-    <script type="module" src="./src/main.ts"></script>
-  </body>
+        <canvas id="three"></canvas>
+        <script type="module" src="./src/main.ts"></script>
+    </body>
 </html>

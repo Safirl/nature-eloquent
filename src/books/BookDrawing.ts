@@ -6,7 +6,7 @@ export default class BookDrawing {
     declare isPainting: boolean;
     declare lineWidth: number;
 
-    constructor(width = 800, height = 550) {
+    constructor(width = 800, height = 400) {
         // Get DOM elements
         const canvas = document.getElementById("draw-canvas");
         const closeBookInterface = document.getElementById("close-book-interface");

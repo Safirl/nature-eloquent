@@ -7,6 +7,7 @@ export default class BookInteraction {
 	declare bookDrawingInterface: HTMLElement;
 	declare bookInterface: HTMLElement;
 	declare nameObjectSelectedElement: HTMLElement;
+	declare bookDrawingInterfaceValidate: HTMLButtonElement;
 
 	declare closeBookSelectorButton: HTMLButtonElement;
 	declare closeBookDrawingButton: HTMLButtonElement;
@@ -19,9 +20,7 @@ export default class BookInteraction {
 	declare isHalfOpenBookDrawing: boolean;
 	declare isFullOpenBookDrawing: boolean;
 
-	//   @TODO : tableau d'objet récupéré depuis le Player
-	declare objectCollected: InteractableObject[] | null;
-	declare nameObjectSelected: string | null;
+	declare objectCollected: (InteractableObject | null)[];
 
 	constructor() {
 		const bookSelectorInterface = document.getElementById(
@@ -39,6 +38,9 @@ export default class BookInteraction {
 		const nameObjectSelectedElement = document.querySelector(
 			".name-object-selected",
 		);
+		const bookDrawingInterfaceValidate = document.querySelector(
+			".validate-book-drawing"
+		);
 
 		if (
 			!bookSelectorInterface ||
@@ -46,7 +48,8 @@ export default class BookInteraction {
 			!closeBookSelectorButton ||
 			!bookDrawingInterface ||
 			!closeBookDrawingButton ||
-			!nameObjectSelectedElement
+			!nameObjectSelectedElement ||
+			!bookDrawingInterfaceValidate
 		) {
 			return;
 		}
@@ -57,13 +60,17 @@ export default class BookInteraction {
 		this.nameObjectSelectedElement = nameObjectSelectedElement as HTMLElement;
 		this.closeBookSelectorButton = closeBookSelectorButton as HTMLButtonElement;
 		this.closeBookDrawingButton = closeBookDrawingButton as HTMLButtonElement;
+		this.bookDrawingInterfaceValidate = bookDrawingInterfaceValidate as HTMLButtonElement;
 
 		this.isFullOpenBookDrawing = false;
 		this.isHalfOpenBookDrawing = false;
 		this.isOpenBookSelector = false;
 		this.isOpenBookDrawing = false;
 
-		this.bookDrawing = new BookDrawing();
+		this.objectCollected = [];
+		this.bookDrawingInterfaceValidate.addEventListener("click", this.validateDropObject);
+
+		// this.bookDrawing = new BookDrawing();
 
 
 		this.isCloseToInteractable = null;
@@ -79,8 +86,9 @@ export default class BookInteraction {
 		Experience.instance.camera.on(
 			"onSelectedObjectChanged",
 
-			(args: InteractableObject | null) => {
-				this.isCloseToInteractable = args ?? null;
+			(args: (InteractableObject | null)[]) => {
+				const object = Array.isArray(args) ? args[0] : args;
+				this.isCloseToInteractable = object;
 				this.halfOpenBookDrawing(args);
 
 				// Si le joueur s'éloigne de l'objet interactif où le carnet est déjà actif
@@ -100,8 +108,9 @@ export default class BookInteraction {
 		// "E" à nouveau -> entrouverture carnet
 		Experience.instance?.camera.on(
 			"onInteractionPressed",
-			(args: InteractableObject | null) => {
-				console.log('arg name', args?.name);
+			(args: (InteractableObject | null)[]) => {
+				const object = Array.isArray(args) ? args[0] : args;
+				console.log('arg name', object?.name);
 				if (this.isHalfOpenBookDrawing) {
 					this.fullOpenBookDrawing(args);
 				} else {
@@ -124,9 +133,18 @@ export default class BookInteraction {
 		);
 	}
 
+	validateDropObject = (): void => {
+		if (!this.isCloseToInteractable) return;
+
+		this.objectCollected.push(this.isCloseToInteractable);
+
+		console.log("Le tableau d'objet :", this.objectCollected);
+
+		this.onCloseBookDrawing();
+	};
 
 	// Ouverture du carnet de drawing entièrement
-	fullOpenBookDrawing(args: InteractableObject | null): void {
+	fullOpenBookDrawing(args: (InteractableObject | null)[]): void {
 		if (!this.isCloseToInteractable) return;
 		console.log("ouverture du carnet en entier !");
 		this.updateSelectedObjectLabel(args);
@@ -139,7 +157,7 @@ export default class BookInteraction {
 		this.isHalfOpenBookDrawing = false;
 	}
 
-	halfOpenBookDrawing(args: InteractableObject | null): void {
+	halfOpenBookDrawing(args: (InteractableObject | null)[]): void {
 		if (!this.isCloseToInteractable) return;
 		console.log("entrouverture du carnet !");
 		this.updateSelectedObjectLabel(args);
@@ -163,10 +181,13 @@ export default class BookInteraction {
 		this.isHalfOpenBookDrawing = false;
 	};
 
-	updateSelectedObjectLabel = (args: InteractableObject | null): void => {
-		const selectedObjectName = args?.name;
-		const selectedObjectId = args?.getId()
-		this.nameObjectSelectedElement.textContent = selectedObjectName ? `Nom de l'objet: ${selectedObjectName + selectedObjectId}` : "Aucun objet sélectionné";
+	updateSelectedObjectLabel = (args: (InteractableObject | null)[]): void => {
+		const object = Array.isArray(args) ? args[0] : args;
+		const selectedObjectName = object?.name;
+		const selectedObjectId = object?.getId();
+		this.nameObjectSelectedElement.textContent = selectedObjectName
+			? `Nom de l'objet: ${selectedObjectName + selectedObjectId}`
+			: "Aucun objet sélectionné";
 	};
 
 	/* INTERACTION POUR LA FERMETURE / OUVERTURE DU CARNET DE SELECTION */
