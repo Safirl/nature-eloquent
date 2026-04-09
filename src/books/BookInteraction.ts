@@ -50,6 +50,11 @@ export default class BookInteraction {
           "Entrouvrir le carnet de dessin avec l'objet :",
           this.isCloseToInteractable,
         );
+
+        // Si le joueur a ouvert son carnet de sélection devant un objet interactif -> on ferme le carneet de sélection
+        if (this.isCloseToInteractable && this.isOpenBookSelector) {
+          this.setBookSelectorOpen(false);
+        }
       },
     );
 
@@ -80,6 +85,7 @@ export default class BookInteraction {
   //   INTERACTION 2 : On affiche ou non le carnet de sélection
   setBookSelectorOpen = (isOpen: boolean): void => {
     this.isOpenBookSelector = isOpen;
+    document.exitPointerLock();
     this.updateBookSelectorVisibility();
   };
 
@@ -88,5 +94,8 @@ export default class BookInteraction {
     const displayBook = this.isOpenBookSelector ? "flex" : "none";
     this.bookInterface.style.display = displayBook;
     this.bookSelectorInterface.style.display = displayBook;
+    if (!this.isOpenBookSelector) {
+      document.body.requestPointerLock();
+    }
   };
 }
