@@ -21,7 +21,7 @@
 #book-selector-interface,
 #book-drawing-interface {
     position: relative;
-    background-color: white;
+    background-color: rgb(209, 202, 202);
 }
 
 .book-panel {

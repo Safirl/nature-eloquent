@@ -6,6 +6,8 @@ export default class BookInteraction {
 	declare bookSelectorInterface: HTMLElement;
 	declare bookDrawingInterface: HTMLElement;
 	declare bookInterface: HTMLElement;
+	declare nameObjectSelectedElement: HTMLElement;
+
 	declare closeBookSelectorButton: HTMLButtonElement;
 	declare closeBookDrawingButton: HTMLButtonElement;
 	declare isCloseToInteractable: InteractableObject | null;
@@ -18,6 +20,7 @@ export default class BookInteraction {
 
 	//   @TODO : tableau d'objet récupéré depuis le Player
 	declare objectCollected: InteractableObject[] | null;
+	declare nameObjectSelected: string | null;
 
 	constructor() {
 		const bookSelectorInterface = document.getElementById(
@@ -32,13 +35,17 @@ export default class BookInteraction {
 		);
 		const closeBookDrawingButton =
 			document.getElementById("close-book-drawing");
+		const nameObjectSelectedElement = document.querySelector(
+			".name-object-selected",
+		);
 
 		if (
 			!bookSelectorInterface ||
 			!bookInterface ||
 			!closeBookSelectorButton ||
 			!bookDrawingInterface ||
-			!closeBookDrawingButton
+			!closeBookDrawingButton ||
+			!nameObjectSelectedElement
 		) {
 			return;
 		}
@@ -46,6 +53,7 @@ export default class BookInteraction {
 		this.bookSelectorInterface = bookSelectorInterface;
 		this.bookDrawingInterface = bookDrawingInterface;
 		this.bookInterface = bookInterface;
+		this.nameObjectSelectedElement = nameObjectSelectedElement as HTMLElement;
 		this.closeBookSelectorButton = closeBookSelectorButton as HTMLButtonElement;
 		this.closeBookDrawingButton = closeBookDrawingButton as HTMLButtonElement;
 
@@ -71,8 +79,7 @@ export default class BookInteraction {
 
 			(args: InteractableObject | null) => {
 				this.isCloseToInteractable = args ?? null;
-
-				this.halfOpenBookDrawing();
+				this.halfOpenBookDrawing(args);
 
 				// Si le joueur s'éloigne de l'objet interactif où le carnet est déjà actif
 				if (!this.isCloseToInteractable) {
@@ -90,8 +97,8 @@ export default class BookInteraction {
 		Experience.instance?.camera.on(
 			"onInteractionPressed",
 			(args: InteractableObject | null) => {
-				console.log('arg name', args?.getId());
-				this.openBookDrawing();
+				console.log('arg name', args?.name);
+				this.openBookDrawing(args);
 			},
 		);
 
@@ -109,9 +116,10 @@ export default class BookInteraction {
 	}
 
 	// Ouverture du carnet de drawing entièrement
-	openBookDrawing(): void {
+	openBookDrawing(args: InteractableObject | null): void {
 		if (!this.isCloseToInteractable) return;
 		console.log("ouverture du carnet en entier !");
+		this.updateSelectedObjectLabel(args);
 		this.bookSelectorInterface.style.display = "none";
 		this.bookInterface.style.display = "flex";
 		this.bookInterface.classList.remove("half-open-book-interface");
@@ -121,9 +129,10 @@ export default class BookInteraction {
 		this.isHalfOpenBookDrawing = false;
 	}
 
-	halfOpenBookDrawing(): void {
+	halfOpenBookDrawing(args: InteractableObject | null): void {
 		if (!this.isCloseToInteractable) return;
 		console.log("entrouverture du carnet !");
+		this.updateSelectedObjectLabel(args);
 		this.bookSelectorInterface.style.display = "none";
 		this.bookInterface.style.display = "flex";
 		this.bookInterface.classList.add("half-open-book-interface");
@@ -136,11 +145,17 @@ export default class BookInteraction {
 	onCloseBookDrawing = (): void => {
 		this.bookSelectorInterface.style.display = "none";
 		this.bookInterface.style.display = "none";
-		// this.bookInterface.classList.remove("half-open-book-interface");
+		this.bookInterface.classList.remove("half-open-book-interface");
 		this.bookDrawingInterface.style.display = "none";
 		this.isOpenBookDrawing = false;
 		document.body.requestPointerLock();
 		this.isHalfOpenBookDrawing = false;
+	};
+
+	updateSelectedObjectLabel = (args: InteractableObject | null): void => {
+		const selectedObjectName = args?.name;
+		const selectedObjectId = args?.getId()
+		this.nameObjectSelectedElement.textContent = selectedObjectName ? `Nom de l'objet: ${selectedObjectName + selectedObjectId}` : "Aucun objet sélectionné";
 	};
 
 	/* INTERACTION POUR LA FERMETURE / OUVERTURE DU CARNET DE SELECTION */
