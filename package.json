@@ -17,6 +17,7 @@
     "base-experience": "github:Safirl/three-base-experience",
     "first-person-plugin": "github:Safirl/three-first-person",
     "lil-gui": "^0.21.0",
-    "three": "^0.183.2"
+    "three": "^0.183.2",
+    "seedrandom": "^3.0.5"
   }
 }
