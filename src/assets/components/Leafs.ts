@@ -21,23 +21,27 @@ export default class Leafs {
     declare debug: Debug
     declare debugFolder: GUI
     declare name: string
-    private count = 3
+    private count = 0
     declare geometry: THREE.BufferGeometry
     declare power: 2
     declare material: THREE.ShaderMaterial
+    declare positions: THREE.Vector3[]
 
-    constructor(name: string, resource: THREE.Texture) {
+    constructor() {
         if (!Experience.instance) {
             return;
         }
 
-        this.texture = resource
         this.experience = Experience.instance
         this.debug = this.experience.debug
 
         this.scene = this.experience.scene
         this.resources = this.experience.resources
+        this.texture = this.resources.items.leafs_texture as THREE.Texture
         this.time = this.experience.time
+        this.positions = []
+        this.name = "leaves"
+
 
         if (this.debug.active) {
             this.debugFolder = this.debug.ui.addFolder('🍃 Leaves manager')
@@ -45,11 +49,84 @@ export default class Leafs {
         }
 
 
+
+    }
+
+    addLeafPosition(v: THREE.Vector3) {
+        this.positions.push(v)
+        this.count = this.positions.length
+    }
+
+    create() {
         this.setGeometry()
         this.setMaterial()
         this.setModel()
     }
 
+    setDebugObject() {
+        this.debugFolder
+            .add(this, 'power')
+            .name('shadow range')
+            .min(1)
+            .max(10)
+            .step(1)
+            .onChange(() => {
+
+            })
+    }
+
+    setGeometry() {
+        const count = 200
+        const planes = []
+
+        for (let i = 0; i < count; i++) {
+            const plane = new THREE.PlaneGeometry(0.8, 0.8)
+
+            // Position
+            const spherical = new THREE.Spherical(
+                Math.pow(rng(), 3) * 0.95,
+                Math.PI * 2 * rng() * 0.95,
+                Math.PI * rng() * 0.95
+            )
+            const position = new THREE.Vector3().setFromSpherical(spherical)
+
+            plane.rotateZ(rng() * 9999)
+            plane.rotateY(rng() * 9999)
+            plane.rotateX(rng() * 9999)
+            plane.translate(
+                position.x,
+                position.y,
+                position.z
+            )
+
+            // Normal
+            const normal = position.clone().normalize()
+            const normalArray = new Float32Array(12)
+            for (let i = 0; i < 4; i++) {
+                const i3 = i * 3
+
+                const position = new THREE.Vector3(
+                    plane.attributes.position.array[i3],
+                    plane.attributes.position.array[i3 + 1],
+                    plane.attributes.position.array[i3 + 2],
+                )
+
+                const mixedNormal = position.lerp(normal, 0.85)
+
+                normalArray[i3] = mixedNormal.x
+                normalArray[i3 + 1] = mixedNormal.y
+                normalArray[i3 + 2] = mixedNormal.z
+            }
+
+            plane.setAttribute('normal', new THREE.BufferAttribute(normalArray, 3))
+
+            // Save
+            planes.push(plane)
+        }
+
+        // Merge all planes
+        this.geometry = mergeGeometries(planes)
+    }
 
     setMaterial() {
         this.material = new THREE.ShaderMaterial({
@@ -145,6 +222,7 @@ export default class Leafs {
             side: THREE.DoubleSide
         });
     }
+
     setModel() {
 
 
@@ -157,32 +235,10 @@ export default class Leafs {
         for (let i = 0; i < this.count; i++) {
             const width = Math.PI * 2 * 0.1
 
-            let x = (Math.random() * Math.PI * 2) * 0.1 - width / 2
-            let y = (Math.random() * Math.PI * 2) * 0.1 - width / 2
-            let z = (Math.random() * Math.PI * 2) * 0.1 - width / 2
+            let x = this.positions[i].x
+            let y = this.positions[i].y
+            let z = this.positions[i].z
 
-            if (i === 0) {
-
-                x += - 0.8
-                y += + 2
-                z += - 0.7
-
-            } else if (i === 1) {
-
-                x += 0.8
-                y += 4
-                z += + 0.3
-
-            } else {
-
-                x += -0.2
-                y += 3
-                z += + 1
-
-            }
-
-
-            console.log("on est passé here")
 
             dummy.position.set(x, y, z);
 
@@ -199,72 +255,6 @@ export default class Leafs {
 
 
         this.scene.add(this.instance)
-    }
-
-
-    setDebugObject() {
-        this.debugFolder
-            .add(this, 'power')
-            .name('shadow range')
-            .min(1)
-            .max(10)
-            .step(1)
-            .onChange(() => {
-
-            })
-    }
-
-    setGeometry() {
-        const count = 200
-        const planes = []
-
-        for (let i = 0; i < count; i++) {
-            const plane = new THREE.PlaneGeometry(0.8, 0.8)
-
-            // Position
-            const spherical = new THREE.Spherical(
-                Math.pow(rng(), 3) * 0.95,
-                Math.PI * 2 * rng() * 0.95,
-                Math.PI * rng() * 0.95
-            )
-            const position = new THREE.Vector3().setFromSpherical(spherical)
-
-            plane.rotateZ(rng() * 9999)
-            plane.rotateY(rng() * 9999)
-            plane.rotateX(rng() * 9999)
-            plane.translate(
-                position.x,
-                position.y,
-                position.z
-            )
-
-            // Normal
-            const normal = position.clone().normalize()
-            const normalArray = new Float32Array(12)
-            for (let i = 0; i < 4; i++) {
-                const i3 = i * 3
-
-                const position = new THREE.Vector3(
-                    plane.attributes.position.array[i3],
-                    plane.attributes.position.array[i3 + 1],
-                    plane.attributes.position.array[i3 + 2],
-                )
-
-                const mixedNormal = position.lerp(normal, 0.85)
-
-                normalArray[i3] = mixedNormal.x
-                normalArray[i3 + 1] = mixedNormal.y
-                normalArray[i3 + 2] = mixedNormal.z
-            }
-
-            plane.setAttribute('normal', new THREE.BufferAttribute(normalArray, 3))
-
-            // Save
-            planes.push(plane)
-        }
-
-        // Merge all planes
-        this.geometry = mergeGeometries(planes)
     }
 
     update() {

@@ -46,7 +46,7 @@ const sources: Source[] = [
   {
     name: "tree_1",
     type: "gltfModel",
-    path: "models/vegetation/tree_1.glb",
+    path: "models/vegetation/test.glb",
   },
   {
     name: "leafs_texture",

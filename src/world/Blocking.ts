@@ -5,6 +5,7 @@ import InteractableObject from "../interactable/InteractableObject";
 import * as THREE from "three"
 import OutlinerManager from "./OutlinerManager";
 import Tree from "../assets/components/Tree";
+import Leafs from "../assets/components/Leafs";
 export default class BlockingWorld extends World {
     declare experience: Experience;
     declare scene: Experience["scene"];
@@ -15,6 +16,7 @@ export default class BlockingWorld extends World {
     declare interactableObjects: InteractableObject[]
     declare outlineManager: OutlinerManager
     declare tree: Tree
+    declare bushes: Leafs
 
     init() {
         super.init()
@@ -23,10 +25,10 @@ export default class BlockingWorld extends World {
         this.environment = new Environment();
         this.outlineManager = new OutlinerManager();
 
+        this.bushes = new Leafs()
         this.interactableObjects = []
         const mushroom1 = new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true, false, this.resources.items.mushroomCollider as GLTF)
         const mushroom2 = new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true, false, this.resources.items.mushroomCollider as GLTF)
-
         mushroom1.model.scale.addScalar(2.)
         mushroom1.model.position.set(5, 0, 5)
         mushroom2.model.scale.addScalar(2.)
@@ -43,7 +45,31 @@ export default class BlockingWorld extends World {
             // collisionManager.worldOctree.fromGraphNode(mushroom1.collisionResource.scene)
             // collisionManager.worldOctree.fromGraphNode(mushroom2.collisionResource.scene)
         }
-        this.tree = new Tree("tree_1", this.resources.items["tree_1"] as GLTF)
+
+        const surface = 200
+
+        this.tree = new Tree("tree_1", {
+            model: this.resources.items["tree_1"] as GLTF,
+            count: 1000,
+            surface: surface
+        })
+
+        /*
+            * add bushes on the floor
+        */
+        const bushesOnTheFloor = 500;
+        for (let i = 0; i < bushesOnTheFloor; i++) {
+            this.bushes.addLeafPosition(new THREE.Vector3(
+                (Math.random() * surface) - surface * 0.5,
+                0.75,
+                (Math.random() * surface) - surface * 0.5,
+            ))
+
+        }
+        this.bushes.create()
+
+
+        console.log(this.bushes)
 
     }
 
@@ -53,7 +79,7 @@ export default class BlockingWorld extends World {
             this.interactableObjects.forEach((o) => {
                 o.update()
             })
-            this.tree.update()
+            this.bushes.update()
         }
     }
 }
