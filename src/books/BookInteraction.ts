@@ -17,6 +17,7 @@ export default class BookInteraction {
 	declare bookDrawing: BookDrawing | null;
 
 	declare isHalfOpenBookDrawing: boolean;
+	declare isFullOpenBookDrawing: boolean;
 
 	//   @TODO : tableau d'objet récupéré depuis le Player
 	declare objectCollected: InteractableObject[] | null;
@@ -57,6 +58,7 @@ export default class BookInteraction {
 		this.closeBookSelectorButton = closeBookSelectorButton as HTMLButtonElement;
 		this.closeBookDrawingButton = closeBookDrawingButton as HTMLButtonElement;
 
+		this.isFullOpenBookDrawing = false;
 		this.isHalfOpenBookDrawing = false;
 		this.isOpenBookSelector = false;
 		this.isOpenBookDrawing = false;
@@ -94,13 +96,20 @@ export default class BookInteraction {
 		);
 
 		// INTERACTION 3 : Ouverture du carnet de dessin en entier
+		// "E" -> Ouverture carnet
+		// "E" à nouveau -> entrouverture carnet
 		Experience.instance?.camera.on(
 			"onInteractionPressed",
 			(args: InteractableObject | null) => {
 				console.log('arg name', args?.name);
-				this.openBookDrawing(args);
+				if (this.isHalfOpenBookDrawing) {
+					this.fullOpenBookDrawing(args);
+				} else {
+					this.halfOpenBookDrawing(args);
+				}
 			},
 		);
+
 
 		// INTERACTION 2 : Ouverture du carnet de sélection
 		Experience.instance.inputSystem.on("interact", this.onOpenBookSelector);
@@ -115,8 +124,9 @@ export default class BookInteraction {
 		);
 	}
 
+
 	// Ouverture du carnet de drawing entièrement
-	openBookDrawing(args: InteractableObject | null): void {
+	fullOpenBookDrawing(args: InteractableObject | null): void {
 		if (!this.isCloseToInteractable) return;
 		console.log("ouverture du carnet en entier !");
 		this.updateSelectedObjectLabel(args);
@@ -139,6 +149,7 @@ export default class BookInteraction {
 		this.bookDrawingInterface.style.display = "flex";
 		this.isOpenBookDrawing = true;
 		this.isHalfOpenBookDrawing = true;
+		document.body.requestPointerLock();
 
 	}
 
