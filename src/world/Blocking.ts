@@ -1,47 +1,9 @@
-// import { Actor, Environment, Experience, Floor, World } from "base-experience";
-// import type { FirstPersonCameraOctree } from "first-person-plugin";
-// import type { GLTF } from "three/examples/jsm/Addons.js";
-// import InteractableObject from "../interactable/InteractableObject";
-
-// export default class BlockingWorld extends World {
-//     declare experience: Experience;
-//     declare scene: Experience["scene"];
-//     declare environment: Environment;
-//     declare resources: Experience["resources"];
-//     declare floor: Floor;
-//     declare levelDesign: Actor
-//     declare interactableObject: InteractableObject
-
-//     init() {
-//         super.init()
-//         this.floor = new Floor();
-//         //Fox is just an actor because it doesn't have any logic in it.
-//         // this.fox = new Actor("fox", this.resources.items.foxModel as GLTF)
-//         this.levelDesign = new Actor("LD", this.resources.items.levelDesignModel as GLTF)
-//         // this.levelDesign.model.scale.set(0.02, 0.02, 0.02)
-//         this.environment = new Environment();
-//         this.interactableObject = new InteractableObject("interactableMushroom", this.resources.items.mushroomModel as GLTF)
-//         this.interactableObject.model.scale.set(2,2,2)
-
-//         const camera = Experience.instance?.camera as FirstPersonCameraOctree;
-//         if (camera.worldOctree) {
-//             // camera.worldOctree.fromGraphNode(this.floor.mesh);
-//             camera.worldOctree.fromGraphNode(this.levelDesign.model);
-//         }
-//     }
-
-//     update() {
-//         if (this.levelDesign) {
-//             this.levelDesign.update()
-//         }
-//     }
-// }
-
 import { Actor, Environment, Experience, Floor, World } from "base-experience";
 import type { FirstPersonCameraOctree } from "first-person-plugin";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import InteractableObject from "../interactable/InteractableObject";
 import * as THREE from "three"
+import OutlinerManager from "./OutlinerManager";
 
 export default class BlockingWorld extends World {
     declare experience: Experience;
@@ -50,24 +12,31 @@ export default class BlockingWorld extends World {
     declare resources: Experience["resources"];
     declare floor: Floor;
     declare levelDesign: Actor
-    declare interactableObject: InteractableObject
+    declare interactableObjects: InteractableObject[]
+    declare outlineManager: OutlinerManager
 
     init() {
         super.init()
         this.floor = new Floor();
-        //Fox is just an actor because it doesn't have any logic in it.
-        // this.fox = new Actor("fox", this.resources.items.foxModel as GLTF)
         this.levelDesign = new Actor("LD", this.resources.items.levelDesignModel as GLTF)
-        // this.levelDesign.model.scale.set(0.02, 0.02, 0.02)
         this.environment = new Environment();
-        this.interactableObject = new InteractableObject("interactableMushroom", this.resources.items.mushroomModel as GLTF)
-        this.interactableObject.model.scale.set(2,2,2)
+        this.outlineManager = new OutlinerManager();
+
+        this.interactableObjects = []
+        const mushroom1 = new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true)
+        const mushroom2 = new InteractableObject("interactableMushroom2", this.resources.items.mushroomModel as GLTF, true)
+        mushroom1.model.scale.set(2,2,2)
+        mushroom2.model.scale.set(2,2,2)
+        mushroom1.model.position.set(5,0,5)
+        mushroom2.model.position.set(5,0,10)
+        this.interactableObjects.push(mushroom1, mushroom2)
 
         const camera = Experience.instance?.camera as FirstPersonCameraOctree;
         if (camera.worldOctree) {
-            // camera.worldOctree.fromGraphNode(this.floor.mesh);
             const group = new THREE.Group()
-            group.add(this.interactableObject.model.clone())
+            this.interactableObjects.forEach((o) => {
+                group.add(o.model.clone())
+            })
             group.add(this.levelDesign.model.clone())
             camera.worldOctree.fromGraphNode(group);
         }
@@ -76,7 +45,9 @@ export default class BlockingWorld extends World {
     update() {
         if (this.levelDesign) {
             this.levelDesign.update()
-            this.interactableObject.update()
+            this.interactableObjects.forEach((o) => {
+                o.update()
+            })
         }
     }
 }

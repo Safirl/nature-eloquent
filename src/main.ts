@@ -4,8 +4,9 @@ import { FirstPersonCameraOctree } from 'first-person-plugin'
 import { Experience } from 'base-experience'
 import sources from './resources/sources'
 import { type InputProfile } from 'base-experience'
-import { keyboardProfile } from 'first-person-plugin'
+import { keyboardProfile } from './resources/inputProfiles'
 import BlockingWorld from './world/Blocking'
+import Player from './player/Player'
 
 const init = () => {
   const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement
@@ -16,7 +17,7 @@ const init = () => {
   
   canvas.style.width = "100%"
   canvas.style.height = "100%"
-  const camera = new FirstPersonCameraOctree(2.)
+  const camera = new Player(2.)
   const world = new BlockingWorld()
   const experience = new Experience(canvas, sources, camera, world)
   const profiles: InputProfile[] = [keyboardProfile]
