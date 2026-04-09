@@ -6,8 +6,8 @@ export default class InteractableObject extends Actor {
     declare player: Player
     declare threshold: number
 
-    constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false) {
-        super(name, resource, makeUnique, makeMaterialsUnique)
+    constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false, collisionResource?: GLTF) {
+        super(name, resource, makeUnique, makeMaterialsUnique, collisionResource)
         const player = Experience.instance?.camera as Player;
         if (!player) return;
         this.player = player

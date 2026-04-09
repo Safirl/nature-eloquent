@@ -34,6 +34,11 @@ const sources: Source[] = [
     path: "models/champignon/champginon.gltf",
   },
   {
+    name: "mushroomCollider",
+    type: "gltfModel",
+    path: "models/champignon/champginon.gltf",
+  },
+  {
     name: "levelDesignModel",
     type: "gltfModel",
     path: "models/LD/blocking.glb"
