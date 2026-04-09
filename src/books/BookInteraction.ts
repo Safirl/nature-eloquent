@@ -6,9 +6,12 @@ export default class BookInteraction {
   declare bookDrawingInterface: HTMLElement;
   declare bookInterface: HTMLElement;
   declare closeBookSelectorButton: HTMLButtonElement;
+  declare closeBookDrawingButton: HTMLButtonElement;
   declare isCloseToInteractable: InteractableObject | null;
   declare isOpenBookSelector: boolean;
   declare isOpenBookDrawing: boolean;
+
+  //   @TODO : tableau d'objet récupéré depuis le Player
   declare objectCollected: InteractableObject[] | null;
 
   constructor() {
@@ -22,12 +25,15 @@ export default class BookInteraction {
     const closeBookSelectorButton = document.getElementById(
       "close-book-selector",
     );
+    // const closeBookDrawingButton =
+    //   document.getElementById("close-book-drawing");
 
     if (
       !bookSelectorInterface ||
       !bookInterface ||
       !closeBookSelectorButton ||
       !bookDrawingInterface
+      //   || !closeBookDrawingButton
     ) {
       return;
     }
@@ -36,6 +42,7 @@ export default class BookInteraction {
     this.bookDrawingInterface = bookDrawingInterface;
     this.bookInterface = bookInterface;
     this.closeBookSelectorButton = closeBookSelectorButton as HTMLButtonElement;
+    // this.closeBookDrawingButton = closeBookDrawingButton as HTMLButtonElement;
 
     this.isOpenBookSelector = false;
     this.isOpenBookDrawing = false;
@@ -54,11 +61,27 @@ export default class BookInteraction {
 
       (args: InteractableObject | null) => {
         this.isCloseToInteractable = args ?? null;
-        this.entreouvrirBookDrawing();
+        this.halfOpenBookDrawing();
+
+        // Si le joueur s'éloigne de l'objet interactif où le carnet est déjà actif
+        if (!this.isCloseToInteractable) {
+          this.onCloseBookDrawing();
+        }
 
         // Si le joueur a ouvert son carnet de sélection devant un objet interactif -> on ferme le carneet de sélection
         if (this.isCloseToInteractable && this.isOpenBookSelector) {
           this.setBookSelectorOpen(false);
+        }
+      },
+    );
+
+    // INTERACTION 3
+
+    Experience.instance?.camera.on(
+      "onInteractionPressed",
+      (args: InteractableObject | null) => {
+        if (args) {
+          this.setBookSelectorOpen(true);
         }
       },
     );
@@ -71,12 +94,22 @@ export default class BookInteraction {
     );
   }
 
-  entreouvrirBookDrawing(): void {
+  halfOpenBookDrawing(): void {
     if (!this.isCloseToInteractable) return;
     console.log("entrouverture du carnet !");
-    this.bookSelectorInterface.style.display = "none";
+    this.bookSelectorInterface.style.visibility = "none";
+    this.bookInterface.style.display = "flex";
+    this.bookInterface.classList.add("half-open-book-interface");
     this.bookDrawingInterface.style.display = "flex";
     this.isOpenBookDrawing = true;
+  }
+
+  onCloseBookDrawing(): void {
+    this.bookSelectorInterface.style.display = "none";
+    this.bookInterface.style.display = "flex";
+    this.bookInterface.classList.remove("half-open-book-interface");
+    this.bookDrawingInterface.style.display = "none";
+    this.isOpenBookDrawing = false;
   }
 
   /* INTERACTION POUR LA FERMETURE / OUVERTURE DU CARNET DE SELECTION */
