@@ -18,27 +18,29 @@ export default class BlockingWorld extends World {
     init() {
         super.init()
         this.floor = new Floor();
-        this.levelDesign = new Actor("LD", this.resources.items.levelDesignModel as GLTF)
+        this.levelDesign = new Actor("LD", this.resources.items.levelDesignModel as GLTF, true, false, this.resources.items.levelDesignModel as GLTF)
         this.environment = new Environment();
         this.outlineManager = new OutlinerManager();
 
         this.interactableObjects = []
-        const mushroom1 = new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true)
-        const mushroom2 = new InteractableObject("interactableMushroom2", this.resources.items.mushroomModel as GLTF, true)
-        mushroom1.model.scale.set(2,2,2)
-        mushroom2.model.scale.set(2,2,2)
+        const mushroom1 = new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true, false, this.resources.items.mushroomCollider as GLTF)
+        const mushroom2= new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true, false, this.resources.items.mushroomCollider as GLTF)
+
+        mushroom1.model.scale.addScalar(2.)
         mushroom1.model.position.set(5,0,5)
+        mushroom2.model.scale.addScalar(2.)
         mushroom2.model.position.set(5,0,10)
         this.interactableObjects.push(mushroom1, mushroom2)
 
-        const camera = Experience.instance?.camera as FirstPersonCameraOctree;
-        if (camera.worldOctree) {
-            const group = new THREE.Group()
-            this.interactableObjects.forEach((o) => {
-                group.add(o.model.clone())
-            })
-            group.add(this.levelDesign.model.clone())
-            camera.worldOctree.fromGraphNode(group);
+        const collisionManager = Experience.instance?.collisionManager
+        if (!collisionManager) throw new Error("CollisionTemplateWorld initialization failed: CollisionManager is not available.");
+        if (collisionManager) {
+            collisionManager.addCollisionObject([this.levelDesign])
+            // this.interactableObjects
+            collisionManager.addCollisionObject(this.interactableObjects)
+            // const model = this.resources.items.mushroom1 as GLTF
+            // collisionManager.worldOctree.fromGraphNode(mushroom1.collisionResource.scene)
+            // collisionManager.worldOctree.fromGraphNode(mushroom2.collisionResource.scene)
         }
     }
 
