@@ -2,23 +2,24 @@ import { Experience, type InputEventArgs } from "base-experience";
 import type InteractableObject from "../interactable/InteractableObject";
 
 export default class BookInteraction {
+  declare bookInterface: HTMLElement;
   declare bookSelectorInterface: HTMLElement;
   declare bookDrawingInterface: HTMLElement;
-  declare bookInterface: HTMLElement;
   declare closeBookSelectorButton: HTMLButtonElement;
   declare isCloseToInteractable: InteractableObject | null;
   declare isOpenBookSelector: boolean;
   declare isOpenBookDrawing: boolean;
+  //   @TODO : pour les obj collectés
   declare objectCollected: InteractableObject[] | null;
 
   constructor() {
+    const bookInterface = document.getElementById("book-interface");
     const bookSelectorInterface = document.getElementById(
       "book-selector-interface",
     );
     const bookDrawingInterface = document.getElementById(
       "book-drawing-interface",
     );
-    const bookInterface = document.getElementById("book-interface");
     const closeBookSelectorButton = document.getElementById(
       "close-book-selector",
     );
@@ -33,14 +34,12 @@ export default class BookInteraction {
     }
 
     this.bookSelectorInterface = bookSelectorInterface;
-    this.bookDrawingInterface = bookDrawingInterface;
     this.bookInterface = bookInterface;
+    this.bookDrawingInterface = bookDrawingInterface; // here
     this.closeBookSelectorButton = closeBookSelectorButton as HTMLButtonElement;
 
     this.isOpenBookSelector = false;
-    this.isOpenBookDrawing = false;
     this.isCloseToInteractable = null;
-    this.updateBookSelectorVisibility();
     this.registerEventToggleBook();
   }
 
@@ -54,11 +53,19 @@ export default class BookInteraction {
 
       (args: InteractableObject | null) => {
         this.isCloseToInteractable = args ?? null;
-        this.entreouvrirBookDrawing();
 
-        // Si le joueur a ouvert son carnet de sélection devant un objet interactif -> on ferme le carneet de sélection
+        this.entreouvrirBookDrawing;
+        // console.log(
+        //   "Entrouvrir le carnet de dessin avec l'objet :",
+        //   this.isCloseToInteractable,
+        // );
+
+        // Si le joueur s'approche -> on entrouvre
+        // --- ajouter une class CSS de déplacement sur les Y
+
+        // Si le joueur a réussi à ouvrir son carnet de sélection devant un objet interactif -> on ferme le carneet de sélection
         if (this.isCloseToInteractable && this.isOpenBookSelector) {
-          this.setBookSelectorOpen(false);
+          this.setBookSelectorUpdated(false);
         }
       },
     );
@@ -71,13 +78,17 @@ export default class BookInteraction {
     );
   }
 
-  entreouvrirBookDrawing(): void {
-    if (!this.isCloseToInteractable) return;
-    console.log("entrouverture du carnet !");
-    this.bookSelectorInterface.style.display = "none";
-    this.bookDrawingInterface.style.display = "flex";
-    this.isOpenBookDrawing = true;
-  }
+  /* ENTROUVERTURE DU CARNET DE DRAWING */
+
+  entreouvrirBookDrawing = (args: InputEventArgs): void => {
+    if (args.type !== "pressed") {
+      return;
+    }
+    if (this.isCloseToInteractable) {
+      console.log("entrouvrir le livre : le joueur est proche de l'objet");
+      //   this.setBookDrawingUpdated(!this.isOpenBookDrawing);
+    }
+  };
 
   /* INTERACTION POUR LA FERMETURE / OUVERTURE DU CARNET DE SELECTION */
 
@@ -88,28 +99,24 @@ export default class BookInteraction {
     }
     if (this.isCloseToInteractable === null) {
       console.log("le joueur n'est pas proche de l'objet");
-      this.setBookSelectorOpen(!this.isOpenBookSelector);
+      this.setBookSelectorUpdated(!this.isOpenBookSelector);
     }
   };
 
   //  Clique sur la croix pour fermer le carnet de sélection
   onCloseBookSelector = (): void => {
-    this.setBookSelectorOpen(false);
+    this.setBookSelectorUpdated(false);
   };
 
-  //   Toggle la visibilité du carnet de sélection
-  setBookSelectorOpen = (isOpen: boolean): void => {
+  //  Toogle la visibilité du carnet de sélection
+  setBookSelectorUpdated = (isOpen: boolean): void => {
     this.isOpenBookSelector = isOpen;
     document.exitPointerLock();
-    this.updateBookSelectorVisibility();
-  };
 
-  //   Mettre à jour visibilité du style en HTML
-  updateBookSelectorVisibility = (): void => {
+    // Mettre à jour le style d'affichage du carnet de sélection
     const displayBook = this.isOpenBookSelector ? "flex" : "none";
     this.bookInterface.style.display = displayBook;
     this.bookSelectorInterface.style.display = displayBook;
-    this.bookDrawingInterface.style.display = "none";
     if (!this.isOpenBookSelector) {
       document.body.requestPointerLock();
     }
