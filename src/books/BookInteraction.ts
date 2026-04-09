@@ -11,6 +11,8 @@ export default class BookInteraction {
   declare isOpenBookSelector: boolean;
   declare isOpenBookDrawing: boolean;
 
+  declare isHalfOpenBookDrawing: boolean;
+
   //   @TODO : tableau d'objet récupéré depuis le Player
   declare objectCollected: InteractableObject[] | null;
 
@@ -25,15 +27,15 @@ export default class BookInteraction {
     const closeBookSelectorButton = document.getElementById(
       "close-book-selector",
     );
-    // const closeBookDrawingButton =
-    //   document.getElementById("close-book-drawing");
+    const closeBookDrawingButton =
+      document.getElementById("close-book-drawing");
 
     if (
       !bookSelectorInterface ||
       !bookInterface ||
       !closeBookSelectorButton ||
-      !bookDrawingInterface
-      //   || !closeBookDrawingButton
+      !bookDrawingInterface ||
+      !closeBookDrawingButton
     ) {
       return;
     }
@@ -42,7 +44,9 @@ export default class BookInteraction {
     this.bookDrawingInterface = bookDrawingInterface;
     this.bookInterface = bookInterface;
     this.closeBookSelectorButton = closeBookSelectorButton as HTMLButtonElement;
-    // this.closeBookDrawingButton = closeBookDrawingButton as HTMLButtonElement;
+    this.closeBookDrawingButton = closeBookDrawingButton as HTMLButtonElement;
+
+    this.isHalfOpenBookDrawing = false;
 
     this.isOpenBookSelector = false;
     this.isOpenBookDrawing = false;
@@ -61,6 +65,7 @@ export default class BookInteraction {
 
       (args: InteractableObject | null) => {
         this.isCloseToInteractable = args ?? null;
+
         this.halfOpenBookDrawing();
 
         // Si le joueur s'éloigne de l'objet interactif où le carnet est déjà actif
@@ -75,42 +80,62 @@ export default class BookInteraction {
       },
     );
 
-    // INTERACTION 3
-
+    // INTERACTION 3 : Ouverture du carnet de dessin en entier
     Experience.instance?.camera.on(
       "onInteractionPressed",
       (args: InteractableObject | null) => {
-        if (args) {
-          this.setBookSelectorOpen(true);
-        }
+        console.log("arguments : ", args);
+        this.openBookDrawing();
       },
     );
 
     // INTERACTION 2 : Ouverture du carnet de sélection
     Experience.instance.inputSystem.on("interact", this.onOpenBookSelector);
+
     this.closeBookSelectorButton.addEventListener(
       "click",
       this.onCloseBookSelector,
     );
+    this.closeBookDrawingButton.addEventListener(
+      "click",
+      this.onCloseBookDrawing,
+    );
+  }
+
+  // Ouverture du carnet de drawing entièrement
+  openBookDrawing(): void {
+    if (!this.isCloseToInteractable) return;
+    console.log("ouverture du carnet en entier !");
+    this.bookSelectorInterface.style.display = "none";
+    this.bookInterface.style.display = "flex";
+    this.bookInterface.classList.remove("half-open-book-interface");
+    this.bookDrawingInterface.style.display = "flex";
+    this.isOpenBookDrawing = true;
+    document.exitPointerLock();
+    this.isHalfOpenBookDrawing = false;
   }
 
   halfOpenBookDrawing(): void {
     if (!this.isCloseToInteractable) return;
     console.log("entrouverture du carnet !");
-    this.bookSelectorInterface.style.visibility = "none";
+    this.bookSelectorInterface.style.display = "none";
     this.bookInterface.style.display = "flex";
     this.bookInterface.classList.add("half-open-book-interface");
     this.bookDrawingInterface.style.display = "flex";
     this.isOpenBookDrawing = true;
+    this.isHalfOpenBookDrawing = true;
   }
 
-  onCloseBookDrawing(): void {
+  onCloseBookDrawing = (): void => {
     this.bookSelectorInterface.style.display = "none";
-    this.bookInterface.style.display = "flex";
-    this.bookInterface.classList.remove("half-open-book-interface");
+    this.bookInterface.style.display = "none";
+    // this.bookInterface.classList.remove("half-open-book-interface");
     this.bookDrawingInterface.style.display = "none";
     this.isOpenBookDrawing = false;
-  }
+    document.body.requestPointerLock();
+    this.isHalfOpenBookDrawing = false;
+    true;
+  };
 
   /* INTERACTION POUR LA FERMETURE / OUVERTURE DU CARNET DE SELECTION */
 
