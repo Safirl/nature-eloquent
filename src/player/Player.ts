@@ -14,7 +14,7 @@ export default class Player extends FirstPersonCameraOctree {
 
     interactWithObject = (args: InputEventArgs) => {
         if (args.type === "pressed") {
-            console.log("pressed")
+            this.trigger("onInteractionPressed", [this.closestObject])
         }
     }
 
