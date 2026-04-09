@@ -24,6 +24,7 @@ export default class Leafs {
     private count = 3
     declare geometry: THREE.BufferGeometry
     declare power: 2
+    declare material: THREE.ShaderMaterial
 
     constructor(name: string, resource: THREE.Texture) {
         if (!Experience.instance) {
@@ -45,25 +46,33 @@ export default class Leafs {
 
 
         this.setGeometry()
+        this.setMaterial()
         this.setModel()
     }
 
-    setModel() {
-        // const geometry = new THREE.PlaneGeometry(1, 1)
-        const material = new THREE.ShaderMaterial({
+
+    setMaterial() {
+        this.material = new THREE.ShaderMaterial({
             uniforms: {
                 map: { value: this.texture },
-                power: { value: this.power }
+                power: { value: this.power },
+                uTime: { value: 0 }
             },
             vertexShader: `
+                uniform float uTime;
+                
                 varying vec2 vUv;
                 varying vec3 vNormal;
+                
                 void main() {
                     vUv = uv;
                     // vNormal = normalize(normalMatrix * normal);
                     vNormal = normalize(mat3(modelMatrix * instanceMatrix) * normal);
 
-                    vec4 worldPosition = instanceMatrix * vec4(position, 1.0);
+                    vec3 pos = position;
+                    vec4 worldPosition = instanceMatrix * vec4(pos, 1.0);
+                    worldPosition.x += sin(worldPosition.y * uTime * 0.002) * 0.02;
+                    
                     gl_Position = projectionMatrix * modelViewMatrix * worldPosition;
                 }
             `,
@@ -135,12 +144,13 @@ export default class Leafs {
             transparent: true,
             side: THREE.DoubleSide
         });
-
+    }
+    setModel() {
 
 
         const dummy = new THREE.Object3D();
 
-        this.instance = new THREE.InstancedMesh(this.geometry, material, this.count);
+        this.instance = new THREE.InstancedMesh(this.geometry, this.material, this.count);
 
         const matrix = new THREE.Matrix4();
 
@@ -255,5 +265,11 @@ export default class Leafs {
 
         // Merge all planes
         this.geometry = mergeGeometries(planes)
+    }
+
+    update() {
+
+        this.material.uniforms.uTime.value = this.time.elapsed
+
     }
 }

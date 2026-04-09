@@ -14,6 +14,7 @@ export default class BlockingWorld extends World {
     declare levelDesign: Actor
     declare interactableObjects: InteractableObject[]
     declare outlineManager: OutlinerManager
+    declare tree: Tree
 
     init() {
         super.init()
@@ -24,12 +25,12 @@ export default class BlockingWorld extends World {
 
         this.interactableObjects = []
         const mushroom1 = new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true, false, this.resources.items.mushroomCollider as GLTF)
-        const mushroom2= new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true, false, this.resources.items.mushroomCollider as GLTF)
+        const mushroom2 = new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true, false, this.resources.items.mushroomCollider as GLTF)
 
         mushroom1.model.scale.addScalar(2.)
-        mushroom1.model.position.set(5,0,5)
+        mushroom1.model.position.set(5, 0, 5)
         mushroom2.model.scale.addScalar(2.)
-        mushroom2.model.position.set(5,0,10)
+        mushroom2.model.position.set(5, 0, 10)
         this.interactableObjects.push(mushroom1, mushroom2)
 
         const collisionManager = Experience.instance?.collisionManager
@@ -42,6 +43,8 @@ export default class BlockingWorld extends World {
             // collisionManager.worldOctree.fromGraphNode(mushroom1.collisionResource.scene)
             // collisionManager.worldOctree.fromGraphNode(mushroom2.collisionResource.scene)
         }
+        this.tree = new Tree("tree_1", this.resources.items["tree_1"] as GLTF)
+
     }
 
     update() {
@@ -50,6 +53,7 @@ export default class BlockingWorld extends World {
             this.interactableObjects.forEach((o) => {
                 o.update()
             })
+            this.tree.update()
         }
     }
 }

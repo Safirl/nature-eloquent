@@ -56,4 +56,8 @@ export default class Tree {
         this.leafs = new Leafs("tree-leafs", texture) // 🤡
     }
 
+
+    update() {
+        this.leafs.update()
+    }
 }
