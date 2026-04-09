@@ -42,7 +42,17 @@ const sources: Source[] = [
     name: "levelDesignModel",
     type: "gltfModel",
     path: "models/LD/blocking.glb"
-  }
+  },
+  {
+    name: "tree_1",
+    type: "gltfModel",
+    path: "models/vegetation/tree_1.glb",
+  },
+  {
+    name: "leafs_texture",
+    type: "texture",
+    path: "textures/vegetation/leaves.jpg",
+  },
 ];
 
 export default sources;

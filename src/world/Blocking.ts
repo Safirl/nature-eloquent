@@ -4,7 +4,7 @@ import type { GLTF } from "three/examples/jsm/Addons.js";
 import InteractableObject from "../interactable/InteractableObject";
 import * as THREE from "three"
 import OutlinerManager from "./OutlinerManager";
-
+import Tree from "../assets/components/Tree";
 export default class BlockingWorld extends World {
     declare experience: Experience;
     declare scene: Experience["scene"];
