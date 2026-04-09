@@ -10,19 +10,22 @@
     <!-- Book canvas -->
 
     <div id="book-interface">
-      <button id="close-book">Close Book</button>
-
       <!-- Book selector -->
-      <div id="book-selector-interface">
-        <button>Object 1</button>
-        <button>Object 2</button>
+      <div id="book-selector-interface" class="book-panel">
+        <p>Choisi ...</p>
+        <button id="close-book-selector" class="book-close">X</button>
+        <button type="button">Object 1</button>
+        <button type="button">Object 2</button>
       </div>
 
       <!-- Book drawing -->
-      <div id="book-drawing-interface">
-        <div id="toolbar"></div>
+      <!-- <div id="book-drawing-interface" class="book-panel">
+        <button id="close-book-drawing" class="book-close" type="button">
+          Close Book
+        </button>
+        <p>Dessine ...</p>
         <canvas id="draw-canvas"></canvas>
-      </div>
+      </div> -->
     </div>
 
     <canvas id="three"></canvas>
