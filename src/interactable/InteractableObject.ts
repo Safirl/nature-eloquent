@@ -17,12 +17,8 @@ export default class InteractableObject extends Actor {
     init = () => {};
     destroy= () => {};
 
-    pickObject() {
-
-    }
-
-    getName(): string {
-        return this.name;
+    hideObject() {
+        this.model.visible = false;
     }
 
     update(): void {
@@ -32,11 +28,9 @@ export default class InteractableObject extends Actor {
         const distance = this.player.instance.position.distanceTo(this.model.position)
         if (distance < this.threshold) {
             this.player.setClosestObject(this)
-            // this.isClose = true;
         }
         else if (distance > this.threshold){
             this.player.clearClosestObject(this)
-            // this.isClose = false;
         }
     }
 }

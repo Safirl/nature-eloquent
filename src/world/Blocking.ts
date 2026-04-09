@@ -3,6 +3,7 @@ import type { FirstPersonCameraOctree } from "first-person-plugin";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import InteractableObject from "../interactable/InteractableObject";
 import * as THREE from "three"
+import OutlinerManager from "./OutlinerManager";
 
 export default class BlockingWorld extends World {
     declare experience: Experience;
@@ -12,12 +13,14 @@ export default class BlockingWorld extends World {
     declare floor: Floor;
     declare levelDesign: Actor
     declare interactableObjects: InteractableObject[]
+    declare outlineManager: OutlinerManager
 
     init() {
         super.init()
         this.floor = new Floor();
         this.levelDesign = new Actor("LD", this.resources.items.levelDesignModel as GLTF)
         this.environment = new Environment();
+        this.outlineManager = new OutlinerManager();
 
         this.interactableObjects = []
         const mushroom1 = new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true)
