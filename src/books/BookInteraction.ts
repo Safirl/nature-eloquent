@@ -20,7 +20,7 @@ export default class BookInteraction {
 	declare isHalfOpenBookDrawing: boolean;
 	declare isFullOpenBookDrawing: boolean;
 
-	declare objectCollected: (InteractableObject | null)[];
+	declare objectsCollected: InteractableObject[];
 
 	constructor() {
 		const bookSelectorInterface = document.getElementById(
@@ -67,7 +67,7 @@ export default class BookInteraction {
 		this.isOpenBookSelector = false;
 		this.isOpenBookDrawing = false;
 
-		this.objectCollected = [];
+		this.objectsCollected = [];
 		this.bookDrawingInterfaceValidate.addEventListener("click", this.validateDropObject);
 
 		// this.bookDrawing = new BookDrawing();
@@ -135,13 +135,12 @@ export default class BookInteraction {
 
 	validateDropObject = (): void => {
 		if (!this.isCloseToInteractable) return;
-
-		this.objectCollected.push(this.isCloseToInteractable);
-
-		console.log("Le tableau d'objet :", this.objectCollected);
+		this.objectsCollected.push(this.isCloseToInteractable);
+		console.log("Le tableau d'objet :", this.objectsCollected);
 
 		this.onCloseBookDrawing();
 	};
+
 
 	// Ouverture du carnet de drawing entièrement
 	fullOpenBookDrawing(args: (InteractableObject | null)[]): void {
@@ -153,7 +152,7 @@ export default class BookInteraction {
 		this.bookInterface.classList.remove("half-open-book-interface");
 		this.bookDrawingInterface.style.display = "flex";
 		this.isOpenBookDrawing = true;
-		document.exitPointerLock();
+		this.setPointerLock(false);
 		this.isHalfOpenBookDrawing = false;
 	}
 
@@ -167,7 +166,7 @@ export default class BookInteraction {
 		this.bookDrawingInterface.style.display = "flex";
 		this.isOpenBookDrawing = true;
 		this.isHalfOpenBookDrawing = true;
-		document.body.requestPointerLock();
+		this.setPointerLock(true);
 
 	}
 
@@ -177,7 +176,7 @@ export default class BookInteraction {
 		this.bookInterface.classList.remove("half-open-book-interface");
 		this.bookDrawingInterface.style.display = "none";
 		this.isOpenBookDrawing = false;
-		document.body.requestPointerLock();
+		this.setPointerLock(true);
 		this.isHalfOpenBookDrawing = false;
 	};
 
@@ -211,7 +210,7 @@ export default class BookInteraction {
 	//   Toggle la visibilité du carnet de sélection
 	setBookSelectorOpen = (isOpen: boolean): void => {
 		this.isOpenBookSelector = isOpen;
-		document.exitPointerLock();
+		this.setPointerLock(false);
 		this.updateBookSelectorVisibility();
 	};
 
@@ -222,7 +221,15 @@ export default class BookInteraction {
 		this.bookSelectorInterface.style.display = displayBook;
 		this.bookDrawingInterface.style.display = "none";
 		if (!this.isOpenBookSelector) {
-			document.body.requestPointerLock();
+			this.setPointerLock(true);
 		}
 	};
+
+	setPointerLock(locked: boolean): void {
+		if (locked) {
+			document.body.requestPointerLock();
+		} else {
+			document.exitPointerLock();
+		}
+	}
 }
