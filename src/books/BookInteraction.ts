@@ -109,8 +109,6 @@ export default class BookInteraction {
 		Experience.instance?.camera.on(
 			"onInteractionPressed",
 			(args: (InteractableObject | null)[]) => {
-				const object = Array.isArray(args) ? args[0] : args;
-				console.log('arg name', object?.name);
 				if (this.isHalfOpenBookDrawing) {
 					this.fullOpenBookDrawing(args);
 				} else {
@@ -137,37 +135,35 @@ export default class BookInteraction {
 		if (!this.isCloseToInteractable) return;
 		this.objectsCollected.push(this.isCloseToInteractable);
 		console.log("Le tableau d'objet :", this.objectsCollected);
-
 		this.onCloseBookDrawing();
 	};
 
-
-	// Ouverture du carnet de drawing entièrement
-	fullOpenBookDrawing(args: (InteractableObject | null)[]): void {
-		if (!this.isCloseToInteractable) return;
-		console.log("ouverture du carnet en entier !");
-		this.updateSelectedObjectLabel(args);
-		this.bookSelectorInterface.style.display = "none";
-		this.bookInterface.style.display = "flex";
-		this.bookInterface.classList.remove("half-open-book-interface");
-		this.bookDrawingInterface.style.display = "flex";
-		this.isOpenBookDrawing = true;
-		this.setPointerLock(false);
-		this.isHalfOpenBookDrawing = false;
+	halfOpenBookDrawing(object: (InteractableObject | null)[]): void {
+		this.setBookDrawingOpen(object, false);
 	}
 
-	halfOpenBookDrawing(args: (InteractableObject | null)[]): void {
+	fullOpenBookDrawing(object: (InteractableObject | null)[]): void {
+		this.setBookDrawingOpen(object, true);
+	}
+
+	setBookDrawingOpen(object: (InteractableObject | null)[], isBookDrawingFullOpen: boolean): void {
 		if (!this.isCloseToInteractable) return;
-		console.log("entrouverture du carnet !");
-		this.updateSelectedObjectLabel(args);
+
+		this.displayTargetNameObjectUI(object);
 		this.bookSelectorInterface.style.display = "none";
 		this.bookInterface.style.display = "flex";
-		this.bookInterface.classList.add("half-open-book-interface");
 		this.bookDrawingInterface.style.display = "flex";
 		this.isOpenBookDrawing = true;
-		this.isHalfOpenBookDrawing = true;
-		this.setPointerLock(true);
 
+		if (isBookDrawingFullOpen) {
+			this.bookInterface.classList.remove("half-open-book-interface");
+			this.isHalfOpenBookDrawing = false;
+			this.setPointerLock(false);
+		} else {
+			this.bookInterface.classList.add("half-open-book-interface");
+			this.isHalfOpenBookDrawing = true;
+			this.setPointerLock(true);
+		}
 	}
 
 	onCloseBookDrawing = (): void => {
@@ -180,7 +176,7 @@ export default class BookInteraction {
 		this.isHalfOpenBookDrawing = false;
 	};
 
-	updateSelectedObjectLabel = (args: (InteractableObject | null)[]): void => {
+	displayTargetNameObjectUI = (args: (InteractableObject | null)[]): void => {
 		const object = Array.isArray(args) ? args[0] : args;
 		const selectedObjectName = object?.name;
 		const selectedObjectId = object?.getId();
