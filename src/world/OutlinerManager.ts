@@ -70,6 +70,7 @@ export default class OutlinerManager implements LifeTimeObject {
         
         if (this.debug.active) {
             this.debugFolder = this.debug.ui.addFolder('outline postprocessing')
+            this.debugFolder.open(false)
             this.setDebugObject()
         }
 
