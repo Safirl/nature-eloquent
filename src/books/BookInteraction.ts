@@ -143,7 +143,14 @@ export default class BookInteraction extends EventEmitter {
 
 	validateDropObject = (): void => {
 		if (!this.isCloseToInteractable) return;
-		this.objectsCollected.push(this.isCloseToInteractable);
+
+		const alreadyCollected = this.objectsCollected.find(
+			(obj) => obj.getId() === this.isCloseToInteractable?.getId(),
+		);
+		if (!alreadyCollected) {
+			this.objectsCollected.push(this.isCloseToInteractable);
+		}
+
 		console.log("Le tableau d'objet :", this.objectsCollected);
 		this.onCloseBookDrawing();
 		this.renderCollectedObjects();
@@ -161,10 +168,10 @@ export default class BookInteraction extends EventEmitter {
 		if (!this.isCloseToInteractable) return;
 
 		this.displayTargetNameObjectUI(object);
-		this.bookSelectorInterface.style.display = "none";
+		this.bookSelectorInterface.style.display = "flex";
 		this.bookInterface.style.display = "flex";
-		this.bookDrawingInterface.style.display = "flex";
-		this.isOpenBookDrawing = true;
+		this.bookDrawingInterface.style.display = "none";
+		this.isOpenBookDrawing = false;
 
 		if (isBookDrawingFullOpen) {
 			this.bookInterface.classList.remove("half-open-book-interface");
@@ -243,19 +250,21 @@ export default class BookInteraction extends EventEmitter {
 
 	// Affiche les objets collectés dans le carnet de sélection
 	renderCollectedObjects(): void {
-		const collectedObjectsUI = this.bookSelectorInterface.querySelectorAll(".collected-object-btn");
-		collectedObjectsUI.forEach(btn => btn.remove());
+		const collectedObjectsUI = this.bookSelectorInterface.querySelectorAll(
+			".collected-object, .collected-object-sticker",
+		);
+		collectedObjectsUI.forEach((el) => el.remove());
 
 		// Si pas objet collecté
 		if (this.objectsCollected.length === 0) {
 			const noCollected = document.createElement("p");
-			noCollected.classList.add("collected-object-btn");
+			noCollected.classList.add("collected-object");
 			noCollected.textContent = "Vous n'avez encore rien collecté";
 			this.bookSelectorInterface.appendChild(noCollected);
 			return;
 		}
 
-		// Si obj -> affiché obj sous forme de sticker
+		// Si obj -> affiché obj
 		for (const obj of this.objectsCollected) {
 			const stickerName = this.stickerObject.find(sticker => obj.name.toLowerCase().includes(sticker.toLowerCase()));
 			if (stickerName) {

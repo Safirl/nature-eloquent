@@ -28,12 +28,11 @@
 }
 
 #book-selector-interface, #book-drawing-interface , #book-drawing-interface .book-drawing-interface-left, #book-drawing-interface .book-drawing-interface-right{
-    width: 60vw;
+    width: 70vw;
     height: 60vh;
 }
 
 
-/* Mettre côte à côte les pages droite / left */
 #book-selector-interface{
     display: flex;
     flex-direction: row;
@@ -87,7 +86,7 @@
     color: white;
 }
 
-.collected-object-btn{
+.collected-object{
     position: absolute;
     top :80px;
     left:20px;
@@ -105,3 +104,4 @@
     left: 60px;
     width: 30%;
 }
+
