@@ -1,8 +1,8 @@
-import { Experience, type InputEventArgs } from "base-experience";
+import { EventEmitter, Experience, type InputEventArgs } from "base-experience";
 import type InteractableObject from "../interactable/InteractableObject";
 import BookDrawing from "./BookDrawing";
 
-export default class BookInteraction {
+export default class BookInteraction extends EventEmitter {
     declare bookSelectorInterface: HTMLElement;
     declare bookDrawingInterface: HTMLElement;
     declare bookInterface: HTMLElement;
@@ -21,8 +21,14 @@ export default class BookInteraction {
     declare isFullOpenBookDrawing: boolean;
 
     declare objectsCollected: InteractableObject[];
+    declare bookSelectionInterfaceValidate: HTMLButtonElement | null;
+
+    declare stickerObject: string[];
+
 
     constructor() {
+        super();
+
         const bookSelectorInterface = document.getElementById(
             "book-selector-interface",
         );
@@ -68,45 +74,46 @@ export default class BookInteraction {
         this.isOpenBookDrawing = false;
 
         this.objectsCollected = [];
-        this.bookDrawingInterfaceValidate.addEventListener("click", this.validateDropObject);
+        this.bookSelectionInterfaceValidate = null;
+
+        this.stickerObject = ['interactableMushroom1', 'interactableMushroom2'];
 
         // this.bookDrawing = new BookDrawing();
-
 
         this.isCloseToInteractable = null;
         this.updateBookSelectorVisibility();
         this.registerEventToggleBook();
+        this.renderCollectedObjects();
     }
 
-    //   Tous les événements d'affichage du carnet
+    /* 
+        REGISTER BIND INPUT EVENTS
+    */
+
     registerEventToggleBook(): void {
         if (!Experience.instance) return;
+        this.registerEventsUI();
+        this.registerEventsBookCollectControls(Experience.instance);
+        this.registerEventsProximityDetection(Experience.instance);
+    }
 
-        // INTERACTION 1 : Entrouvrir le carnet si le joueur proche obj interactif
-        Experience.instance.camera.on(
-            "onSelectedObjectChanged",
-
-            (args: (InteractableObject | null)[]) => {
-                const object = Array.isArray(args) ? args[0] : args;
-                this.isCloseToInteractable = object;
-                this.halfOpenBookDrawing(args);
-
-                // Si le joueur s'éloigne de l'objet interactif où le carnet est déjà actif
-                if (!this.isCloseToInteractable) {
-                    this.onCloseBookDrawing();
-                }
-
-                // Si le joueur a ouvert son carnet de sélection devant un objet interactif -> on ferme le carneet de sélection
-                if (this.isCloseToInteractable && this.isOpenBookSelector) {
-                    this.setBookSelectorOpen(false);
-                }
-            },
+    registerEventsUI(): void {
+        this.closeBookSelectorButton.addEventListener(
+            "click",
+            this.onCloseBookSelector,
         );
+        this.closeBookDrawingButton.addEventListener(
+            "click",
+            this.onCloseBookDrawing,
+        );
+        this.bookDrawingInterfaceValidate.addEventListener(
+            "click",
+            this.validateDropObject
+        );
+    }
 
-        // INTERACTION 3 : Ouverture du carnet de dessin en entier
-        // "E" -> Ouverture carnet
-        // "E" à nouveau -> entrouverture carnet
-        Experience.instance?.camera.on(
+    registerEventsBookCollectControls(instance: Experience): void {
+        instance.camera.on(
             "onInteractionPressed",
             (args: (InteractableObject | null)[]) => {
                 if (this.isHalfOpenBookDrawing) {
@@ -116,26 +123,30 @@ export default class BookInteraction {
                 }
             },
         );
-
-
-        // INTERACTION 2 : Ouverture du carnet de sélection
-        Experience.instance.inputSystem.on("interact", this.onOpenBookSelector);
-
-        this.closeBookSelectorButton.addEventListener(
-            "click",
-            this.onCloseBookSelector,
-        );
-        this.closeBookDrawingButton.addEventListener(
-            "click",
-            this.onCloseBookDrawing,
-        );
+        instance.inputSystem.on("interact", this.onOpenBookSelector);
     }
+
+    registerEventsProximityDetection(instance: Experience): void {
+        instance.camera.on("onSelectedObjectChanged", (args: (InteractableObject | null)[]) => {
+            const object = Array.isArray(args) ? args[0] : args;
+            this.isCloseToInteractable = object;
+
+            if (!object) {
+                this.onCloseBookDrawing();
+                return;
+            }
+            if (this.isOpenBookSelector) this.setBookSelectorOpen(false);
+            this.halfOpenBookDrawing(args);
+        });
+    }
+
 
     validateDropObject = (): void => {
         if (!this.isCloseToInteractable) return;
         this.objectsCollected.push(this.isCloseToInteractable);
         console.log("Le tableau d'objet :", this.objectsCollected);
         this.onCloseBookDrawing();
+        this.renderCollectedObjects();
     };
 
     halfOpenBookDrawing(object: (InteractableObject | null)[]): void {
@@ -181,7 +192,7 @@ export default class BookInteraction {
         const selectedObjectName = object?.name;
         const selectedObjectId = object?.getId();
         this.nameObjectSelectedElement.textContent = selectedObjectName
-            ? `Nom de l'objet: ${selectedObjectName + selectedObjectId}`
+            ? `Nom de l'objet: ${selectedObjectName} (${selectedObjectId})`
             : "Aucun objet sélectionné";
     };
 
@@ -226,6 +237,49 @@ export default class BookInteraction {
             document.body.requestPointerLock();
         } else {
             document.exitPointerLock();
+        }
+    }
+
+
+    // Affiche les objets collectés dans le carnet de sélection
+    renderCollectedObjects(): void {
+        const collectedObjectsUI = this.bookSelectorInterface.querySelectorAll(".collected-object-btn");
+        collectedObjectsUI.forEach(btn => btn.remove());
+
+        // Si pas objet collecté
+        if (this.objectsCollected.length === 0) {
+            const noCollected = document.createElement("p");
+            noCollected.classList.add("collected-object-btn");
+            noCollected.textContent = "Vous n'avez encore rien collecté";
+            this.bookSelectorInterface.appendChild(noCollected);
+            return;
+        }
+
+        // Si objets collectés -> affiche sous forme de btn
+        for (const obj of this.objectsCollected) {
+            // const btn = document.createElement("button");
+            // btn.classList.add("collected-object-btn");
+            // btn.textContent = obj.name;
+            // btn.addEventListener("click", () => {
+            // 	this.trigger("onCollectedObjectSelected", [obj]);
+            // 	this.fullOpenBookDrawing([obj]);
+            // 	console.log('objet a été cliqué', obj.name);
+            // });
+            // this.bookSelectorInterface.appendChild(btn);
+
+            // Affichage d'une image de l'objet (stickerObject : [])
+            // Mapper le nom de l'obj.name = stickerObject[i]
+            const stickerName = this.stickerObject.find(sticker => obj.name.toLowerCase().includes(sticker.toLowerCase()));
+            if (stickerName) {
+                const img = document.createElement("img");
+                img.src = `./src/books/${stickerName}.png`;
+                img.classList.add("collected-object-sticker");
+                // Affichage aléatoire de l'img dans le carnet de sélection
+                img.style.position = "absolute";
+                img.style.top = `${Math.random() * 80 + 10}%`;
+                img.style.left = `${Math.random() * 80 + 10}%`;
+                this.bookSelectorInterface.appendChild(img);
+            }
         }
     }
 }

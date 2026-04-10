@@ -23,6 +23,8 @@ export default class BookInteraction extends EventEmitter {
 	declare objectsCollected: InteractableObject[];
 	declare bookSelectionInterfaceValidate: HTMLButtonElement | null;
 
+	declare stickerObject: string[];
+
 
 	constructor() {
 		super();
@@ -74,6 +76,7 @@ export default class BookInteraction extends EventEmitter {
 		this.objectsCollected = [];
 		this.bookSelectionInterfaceValidate = null;
 
+		this.stickerObject = ['interactableMushroom1', 'interactableMushroom2'];
 
 		// this.bookDrawing = new BookDrawing();
 
@@ -252,17 +255,19 @@ export default class BookInteraction extends EventEmitter {
 			return;
 		}
 
-		// Si objets collectés -> affiche sous forme de btn
+		// Si obj -> affiché obj sous forme de sticker
 		for (const obj of this.objectsCollected) {
-			const btn = document.createElement("button");
-			btn.classList.add("collected-object-btn");
-			btn.textContent = obj.name;
-			btn.addEventListener("click", () => {
-				this.trigger("onCollectedObjectSelected", [obj]);
-				this.fullOpenBookDrawing([obj]);
-				console.log('objet a été cliqué', obj.name);
-			});
-			this.bookSelectorInterface.appendChild(btn);
+			const stickerName = this.stickerObject.find(sticker => obj.name.toLowerCase().includes(sticker.toLowerCase()));
+			if (stickerName) {
+				const img = document.createElement("img");
+				img.src = `./src/books/${stickerName}.png`;
+				img.classList.add("collected-object-sticker");
+				// Affichage aléatoire de l'img dans le carnet de sélection
+				img.style.position = "absolute";
+				img.style.top = `${Math.random() * 50}%`;
+				img.style.left = `${Math.random() * 40 + 10}%`;
+				this.bookSelectorInterface.appendChild(img);
+			}
 		}
 	}
 }

@@ -22,26 +22,41 @@
 #book-selector-interface,
 #book-drawing-interface {
     position: relative;
-    background-image: url('/src/books/book.svg');
-    background-repeat: no-repeat;
-    background-color: white;
-    border: solid 30px #F6BACB;
+    background-color: #F9EED2;
+    border: solid 30px #DC4543;
     pointer-events: visible;
 }
 
-#book-selector-interface, #book-drawing-interface {
+#book-selector-interface, #book-drawing-interface , #book-drawing-interface .book-drawing-interface-left, #book-drawing-interface .book-drawing-interface-right{
     width: 60vw;
-    height: 65vh;
+    height: 60vh;
 }
 
 
+/* Mettre côte à côte les pages droite / left */
+#book-selector-interface{
+    display: flex;
+    flex-direction: row;
+
+}
+#book-selector-interface .book-selector-interface-left,
+#book-selector-interface .book-selector-interface-right, #book-drawing-interface .book-drawing-interface-left,
+#book-drawing-interface .book-drawing-interface-right {
+    width: 50%;
+    padding: 20px;
+}
+
+#book-selector-interface .book-selector-interface-left {
+    background-image: url('/src/books/book.svg');
+    background-repeat: no-repeat;
+    background-position-y: -40px;
+}
 
 .book-panel {
-    padding: 20px;
     position: relative;
-    background-color: white;
+    background-color: #F9EED2;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: left;
     border-radius: 40px;
 }
@@ -51,26 +66,42 @@
 }
 
 .book-close{
-    position: relative;
+    position: absolute;
     border-radius:999px;
-    background-color: red;
+    background-color: #ff5454;
+    border: 4px solid #d32929;
     width: 40px;
     height: 40px;
-    border: none;
     color: white;
 }
 
 .validate-book-drawing{
-    position: relative;
+     position: absolute;
+     top: 0;
+     right: 0;
     border-radius:999px;
-    background-color: green;
+    background-color: #42d51d;
+    border: 4px solid #249e06;
     width: 40px;
     height: 40px;
-    border: none;
     color: white;
 }
 
+.collected-object-btn{
+    position: absolute;
+    top :80px;
+    left:20px;
+
+}
+
 .wrap-button{
-    display: flex;
-    justify-content: space-between;
+    position: absolute;
+    width: 100%;
+}
+
+.name-object-selected{
+    position: absolute;
+    top: 10vh;
+    left: 60px;
+    width: 30%;
 }
