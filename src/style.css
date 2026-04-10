@@ -49,6 +49,10 @@
     background-image: url('/src/books/book.svg');
     background-repeat: no-repeat;
     background-position-y: -40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-content: flex-start;
 }
 
 .book-panel {
@@ -87,10 +91,22 @@
 }
 
 .collected-object{
-    position: absolute;
-    top :80px;
-    left:20px;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #4b2b2b;
+}
 
+.collected-object-sticker-button {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+}
+
+.collected-object-sticker {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
 }
 
 .wrap-button{

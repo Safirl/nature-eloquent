@@ -76,7 +76,7 @@ export default class BookInteraction extends EventEmitter {
 		this.objectsCollected = [];
 		this.bookSelectionInterfaceValidate = null;
 
-		this.stickerObject = ['interactableMushroom1', 'interactableMushroom2'];
+		this.stickerObject = ['champignon', 'interactableMushroom2'];
 
 		// this.bookDrawing = new BookDrawing();
 
@@ -247,35 +247,43 @@ export default class BookInteraction extends EventEmitter {
 		}
 	}
 
-
 	// Affiche les objets collectés dans le carnet de sélection
 	renderCollectedObjects(): void {
 		const collectedObjectsUI = this.bookSelectorInterface.querySelectorAll(
-			".collected-object, .collected-object-sticker",
+			".collected-object-btn, .collected-object-sticker-button, .collected-object-sticker",
 		);
 		collectedObjectsUI.forEach((el) => el.remove());
 
 		// Si pas objet collecté
 		if (this.objectsCollected.length === 0) {
 			const noCollected = document.createElement("p");
-			noCollected.classList.add("collected-object");
+			noCollected.classList.add("collected-object-btn");
 			noCollected.textContent = "Vous n'avez encore rien collecté";
 			this.bookSelectorInterface.appendChild(noCollected);
 			return;
 		}
 
-		// Si obj -> affiché obj
+		// Création des stickers d'ilmage
 		for (const obj of this.objectsCollected) {
 			const stickerName = this.stickerObject.find(sticker => obj.name.toLowerCase().includes(sticker.toLowerCase()));
 			if (stickerName) {
 				const img = document.createElement("img");
 				img.src = `./src/books/${stickerName}.png`;
 				img.classList.add("collected-object-sticker");
+				img.alt = obj.name;
 				// Affichage aléatoire de l'img dans le carnet de sélection
 				img.style.position = "absolute";
-				img.style.top = `${Math.random() * 50}%`;
-				img.style.left = `${Math.random() * 40 + 10}%`;
+				img.style.top = `${Math.random() * 80 + 10}%`;
+				img.style.left = `${Math.random() * 80 + 10}%`;
+				img.style.cursor = "pointer";
+
 				this.bookSelectorInterface.appendChild(img);
+
+				img.addEventListener("click", () => {
+					this.trigger("onCollectedObjectSelected", [obj]);
+					this.fullOpenBookDrawing([obj]);
+					console.log("objet a ete clique", obj.name);
+				});
 			}
 		}
 	}
