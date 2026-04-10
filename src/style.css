@@ -22,14 +22,19 @@
 #book-selector-interface,
 #book-drawing-interface {
     position: relative;
-    background-color: rgb(209, 202, 202);
+    background-image: url('/src/books/book.svg');
+    background-repeat: no-repeat;
+    background-color: white;
+    border: solid 30px #F6BACB;
     pointer-events: visible;
 }
 
-#book-selector-interface {
-    width: 400px;
-    height: 300px;
+#book-selector-interface, #book-drawing-interface {
+    width: 60vw;
+    height: 65vh;
 }
+
+
 
 .book-panel {
     padding: 20px;
@@ -38,7 +43,7 @@
     display: flex;
     flex-direction: column;
     align-items: left;
-    border-radius: 10px;
+    border-radius: 40px;
 }
 
 .book-panel button{
