@@ -168,9 +168,9 @@ export default class BookInteraction extends EventEmitter {
 		if (!this.isCloseToInteractable) return;
 
 		this.displayTargetNameObjectUI(object);
-		this.bookSelectorInterface.style.display = "flex";
+		this.bookSelectorInterface.style.display = "none";
 		this.bookInterface.style.display = "flex";
-		this.bookDrawingInterface.style.display = "none";
+		this.bookDrawingInterface.style.display = "flex";
 		this.isOpenBookDrawing = false;
 
 		if (isBookDrawingFullOpen) {

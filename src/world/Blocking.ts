@@ -1,46 +1,49 @@
 import { Actor, Environment, Experience, Floor, World } from "base-experience";
-import type { FirstPersonCameraOctree } from "first-person-plugin";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import InteractableObject from "../interactable/InteractableObject";
-import * as THREE from "three"
 import OutlinerManager from "./OutlinerManager";
+import * as THREE from "three"
+import Cloud from "./Cloud";
+import GameEnvironment from "./GameEnvironment";
 
 export default class BlockingWorld extends World {
     declare experience: Experience;
     declare scene: Experience["scene"];
-    declare environment: Environment;
+    declare environment: GameEnvironment;
     declare resources: Experience["resources"];
     declare floor: Floor;
     declare levelDesign: Actor
     declare interactableObjects: InteractableObject[]
     declare outlineManager: OutlinerManager
+    declare fox: Actor
+    declare cloud: Cloud
 
     init() {
         super.init()
         this.floor = new Floor();
-        this.levelDesign = new Actor("LD", this.resources.items.levelDesignModel as GLTF, true, false, this.resources.items.levelDesignModel as GLTF)
-        this.environment = new Environment();
+        this.environment = new GameEnvironment(this.resources.items.environmentMapTexture1 as THREE.CubeTexture, true);
         this.outlineManager = new OutlinerManager();
-
+        
+        this.levelDesign = new Actor("LD", this.resources.items.levelDesignModel as GLTF, true, false, this.resources.items.levelDesignModel as GLTF)
         this.interactableObjects = []
-        const mushroom1 = new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true, false, this.resources.items.mushroomCollider as GLTF)
-        const mushroom2= new InteractableObject("interactableMushroom1", this.resources.items.mushroomModel as GLTF, true, false, this.resources.items.mushroomCollider as GLTF)
+        this.fox = new Actor("fox", this.resources.items.foxModel as GLTF, true)
+        this.fox.setScale(0.02, 0.02, 0.02)
+        const mushroom1 = new InteractableObject("champignon", this.resources.items.mushroomPaintedModel as GLTF, true)
+        const mushroom2= new InteractableObject("champignon", this.resources.items.mushroomModel as GLTF, true, false, this.resources.items.mushroomCollider as GLTF)
 
-        mushroom1.model.scale.addScalar(2.)
-        mushroom1.model.position.set(5,0,5)
-        mushroom2.model.scale.addScalar(2.)
-        mushroom2.model.position.set(5,0,10)
-        this.interactableObjects.push(mushroom1, mushroom2)
+        mushroom1.setScale(2., 2., 2.)
+        // mushroom1.setPosition(5,.9,5)
+        mushroom2.setScale(2., 2., 2.)
+        mushroom2.setPosition(5,0,10)
+        this.interactableObjects.push(mushroom2)
+
+        this.cloud = new Cloud()
 
         const collisionManager = Experience.instance?.collisionManager
         if (!collisionManager) throw new Error("CollisionTemplateWorld initialization failed: CollisionManager is not available.");
         if (collisionManager) {
-            collisionManager.addCollisionObject([this.levelDesign])
-            // this.interactableObjects
-            collisionManager.addCollisionObject(this.interactableObjects)
-            // const model = this.resources.items.mushroom1 as GLTF
-            // collisionManager.worldOctree.fromGraphNode(mushroom1.collisionResource.scene)
-            // collisionManager.worldOctree.fromGraphNode(mushroom2.collisionResource.scene)
+            collisionManager.addCollisionObjects([this.levelDesign])
+            collisionManager.addCollisionObjects(this.interactableObjects)
         }
     }
 
@@ -51,5 +54,12 @@ export default class BlockingWorld extends World {
                 o.update()
             })
         }
+        if (this.fox) {
+            this.fox.update()
+        }
+        if (this.cloud)
+            this.cloud.update()
+        if (this.environment)
+            this.environment.update()
     }
 }

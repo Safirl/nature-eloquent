@@ -1,7 +1,7 @@
 import { Actor, Experience } from "base-experience";
-import type { GLTF } from "three/examples/jsm/Addons.js";
+import { SkeletonUtils, type GLTF } from "three/examples/jsm/Addons.js";
 import type Player from "../player/Player";
-
+import * as THREE from "three"
 export default class InteractableObject extends Actor {
     declare player: Player
     declare threshold: number
@@ -32,5 +32,27 @@ export default class InteractableObject extends Actor {
         else if (distance > this.threshold){
             this.player.clearClosestObject(this)
         }
+    }
+    setModel(makeUnique: boolean, makeMaterialsUnique: boolean): void {
+        if (makeUnique)
+            this.model = SkeletonUtils.clone(this.resource.scene);
+        else
+            this.model = this.resource.scene
+
+        this.model.traverse((child: any) =>
+        {
+            if(child instanceof THREE.Mesh)
+            {
+                child.castShadow = true
+                child.receiveShadow = true
+                const material = child.material as THREE.Material
+
+                material.side = THREE.FrontSide // important
+                material.alphaTest = 0.5
+                material.transparent = false   // 🔥 souvent la cause
+                material.depthWrite = true     // utile pour les ombres
+            }
+        })
+        this.scene.add(this.model)
     }
 }
