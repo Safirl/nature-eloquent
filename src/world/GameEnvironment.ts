@@ -5,19 +5,57 @@ import * as THREE from "three"
 export default class GameEnvironment extends Environment {
     declare shadowHelper: THREE.CameraHelper
     declare sunlightDebugFolder: GUI
+    declare camera: THREE.Camera
+    declare sunlightOffset: THREE.Vector3
+
+    constructor(lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined, useAsBackground?: boolean, backgroundEnvironmentMap?: THREE.CubeTexture) {
+        super(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap)
+        const bg = this.createBackground();
+    }
+
+    createBackground(): THREE.CanvasTexture | undefined {
+        const canvas = document.createElement( 'canvas' );
+        canvas.width = 1;
+        canvas.height = 32;
+
+        const context = canvas.getContext( '2d' );
+        if (!context) return undefined;
+        const gradient = context.createLinearGradient( 0, 0, 0, 32 );
+        // gradient.addColorStop( 0.0, '#014a84' );
+        // gradient.addColorStop( 0.5, '#0561a0' );
+        // gradient.addColorStop( 1.0, '#437ab6' );
+        gradient.addColorStop( 0.0, '#508401' );
+        gradient.addColorStop( 0.5, '#a0057e' );
+        gradient.addColorStop( 1.0, '#437ab6' );
+        context.fillStyle = gradient;
+        context.fillRect( 0, 0, 1, 32 );
+
+        const skyMap = new THREE.CanvasTexture( canvas );
+        skyMap.colorSpace = THREE.SRGBColorSpace;
+        return skyMap;
+    }
 
     setSunlight(): void {
+        const player = Experience.instance?.camera.instance
+        if (!player) return;
+        this.camera = player
+
         this.sunLight = new THREE.DirectionalLight("#ffffff", 3);
         this.sunLight.castShadow = true;
         this.sunLight.shadow.camera.far = 25;
         this.sunLight.shadow.mapSize.set(2048, 2048);
+        this.sunLight.shadow.radius = 2.5
         this.sunLight.shadow.normalBias = 0.05;
-        this.sunLight.position.set(3, 3, 2);
+        this.sunlightOffset = new THREE.Vector3(-4.5*10, .82*10, 2.295*10)
+        this.sunLight.position.set(this.getSunlightPosition().x, this.getSunlightPosition().y, this.getSunlightPosition().z);
         this.scene.add(this.sunLight);
 
         this.sunLight.shadow.camera.near = 1
-        this.sunLight.shadow.camera.far = 25
-        this.sunLight.position.set(-4.5, .82, 2.295)
+        this.sunLight.shadow.camera.far = 100
+        this.sunLight.shadow.camera.top = 65.0
+        this.sunLight.shadow.camera.right = 65.0
+        this.sunLight.shadow.camera.left = -65.0
+        this.sunLight.shadow.camera.bottom = -65.0
 
         /**
          * Add debugger
@@ -27,6 +65,7 @@ export default class GameEnvironment extends Environment {
             this.shadowHelper = new THREE.CameraHelper(this.sunLight.shadow.camera)
             this.scene.add(this.shadowHelper)
         }
+        this.sunLight.target =  this.camera
     }
 
     setDebugObject(): void {
@@ -51,35 +90,11 @@ export default class GameEnvironment extends Environment {
 
             this.sunlightDebugFolder
                 .add(this.sunLight.shadow.camera, 'top')
-                .name('sunlight shadow top')
+                .name('shadow amplitude')
                 .min(1)
-                .max(300)
-                .step(1)
-                .onChange(() => this.updateShadowMatrix())
-
-            this.sunlightDebugFolder
-                .add(this.sunLight.shadow.camera, 'left')
-                .name('sunlight shadow left')
-                .min(-300)
-                .max(-1)
-                .step(1)
-                .onChange(() => this.updateShadowMatrix())
-
-            this.sunlightDebugFolder
-                .add(this.sunLight.shadow.camera, 'right')
-                .name('sunlight shadow right')
-                .min(1)
-                .max(300)
-                .step(1)
-                .onChange(() => this.updateShadowMatrix())
-            
-            this.sunlightDebugFolder
-                .add(this.sunLight.shadow.camera, 'bottom')
-                .name('sunlight shadow bottom')
-                .min(-300)
-                .max(-1)
-                .step(1)
-                .onChange(() => this.updateShadowMatrix())
+                .max(200)
+                .step(.1)
+                .onChange((v: number) => this.updateCameraShadowAmplitude(v))
 
             this.sunlightDebugFolder
                 .add(this.sunLight.shadow, 'radius')
@@ -93,18 +108,24 @@ export default class GameEnvironment extends Environment {
     }
     
     updateShadowMatrix = () => {
-        console.log("coucou")
         this.sunLight.shadow.camera.updateProjectionMatrix()
         this.shadowHelper.update()
     }
 
-    update() {
-        let cameraPosition = new THREE.Vector3();
-        const position = Experience.instance?.camera.instance.position;
-        if (!position) return;
+    updateCameraShadowAmplitude(value: number) {
+        this.sunLight.shadow.camera.top = value
+        this.sunLight.shadow.camera.right = value
+        this.sunLight.shadow.camera.left = -value
+        this.sunLight.shadow.camera.bottom = -value
+        this.updateShadowMatrix()
+    }
 
-        cameraPosition.copy(position)
-        cameraPosition.y += 3
-        this.sunLight.shadow.camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z)
+    update() {
+        this.sunLight.position.set(this.camera.position.x + this.sunlightOffset.x, this.camera.position.y + this.sunlightOffset.y, this.camera.position.z + this.sunlightOffset.z)
+    }
+
+    getSunlightPosition() {
+        const cameraPosition = this.camera.position.add(this.sunlightOffset)
+        return cameraPosition
     }
 } 
