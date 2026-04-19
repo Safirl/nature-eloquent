@@ -8,22 +8,36 @@
 
 /* Book interface */
 
+
 #book-interface {
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: 5%;
+    /* 5% / 30% - 20% */
     transform: translate(-50%, -50%);
     width: 70vw;
     display: flex;
     flex-direction: column;
+    animation: book-interface-left-move 1s ease-in-out infinite alternate;
 }
+
+
+/* @keyframes book-interface-left-move {
+    from {
+        left: -30%;
+    }
+    to {
+        left: -31%;
+    }
+} */
+
 
 .book-panel {
     position: relative;
     display: flex;
     flex-direction: row;
     height: 65vh;
-    background-image: url('/src/books/books2/book-interface.svg');
+    background-image: url('/src/assets/books/book-interface.svg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -38,7 +52,7 @@
     padding: 40px;
 }
 .book-page-left {
-    background-image: url('/src/books/books2/left-page.svg');
+    background-image: url('/src/assets/books/left-page.svg');
     background-repeat: no-repeat;
     background-position: right center;
     background-size: cover;
@@ -58,7 +72,7 @@
 }
 
 .book-page-right {
-    background-image: url('/src/books/books2/right-page.svg');
+    background-image: url('/src/assets/books/right-page.svg');
     background-repeat: no-repeat;
     background-position: left center;
     background-size: cover;
@@ -79,7 +93,7 @@
     transform: translate(-50%, -50%);
     height: 100%;
     width: clamp(12px, 8vw, 100px);
-    background-image: url('/src/books/books2/spine.svg');
+    background-image: url('/src/assets/books/spine.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -97,7 +111,7 @@
 }
 
 .book-tab {
-    background-image: url('/src/books/books2/tab.svg');
+    background-image: url('/src/assets/books/tab.svg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -105,7 +119,7 @@
     height: 60px;
     padding: 10px;
     &:hover {
-        background-image: url('/src/books/books2/tab-hover.svg');
+        background-image: url('/src/assets/books/tab-hover.svg');
     }
     transition: 0.2s ease-in-out;
     img {
@@ -128,14 +142,16 @@
     font-family: 'ChalkyChicken';
     color: #2a393b;
     font-size: 1.25rem;
+    cursor: default;
+    user-select: none;
 }
 .book-page-numbering-left {
-    bottom: 20px;
-    left: 43%;
+    top: 20px;
+    left: 5%;
 }
 .book-page-numbering-right {
-    bottom: 20px;
-    right: 43%;
+    top: 20px;
+    right: 5%;
 }
 /* 
 #book-interface {
