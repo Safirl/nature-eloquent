@@ -91,6 +91,9 @@
     right: -40px;
     top: 60px;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .book-tab {
@@ -101,23 +104,38 @@
     width: 60px;
     height: 60px;
     padding: 10px;
-    cursor: pointer;
+    &:hover {
+        background-image: url('/src/books/books2/tab-hover.svg');
+    }
     transition: 0.2s ease-in-out;
     img {
-        width: 60%;
+        cursor: pointer;
+        width: 100%;
         object-fit: contain;
         position: relative;
         top: 50%;
         left: 50%;
         transform: translateY(-50%) translateX(-50%);
         transition: 0.2s ease-in-out;
-        &:hover {
-            rotate: calc(10deg);
-            img {
-                background-image: url('/src/books/books2/tab-hover.svg');
-            }
-        }
+    &:hover{
+        rotate: calc(3deg);
     }
+    }
+}
+
+.book-page-numbering {
+    position: absolute;
+    font-family: 'ChalkyChicken';
+    color: #2a393b;
+    font-size: 1.25rem;
+}
+.book-page-numbering-left {
+    bottom: 20px;
+    left: 43%;
+}
+.book-page-numbering-right {
+    bottom: 20px;
+    right: 43%;
 }
 /* 
 #book-interface {
