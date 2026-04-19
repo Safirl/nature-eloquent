@@ -1,6 +1,67 @@
-
 /* Book interface */
 
+#book-interface {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-panel {
+    position: relative;
+    /* border-radius: 40px; */
+    display: flex;
+    flex-direction: row;
+    height: 70vh;
+    background-image: url('/src/books/books2/book-interface.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 20px 20px;
+}
+
+.book-page {
+    width: fit-content;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: center; */
+}
+.book-page-left {
+    background-image: url('/src/books/books2/left-page.svg');
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: cover;
+}
+
+.book-page-right {
+    background-image: url('/src/books/books2/right-page.svg');
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: cover;
+}
+.book-spine {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    height: 100%;
+    width: clamp(12px, 8vw, 100px);
+
+    background-image: url('/src/books/books2/spine.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+
+    z-index: 10;
+}
+/* 
 #book-interface {
     position: fixed;
     top: 0;
@@ -120,4 +181,4 @@
     left: 60px;
     width: 30%;
 }
-
+ */
