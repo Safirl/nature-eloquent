@@ -22,7 +22,7 @@
     position: relative;
     display: flex;
     flex-direction: row;
-    height: 70vh;
+    height: 65vh;
     background-image: url('/src/books/books2/book-interface.svg');
     background-size: cover;
     background-repeat: no-repeat;
@@ -52,6 +52,7 @@
     .sticker:hover {
         filter: drop-shadow(0px 10px 3px #847a63a6);
         transform: translateY(-5px);
+        rotate: calc(-10deg);
         cursor: pointer;
     }
 }
@@ -68,6 +69,7 @@
         font-size: 1.875rem;
         text-align: center;
         width: 100%;
+        height: fit-content;
     }
 }
 .book-spine {
@@ -82,6 +84,40 @@
     background-position: center;
     background-size: contain;
     z-index: 10;
+}
+
+.book-tabs {
+    position: absolute;
+    right: -40px;
+    top: 60px;
+    z-index: 10;
+}
+
+.book-tab {
+    background-image: url('/src/books/books2/tab.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 60px;
+    height: 60px;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    img {
+        width: 60%;
+        object-fit: contain;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translateY(-50%) translateX(-50%);
+        transition: 0.2s ease-in-out;
+        &:hover {
+            rotate: calc(10deg);
+            img {
+                background-image: url('/src/books/books2/tab-hover.svg');
+            }
+        }
+    }
 }
 /* 
 #book-interface {
