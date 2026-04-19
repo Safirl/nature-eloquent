@@ -1,3 +1,11 @@
+/* Fonts */
+@font-face {
+    font-family: 'ChalkyChicken';
+    src: url('/assets/fonts/ChalkyChicken.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* Book interface */
 
 #book-interface {
@@ -53,6 +61,14 @@
     background-repeat: no-repeat;
     background-position: left center;
     background-size: cover;
+
+    .interactable-object-title {
+        font-family: 'ChalkyChicken';
+        color: #6d93af;
+        font-size: 1.875rem;
+        text-align: center;
+        width: 100%;
+    }
 }
 .book-spine {
     position: absolute;
