@@ -37,8 +37,6 @@ export default class BlockingWorld extends World {
         mushroom2.setPosition(5,0,10)
         this.interactableObjects.push(mushroom2)
 
-        this.cloud = new Cloud()
-
         const collisionManager = Experience.instance?.collisionManager
         if (!collisionManager) throw new Error("CollisionTemplateWorld initialization failed: CollisionManager is not available.");
         if (collisionManager) {
