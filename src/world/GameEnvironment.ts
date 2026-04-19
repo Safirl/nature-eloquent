@@ -8,6 +8,33 @@ export default class GameEnvironment extends Environment {
     declare camera: THREE.Camera
     declare sunlightOffset: THREE.Vector3
 
+    constructor(lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined, useAsBackground?: boolean, backgroundEnvironmentMap?: THREE.CubeTexture) {
+        super(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap)
+        const bg = this.createBackground();
+    }
+
+    createBackground(): THREE.CanvasTexture | undefined {
+        const canvas = document.createElement( 'canvas' );
+        canvas.width = 1;
+        canvas.height = 32;
+
+        const context = canvas.getContext( '2d' );
+        if (!context) return undefined;
+        const gradient = context.createLinearGradient( 0, 0, 0, 32 );
+        // gradient.addColorStop( 0.0, '#014a84' );
+        // gradient.addColorStop( 0.5, '#0561a0' );
+        // gradient.addColorStop( 1.0, '#437ab6' );
+        gradient.addColorStop( 0.0, '#508401' );
+        gradient.addColorStop( 0.5, '#a0057e' );
+        gradient.addColorStop( 1.0, '#437ab6' );
+        context.fillStyle = gradient;
+        context.fillRect( 0, 0, 1, 32 );
+
+        const skyMap = new THREE.CanvasTexture( canvas );
+        skyMap.colorSpace = THREE.SRGBColorSpace;
+        return skyMap;
+    }
+
     setSunlight(): void {
         const player = Experience.instance?.camera.instance
         if (!player) return;
