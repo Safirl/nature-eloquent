@@ -1,16 +1,24 @@
 import { Environment, Experience } from "base-experience";
 import type GUI from "lil-gui";
 import * as THREE from "three"
+import Sky from "./Sky";
 
 export default class GameEnvironment extends Environment {
     declare shadowHelper: THREE.CameraHelper
     declare sunlightDebugFolder: GUI
     declare camera: THREE.Camera
     declare sunlightOffset: THREE.Vector3
+    declare sky: Sky
 
     constructor(lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined, useAsBackground?: boolean, backgroundEnvironmentMap?: THREE.CubeTexture) {
         super(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap)
-        const bg = this.createBackground();
+        this.sky = new Sky(0, this.debugFolder)
+        // const bg = this.createBackground();
+        // const sky = new THREE.Mesh(
+        //     new THREE.SphereGeometry( 800 ),
+        //     new THREE.MeshBasicMaterial( { map: bg, side: THREE.BackSide } )
+        // );
+        // this.scene.add( sky );
     }
 
     createBackground(): THREE.CanvasTexture | undefined {

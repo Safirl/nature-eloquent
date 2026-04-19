@@ -11,11 +11,13 @@
   "devDependencies": {
     "@types/three": "^0.183.1",
     "typescript": "~6.0.2",
-    "vite": "^8.0.4"
+    "vite": "^8.0.4",
+    "vite-plugin-glsl": "^1.6.0"
   },
   "dependencies": {
     "base-experience": "github:Safirl/three-base-experience",
     "first-person-plugin": "github:Safirl/three-first-person",
+    "gsap": "^3.15.0",
     "lil-gui": "^0.21.0",
     "three": "^0.183.2"
   }
