@@ -8,7 +8,6 @@
 
 /* Book interface */
 
-
 #book-interface {
     position: fixed;
     top: 50%;
@@ -21,7 +20,6 @@
     animation: book-interface-left-move 1s ease-in-out infinite alternate;
 }
 
-
 /* @keyframes book-interface-left-move {
     from {
         left: -30%;
@@ -30,7 +28,6 @@
         left: -31%;
     }
 } */
-
 
 .book-panel {
     position: relative;
@@ -131,9 +128,9 @@
         left: 50%;
         transform: translateY(-50%) translateX(-50%);
         transition: 0.2s ease-in-out;
-    &:hover{
-        rotate: calc(3deg);
-    }
+        &:hover {
+            rotate: calc(3deg);
+        }
     }
 }
 
@@ -153,6 +150,46 @@
     top: 20px;
     right: 5%;
 }
+
+.scale {
+    position: absolute;
+    top: 68%;
+    right: 5%;
+    transform: translateY(-50%);
+
+    p {
+        font-family: 'ChalkyChicken';
+        color: #533d2d;
+    }
+
+    .scale-img {
+        display: flex;
+        gap: 8px;
+        align-items: stretch;
+
+        .apples {
+            display: flex;
+            flex-direction: column;
+
+            img {
+                width: 60px;
+                height: 60px;
+                object-fit: contain;
+            }
+        }
+    }
+
+    .meter {
+        height: 100%;
+        display: flex;
+        img {
+            height: 80%;
+            width: auto;
+            object-fit: cover;
+        }
+    }
+}
+
 /* 
 #book-interface {
     position: fixed;
