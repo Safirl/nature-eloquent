@@ -1,10 +1,10 @@
-import { Debug, Experience, type LifeTimeObject } from "base-experience";
+import { Debug, Experience, type LifeTimeObject } from "@plugins/baseExperience";
 import type GUI from "lil-gui";
 import * as THREE from "three";
 //@ts-ignore
-import skyFragment from "../shaders/skybox/fragment.glsl"
+import skyFragment from "@shaders/skybox/fragment.glsl"
 //@ts-ignore
-import skyVertex from "../shaders/skybox/vertex.glsl"
+import skyVertex from "@shaders/skybox/vertex.glsl"
 import gsap from "gsap";
 
 interface Gradient {

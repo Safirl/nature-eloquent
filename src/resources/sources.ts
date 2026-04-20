@@ -1,4 +1,4 @@
-import type { Source } from "base-experience";
+import type { Source } from "@plugins/baseExperience";
 
 const sources: Source[] = [
   {

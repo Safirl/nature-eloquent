@@ -107,11 +107,6 @@ export const keyboardProfile = {
             event: "backward"
         },
         {
-            physicalInput: "E",
-            index: "KeyE",
-            event: "interact"
-        },
-        {
             physicalInput: "LeftArrow",
             index: "ArrowLeft",
             event: "left"

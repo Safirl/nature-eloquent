@@ -1,6 +1,6 @@
-import { Actor, Experience } from "base-experience";
+import { Actor, Experience } from "@plugins/baseExperience";
 import { SkeletonUtils, type GLTF } from "three/examples/jsm/Addons.js";
-import type Player from "../player/Player";
+import Player from "../player/Player";
 import * as THREE from "three"
 export default class InteractableObject extends Actor {
     declare player: Player
@@ -30,7 +30,8 @@ export default class InteractableObject extends Actor {
             this.player.setClosestObject(this)
         }
         else if (distance > this.threshold){
-            this.player.clearClosestObject(this)
+            if (this.player instanceof Player)
+                this.player.clearClosestObject(this)
         }
     }
     setModel(makeUnique: boolean, makeMaterialsUnique: boolean): void {
