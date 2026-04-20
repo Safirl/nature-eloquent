@@ -1,4 +1,4 @@
-import { Actor, Environment, Experience, Floor, World } from "base-experience";
+import { Actor, Environment, Experience, Floor, World } from "@plugins/baseExperience";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import InteractableObject from "../interactable/InteractableObject";
 import OutlinerManager from "./OutlinerManager";

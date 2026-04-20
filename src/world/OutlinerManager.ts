@@ -1,4 +1,4 @@
-import { Debug, Experience, Renderer, Sizes, type LifeTimeObject } from "base-experience";
+import { Debug, Experience, Renderer, Sizes, type LifeTimeObject } from "@plugins/baseExperience";
 import type GUI from "lil-gui";
 import type { Object3D } from "three";
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';

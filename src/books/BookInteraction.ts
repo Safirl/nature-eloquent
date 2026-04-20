@@ -1,4 +1,4 @@
-import { EventEmitter, Experience, type InputEventArgs } from "base-experience";
+import { EventEmitter, Experience, type InputEventArgs } from "@plugins/baseExperience";
 import type InteractableObject from "../interactable/InteractableObject";
 import BookDrawing from "./BookDrawing";
 

@@ -1,6 +1,6 @@
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import * as THREE from "three"
-import { Debug, Experience, type LifeTimeObject } from 'base-experience';
+import { Debug, Experience, type LifeTimeObject } from "@plugins/baseExperience";
 import type GUI from 'lil-gui';
 
 export default class Cloud implements LifeTimeObject {

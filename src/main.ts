@@ -1,9 +1,9 @@
 import "./reset.css";
 import "./style.css";
-import { FirstPersonCameraOctree } from "first-person-plugin";
-import { Experience } from "base-experience";
+import {FirstPersonCameraOctree} from "@plugins/firstPersonCamera";
+import {Experience} from "@plugins/baseExperience";
 import sources from "./resources/sources";
-import { type InputProfile } from "base-experience";
+import { type InputProfile } from "@plugins/baseExperience";
 import { keyboardProfile } from "./resources/inputProfiles";
 import BlockingWorld from "./world/Blocking";
 import Player from "./player/Player";
@@ -20,7 +20,7 @@ const init = () => {
 
   canvas.style.width = "100%";
   canvas.style.height = "100%";
-  const camera = new Player(2);
+  const camera = new FirstPersonCameraOctree(1.27);
   const world = new BlockingWorld();
   const experience = new Experience(canvas, sources, camera, world);
   const profiles: InputProfile[] = [keyboardProfile];

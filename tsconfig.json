@@ -17,7 +17,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@plugins/*": ["./src/plugins/*"],
+      "@shaders/*": ["./src/shaders/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src"],
 }

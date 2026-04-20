@@ -1,4 +1,4 @@
-import { Environment, Experience } from "base-experience";
+import { Environment, Experience } from "@plugins/baseExperience";
 import type GUI from "lil-gui";
 import * as THREE from "three"
 import Sky from "./Sky";
@@ -17,7 +17,7 @@ export default class GameEnvironment extends Environment {
     constructor(lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined, useAsBackground?: boolean, backgroundEnvironmentMap?: THREE.CubeTexture) {
         super(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap)
         this.sky = new Sky(0, this.debugFolder)
-        // this.setFog();
+        this.setFog();
         // this.cloud = new Cloud()
         // const bg = this.createBackground();
         // const sky = new THREE.Mesh(

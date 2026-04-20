@@ -1,4 +1,4 @@
-import { Actor } from "base-experience";
+import { Actor } from "@plugins/baseExperience";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 
 export default class PlaceableObject extends Actor {
@@ -14,7 +14,7 @@ export default class PlaceableObject extends Actor {
         return this.name;
     }
 
-    destroy() {
+    destroy = () => {
 
     }
 }
