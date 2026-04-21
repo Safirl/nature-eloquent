@@ -3,15 +3,18 @@ import type GUI from "lil-gui";
 import * as THREE from "three"
 import Sky from "./Sky";
 import Cloud from "./Cloud";
+import { UnrealBloomPass } from "three/examples/jsm/Addons.js";
 
 export default class GameEnvironment extends Environment {
     declare shadowHelper: THREE.CameraHelper
-    declare sunlightDebugFolder: GUI
+    protected declare sunlightDebugFolder: GUI
+    protected declare bloomDebugFolder: GUI
     declare fogDebugFolder: GUI
     declare camera: THREE.Camera
     declare sunlightOffset: THREE.Vector3
     declare sky: Sky
     declare fog: THREE.Fog
+    declare bloomPass: UnrealBloomPass
     declare cloud: Cloud;
     private declare sunMesh: THREE.Mesh;
 
@@ -19,6 +22,7 @@ export default class GameEnvironment extends Environment {
         super(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap)
         this.sky = new Sky(0, this.debugFolder)
         this.setFog();
+        this.setBloom()
         // this.cloud = new Cloud()
         // const bg = this.createBackground();
         // const sky = new THREE.Mesh(
@@ -60,7 +64,7 @@ export default class GameEnvironment extends Environment {
         this.sunLight = new THREE.DirectionalLight("#ffffff", 3);
         this.sunLight.castShadow = true;
         this.sunLight.shadow.camera.far = 25;
-        this.sunLight.shadow.mapSize.set(2048*2, 2048*2);
+        this.sunLight.shadow.mapSize.set(2048 * 2, 2048 * 2);
         this.sunLight.shadow.radius = 2.5
         this.sunLight.shadow.normalBias = 0.05;
         this.sunlightOffset = new THREE.Vector3(-45, 8.2, 22.95)
@@ -89,8 +93,7 @@ export default class GameEnvironment extends Environment {
 
     setDebugObject(): void {
         super.setDebugObject()
-        if(this.debug.active)
-        {
+        if (this.debug.active) {
             this.sunlightDebugFolder
                 .add(this.sunLight.shadow.camera, 'near')
                 .name('sunlight shadow near')
@@ -125,7 +128,7 @@ export default class GameEnvironment extends Environment {
         }
 
     }
-    
+
     updateShadowMatrix = () => {
         this.sunLight.shadow.camera.updateProjectionMatrix()
         this.shadowHelper.update()
@@ -140,10 +143,46 @@ export default class GameEnvironment extends Environment {
     }
 
     setSunPlane() {
-        this.sunMesh = new THREE.Mesh(new THREE.CircleGeometry(5, 64), new THREE.MeshBasicMaterial())
-        const sunLightWorldDirection
-        this.sunMesh.rotation.set(this.sunLight.getWorldDirection()) this.sunLight.rotation.y, this.sunLight.rotation.z)
-        this.scene.add(this.sunMesh)
+        this.sunMesh = new THREE.Mesh(new THREE.CircleGeometry(), new THREE.MeshStandardMaterial({ emissive: "#fff", emissiveIntensity: 10 }))
+        this.sunMesh.position.set(this.sunLight.position.x, this.sunLight.position.y, this.sunLight.position.z)
+        this.sunMesh.lookAt(new THREE.Vector3())
+        // const sunLightWorldDirection
+        // this.sunMesh.rotation.set(this.sunLight.getWorldDirection()) this.sunLight.rotation.y, this.sunLight.rotation.z)
+        this.sunLight.attach(this.sunMesh)
+    }
+
+    setBloom() {
+        const resolution = Experience.instance?.sizes
+        this.bloomPass = new UnrealBloomPass(new THREE.Vector2(resolution?.width, resolution?.height), .4, 0.4, 0.85);
+        Experience.instance?.renderer.addComposerPass(this.bloomPass, false);
+
+        /**
+         * Add debugger
+         */
+        if (this.debugFolder) {
+            this.bloomDebugFolder = this.debugFolder.addFolder("🌄 Bloom")
+            this.bloomDebugFolder
+                .add(this.bloomPass, "enabled")
+                .name('Enabled')
+            this.bloomDebugFolder
+                .add(this.bloomPass, "strength")
+                .name('Strength')
+                .min(.1)
+                .max(5)
+                .step(.1)
+            this.bloomDebugFolder
+                .add(this.bloomPass, "radius")
+                .name('Radius')
+                .min(.1)
+                .max(5)
+                .step(.1)
+            this.bloomDebugFolder
+                .add(this.bloomPass, "threshold")
+                .name('Threshold')
+                .min(.1)
+                .max(1)
+                .step(.001)
+        }
     }
 
     // update() {

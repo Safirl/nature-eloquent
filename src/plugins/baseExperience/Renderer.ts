@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import Experience from "./experience/Experience";
-import type { EffectComposer } from "three/examples/jsm/Addons.js";
+import { EffectComposer, RenderPass, ShaderPass, type Pass } from "three/examples/jsm/Addons.js";
+import { GammaCorrectionShader } from "three/examples/jsm/Addons.js";
 
 export default class Renderer {
   declare experience: Experience;
@@ -9,7 +10,8 @@ export default class Renderer {
   declare scene: Experience["scene"];
   declare camera: Experience["camera"];
   declare instance: THREE.WebGLRenderer;
-  declare composer: EffectComposer | null
+  protected declare composer: EffectComposer | null
+  protected declare gammaPass: ShaderPass
 
   constructor() {
     if (!Experience.instance) throw new Error("Renderer initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating the Renderer.");
@@ -47,14 +49,44 @@ export default class Renderer {
     }
   }
 
-  setComposer(composer: EffectComposer | null) {
-    this.composer = composer
+  addComposerPass(pass: Pass, afterGammaCorrectionPass?: boolean, index?: number) {
+    if (!this.composer) {
+      this.initializeComposer();
+    }
+    if (typeof index === "number") {
+      this.composer?.insertPass(pass, index)
+    }
+    else if (!afterGammaCorrectionPass) {
+      this.composer?.insertPass(pass, this.composer.passes.length - 1)
+    }
+    else {
+      this.composer?.addPass(pass)
+    }
+  }
+
+  initializeComposer() {
+    const renderTarget = new THREE.WebGLRenderTarget(
+      800,
+      600,
+      {
+        samples: this.experience.sizes.pixelRatio < 2 ? 2 : 0
+      }
+    );
+    this.composer = new EffectComposer(this.instance, renderTarget);
+    this.composer.setPixelRatio(this.experience.sizes.pixelRatio)
+    this.composer.setSize(this.experience.sizes.width, this.experience.sizes.height)
+
+    const renderPass = new RenderPass(this.scene, this.camera.instance);
+    this.composer.addPass(renderPass);
+
+    this.gammaPass = new ShaderPass(GammaCorrectionShader)
+    this.composer.addPass(this.gammaPass)
   }
 
   update() {
     if (this.composer) {
       this.composer.render()
-    } 
+    }
     else {
       this.instance.render(this.scene, this.camera.instance);
     }

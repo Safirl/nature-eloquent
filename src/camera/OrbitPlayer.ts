@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
-import {Camera} from "@plugins/baseExperience";
+import { Camera } from "@plugins/baseExperience";
 
-export default class OrbitPlayer extends Camera{
+export default class OrbitPlayer extends Camera {
   declare controls: OrbitControls;
 
   setInstance() {
@@ -33,19 +33,19 @@ export default class OrbitPlayer extends Camera{
 
   setDebugObject() {
     super.setDebugObject();
-    if(!this.debug.active) return;
+    if (!this.debug.active) return;
     this.debugFolder
-        .add(this.controls, 'maxDistance')
-        .name('max distance')
-        .min(5)
-        .max(30)
-        .step(.1)
+      .add(this.controls, 'maxDistance')
+      .name('max distance')
+      .min(5)
+      .max(30)
+      .step(.1)
 
     this.debugFolder
-        .add(this.controls, 'minDistance')
-        .name('min distance')
-        .min(.1)
-        .max(5)
-        .step(.1)
+      .add(this.controls, 'minDistance')
+      .name('min distance')
+      .min(.1)
+      .max(5)
+      .step(.1)
   }
 }
