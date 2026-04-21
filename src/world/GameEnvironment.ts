@@ -13,6 +13,7 @@ export default class GameEnvironment extends Environment {
     declare sky: Sky
     declare fog: THREE.Fog
     declare cloud: Cloud;
+    private declare sunMesh: THREE.Mesh;
 
     constructor(lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined, useAsBackground?: boolean, backgroundEnvironmentMap?: THREE.CubeTexture) {
         super(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap)
@@ -51,28 +52,6 @@ export default class GameEnvironment extends Environment {
         }
     }
 
-    createBackground(): THREE.CanvasTexture | undefined {
-        const canvas = document.createElement( 'canvas' );
-        canvas.width = 1;
-        canvas.height = 32;
-
-        const context = canvas.getContext( '2d' );
-        if (!context) return undefined;
-        const gradient = context.createLinearGradient( 0, 0, 0, 32 );
-        // gradient.addColorStop( 0.0, '#014a84' );
-        // gradient.addColorStop( 0.5, '#0561a0' );
-        // gradient.addColorStop( 1.0, '#437ab6' );
-        gradient.addColorStop( 0.0, '#508401' );
-        gradient.addColorStop( 0.5, '#a0057e' );
-        gradient.addColorStop( 1.0, '#437ab6' );
-        context.fillStyle = gradient;
-        context.fillRect( 0, 0, 1, 32 );
-
-        const skyMap = new THREE.CanvasTexture( canvas );
-        skyMap.colorSpace = THREE.SRGBColorSpace;
-        return skyMap;
-    }
-
     setSunlight(): void {
         const player = Experience.instance?.camera.instance
         if (!player) return;
@@ -84,8 +63,8 @@ export default class GameEnvironment extends Environment {
         this.sunLight.shadow.mapSize.set(2048*2, 2048*2);
         this.sunLight.shadow.radius = 2.5
         this.sunLight.shadow.normalBias = 0.05;
-        this.sunlightOffset = new THREE.Vector3(-4.5*10, .82*10, 2.295*10)
-        this.sunLight.position.set(this.getSunlightPosition().x, this.getSunlightPosition().y, this.getSunlightPosition().z);
+        this.sunlightOffset = new THREE.Vector3(-45, 8.2, 22.95)
+        this.sunLight.position.set(this.sunlightOffset.x, this.sunlightOffset.y, this.sunlightOffset.z);
         this.scene.add(this.sunLight);
 
         this.sunLight.shadow.camera.near = 1
@@ -95,6 +74,8 @@ export default class GameEnvironment extends Environment {
         this.sunLight.shadow.camera.left = -45
         this.sunLight.shadow.camera.bottom = -45
 
+        this.setSunPlane();
+
         /**
          * Add debugger
          */
@@ -103,7 +84,7 @@ export default class GameEnvironment extends Environment {
             this.shadowHelper = new THREE.CameraHelper(this.sunLight.shadow.camera)
             this.scene.add(this.shadowHelper)
         }
-        this.sunLight.target =  this.camera
+        // this.sunLight.target =  this.camera
     }
 
     setDebugObject(): void {
@@ -158,12 +139,19 @@ export default class GameEnvironment extends Environment {
         this.updateShadowMatrix()
     }
 
-    update() {
-        this.sunLight.position.set(this.camera.position.x + this.sunlightOffset.x, this.camera.position.y + this.sunlightOffset.y, this.camera.position.z + this.sunlightOffset.z)
+    setSunPlane() {
+        this.sunMesh = new THREE.Mesh(new THREE.CircleGeometry(5, 64), new THREE.MeshBasicMaterial())
+        const sunLightWorldDirection
+        this.sunMesh.rotation.set(this.sunLight.getWorldDirection()) this.sunLight.rotation.y, this.sunLight.rotation.z)
+        this.scene.add(this.sunMesh)
     }
 
-    getSunlightPosition() {
-        const cameraPosition = this.camera.position.add(this.sunlightOffset)
-        return cameraPosition
-    }
+    // update() {
+    //     this.sunLight.position.set(this.camera.position.x + this.sunlightOffset.x, this.camera.position.y + this.sunlightOffset.y, this.camera.position.z + this.sunlightOffset.z)
+    // }
+
+    // getSunlightPosition() {
+    //     const cameraPosition = this.camera.position.add(this.sunlightOffset)
+    //     return cameraPosition
+    // }
 } 
