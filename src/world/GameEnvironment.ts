@@ -28,7 +28,7 @@ export default class GameEnvironment extends Environment {
     }
 
     setFog() {
-        this.fog = new THREE.Fog("#C8ECC8", 0, 300);
+        this.fog = new THREE.Fog("#ecdfc8", 0, 120);
         this.scene.fog = this.fog;
         /**
          * Add debugger
