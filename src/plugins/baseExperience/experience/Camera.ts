@@ -31,9 +31,9 @@ export default class Camera extends EventEmitter implements LifeTimeObject {
     this.debug = this.experience.debug
 
     if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder('camera')
+      this.debugFolder = this.debug.ui.addFolder('🎥 camera')
     }
-  
+
     this.setInstance();
     this.setControls();
     this.setDebugObject();
@@ -54,20 +54,19 @@ export default class Camera extends EventEmitter implements LifeTimeObject {
    * Override to add controls to the camera
    * @TODO The Camera should be attached to an actor and not directly passed to the experience ?
    */
-  setControls() {}
+  setControls() { }
 
   resize() {
     this.instance.aspect = this.sizes.width / this.sizes.height;
     this.instance.updateProjectionMatrix();
   }
 
-  update() {}
+  update() { }
 
-  destroy() {}
+  destroy() { }
 
   setDebugObject() {
-    if(this.debug.active)
-    {
+    if (this.debug.active) {
       this.debugFolder
         .add(this.instance, 'fov')
         .name('fov')

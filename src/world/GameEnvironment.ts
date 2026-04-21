@@ -6,8 +6,6 @@ import Cloud from "./Cloud";
 import { UnrealBloomPass } from "three/examples/jsm/Addons.js";
 
 export default class GameEnvironment extends Environment {
-    declare shadowHelper: THREE.CameraHelper
-    protected declare sunlightDebugFolder: GUI
     protected declare bloomDebugFolder: GUI
     declare fogDebugFolder: GUI
     declare camera: THREE.Camera
@@ -39,7 +37,7 @@ export default class GameEnvironment extends Environment {
          * Add debugger
          */
         if (this.debugFolder) {
-            this.fogDebugFolder = this.debugFolder.addFolder("fog")
+            this.fogDebugFolder = this.debugFolder.addFolder("🌫️ fog")
             this.fogDebugFolder
                 .add(this.fog, "near")
                 .name('fog near')
@@ -83,11 +81,6 @@ export default class GameEnvironment extends Environment {
         /**
          * Add debugger
          */
-        if (this.debugFolder) {
-            this.sunlightDebugFolder = this.debugFolder.addFolder("sunlight")
-            this.shadowHelper = new THREE.CameraHelper(this.sunLight.shadow.camera)
-            this.scene.add(this.shadowHelper)
-        }
         // this.sunLight.target =  this.camera
     }
 
@@ -131,7 +124,6 @@ export default class GameEnvironment extends Environment {
 
     updateShadowMatrix = () => {
         this.sunLight.shadow.camera.updateProjectionMatrix()
-        this.shadowHelper.update()
     }
 
     updateCameraShadowAmplitude(value: number) {
@@ -143,7 +135,7 @@ export default class GameEnvironment extends Environment {
     }
 
     setSunPlane() {
-        this.sunMesh = new THREE.Mesh(new THREE.CircleGeometry(), new THREE.MeshStandardMaterial({ emissive: "#fff", emissiveIntensity: 10 }))
+        this.sunMesh = new THREE.Mesh(new THREE.CircleGeometry(), new THREE.MeshBasicMaterial())
         this.sunMesh.position.set(this.sunLight.position.x, this.sunLight.position.y, this.sunLight.position.z)
         this.sunMesh.lookAt(new THREE.Vector3())
         // const sunLightWorldDirection

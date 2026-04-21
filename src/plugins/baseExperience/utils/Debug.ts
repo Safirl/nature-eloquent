@@ -1,5 +1,4 @@
 import GUI from 'lil-gui'
-
 export default class Debug {
     declare active: boolean
     declare ui: GUI

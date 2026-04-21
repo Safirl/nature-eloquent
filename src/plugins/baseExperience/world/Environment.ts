@@ -5,6 +5,7 @@ import type GUI from "lil-gui";
 import EnvironmentMap from "./EnvironmentMap";
 
 export default class Environment {
+  declare shadowHelper: THREE.CameraHelper
   declare experience: Experience;
   declare scene: Experience["scene"];
   declare sunLight: THREE.DirectionalLight;
@@ -12,6 +13,7 @@ export default class Environment {
   declare environmentMap: EnvironmentMap;
   declare debug: Debug
   declare debugFolder: GUI
+  protected declare sunlightDebugFolder: GUI
 
   constructor(lightingEnvironmentMap?: THREE.CubeTexture, useAsBackground: boolean = false, backgroundEnvironmentMap?: THREE.CubeTexture) {
     if (!Experience.instance) throw new Error("Environment initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating the Environment.");
@@ -27,10 +29,14 @@ export default class Environment {
     }
 
     this.setSunlight();
-    if (lightingEnvironmentMap) 
+    if (lightingEnvironmentMap)
       this.setEnvironmentMap(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap);
 
     this.setDebugObject();
+  }
+
+  update() {
+    this.shadowHelper.update()
   }
 
   setSunlight() {
@@ -52,10 +58,9 @@ export default class Environment {
 
     this.environmentMap.updateMaterials();
   }
-  
+
   setDebugObject() {
-    if(this.debug.active)
-    {
+    if (this.debug.active) {
       this.debugFolder
         .add(this.environmentMap, 'intensity')
         .name('envMapIntensity')
@@ -64,28 +69,32 @@ export default class Environment {
         .step(0.001)
         .onChange(this.environmentMap.updateMaterials)
 
-      this.debugFolder
+      this.sunlightDebugFolder = this.debugFolder.addFolder("☀️ sunlight")
+      this.shadowHelper = new THREE.CameraHelper(this.sunLight.shadow.camera)
+      this.scene.add(this.shadowHelper)
+
+      this.sunlightDebugFolder
         .add(this.sunLight, 'intensity')
         .name('sunLightIntensity')
         .min(0)
         .max(10)
         .step(0.001)
-      
-      this.debugFolder
+
+      this.sunlightDebugFolder
         .add(this.sunLight.position, 'x')
         .name('sunLightX')
         .min(- 5)
         .max(5)
         .step(0.001)
-      
-      this.debugFolder
+
+      this.sunlightDebugFolder
         .add(this.sunLight.position, 'y')
         .name('sunLightY')
         .min(- 5)
         .max(5)
         .step(0.001)
-      
-      this.debugFolder
+
+      this.sunlightDebugFolder
         .add(this.sunLight.position, 'z')
         .name('sunLightZ')
         .min(- 5)
