@@ -18,7 +18,7 @@ export default class GameEnvironment extends Environment {
 
     constructor(lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined, useAsBackground?: boolean, backgroundEnvironmentMap?: THREE.CubeTexture) {
         super(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap)
-        this.sky = new Sky(0, this.debugFolder)
+        // this.sky = new Sky(0, this.debugFolder)
         this.setFog();
         this.setBloom()
         // this.cloud = new Cloud()

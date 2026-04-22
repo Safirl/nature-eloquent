@@ -5,6 +5,11 @@ import { Camera } from "@plugins/baseExperience";
 export default class OrbitPlayer extends Camera {
   declare controls: OrbitControls;
 
+  init(): void {
+    super.init()
+    this.instance.layers.enable(2)
+  }
+
   setInstance() {
     this.instance = new THREE.PerspectiveCamera(
       35,

@@ -11,8 +11,7 @@ import type { LifeTimeObject } from "../types/types";
 /**
  * Base class for animated 3D objects. Auto creates a debug folder to play animations.
  */
-export default class Actor implements LifeTimeObject
-{
+export default class Actor implements LifeTimeObject {
     declare experience: Experience
     declare scene: THREE.Scene
     declare resources: Resources
@@ -27,9 +26,8 @@ export default class Actor implements LifeTimeObject
     declare name: string
     private id: string = crypto.randomUUID()
 
-    constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false, collisionResource?: GLTF) 
-    {
-        if (!Experience.instance) throw new Error("Actor initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating Actor.");        
+    constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false, collisionResource?: GLTF) {
+        if (!Experience.instance) throw new Error("Actor initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating Actor.");
 
         this.experience = Experience.instance
         this.debug = this.experience.debug
@@ -43,7 +41,7 @@ export default class Actor implements LifeTimeObject
         this.time = this.experience.time
         // Setup
         this.resource = resource
-        
+
         this.setModel(makeUnique, makeMaterialsUnique)
         if (collisionResource) {
             this.collisionResource = collisionResource
@@ -57,7 +55,7 @@ export default class Actor implements LifeTimeObject
         return this.id
     }
 
-    init = () => {};
+    init = () => { };
     destroy = () => {
         this.model.traverse((child) => {
             if (child instanceof THREE.Mesh) {
@@ -77,27 +75,24 @@ export default class Actor implements LifeTimeObject
             this.model = SkeletonUtils.clone(this.resource.scene);
         else
             this.model = this.resource.scene
-
+        this.model.name = this.name;
         this.scene.add(this.model)
 
-        this.model.traverse((child: any) =>
-        {
-            if(child instanceof THREE.Mesh)
-            {
+        this.model.traverse((child: any) => {
+            if (child instanceof THREE.Mesh) {
                 child.castShadow = true
                 child.receiveShadow = true
             }
-            if (makeMaterialsUnique && child instanceof THREE.Material)
-            {
+            if (makeMaterialsUnique && child instanceof THREE.Material) {
                 child = child.clone()
             }
         })
     }
 
     setRotation(x: number, y: number, z: number) {
-        this.model.rotation.set(x,y,z)
+        this.model.rotation.set(x, y, z)
         if (this.colliderModel) {
-            this.colliderModel.rotation.set(x,y,z)
+            this.colliderModel.rotation.set(x, y, z)
 
             if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
             this.experience.collisionManager?.rebuildCollisions()
@@ -105,19 +100,19 @@ export default class Actor implements LifeTimeObject
     }
 
     setPosition(x: number, y: number, z: number) {
-        this.model.position.set(x,y,z)
+        this.model.position.set(x, y, z)
         if (this.colliderModel) {
-            this.colliderModel.position.set(x,y,z)
-            
+            this.colliderModel.position.set(x, y, z)
+
             if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
             this.experience.collisionManager?.rebuildCollisions()
         }
     }
 
     setScale(x: number, y: number, z: number) {
-        this.model.scale.set(x,y,z)
+        this.model.scale.set(x, y, z)
         if (this.colliderModel) {
-            this.colliderModel.scale.set(x,y,z)
+            this.colliderModel.scale.set(x, y, z)
 
             if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
 
@@ -137,7 +132,7 @@ export default class Actor implements LifeTimeObject
         this.animation.mixer = new THREE.AnimationMixer(this.model)
         this.animation.actions = []
         this.resource.animations.forEach((animation) => {
-            this.animation.actions.push({name: animation.name, action: this.animation.mixer.clipAction(animation)})
+            this.animation.actions.push({ name: animation.name, action: this.animation.mixer.clipAction(animation) })
         })
         this.animation.currentAction = this.animation.actions[0]
         this.animation.currentAction?.action.play()
@@ -149,8 +144,7 @@ export default class Actor implements LifeTimeObject
         const debugObject: { [key: string]: () => void } = {}
         this.animation.actions.forEach((action) => {
             const actionName = action.name
-            debugObject[actionName] = () =>
-            {
+            debugObject[actionName] = () => {
                 this.animation.play(actionName)
             }
             this.debugFolder

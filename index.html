@@ -1,45 +1,47 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Petit Pois</title>
-    </head>
-    <body>
-        <!-- Book canvas -->
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Petit Pois</title>
+  </head>
+  <body>
+    <!-- Book canvas -->
 
-        <div id="book-interface">
-            <!-- Book selector -->
-            <div id="book-selector-interface" class="book-panel">
-                <button id="close-book-selector" class="book-close">X</button>
-                <!-- <button class="validate-book-drawing">OK</button> -->
-                <div class="book-selector-interface-left"></div>
-                <div class="book-selector-interface-right"></div>
-            </div>
+    <!-- <div id="book-interface"> -->
+    <!-- Book selector -->
+    <!-- <div id="book-selector-interface" class="book-panel"> -->
+    <!-- <button id="close-book-selector" class="book-close">X</button> -->
+    <!-- <button class="validate-book-drawing">OK</button> -->
+    <!-- <div class="book-selector-interface-left"></div> -->
+    <!-- <div class="book-selector-interface-right"></div> -->
+    <!-- </div> -->
 
-            <!-- Book drawing -->
-            <div id="book-drawing-interface" class="book-panel">
-                <div class="wrap-button">
-                    <button
-                        id="close-book-drawing"
-                        class="book-close"
-                        type="button"
-                    >
-                        X
-                    </button>
-                    <button class="validate-book-drawing">OK</button>
-                </div>
-
-                <div class="book-drawing-interface-left">
-                    <p class="name-object-selected"></p>
-                </div>
-                <div class="book-drawing-interface-right"></div>
-                <!-- <canvas id="draw-canvas"></canvas> -->
-            </div>
+    <!-- Book drawing -->
+    <!-- <div id="book-drawing-interface" class="book-panel"> -->
+    <!-- <div class="wrap-button"> -->
+    <!-- <button id="close-book-drawing" class="book-close" type="button">
+            X
+          </button>
+          <button class="validate-book-drawing">OK</button>
         </div>
 
-        <canvas id="three"></canvas>
-        <script type="module" src="./src/main.ts"></script>
-    </body>
+        <div class="book-drawing-interface-left">
+          <p class="name-object-selected"></p>
+        </div>
+        <div class="book-drawing-interface-right"></div> -->
+    <!-- <canvas id="draw-canvas"></canvas> -->
+    <!-- </div>
+    </div> -->
+
+    <div id="tool-selector">
+      <button>Flower</button>
+      <button>Ants</button>
+      <button>Grass</button>
+    </div>
+
+    <canvas id="three"></canvas>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
 </html>

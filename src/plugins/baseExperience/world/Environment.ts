@@ -71,6 +71,7 @@ export default class Environment {
 
       this.sunlightDebugFolder = this.debugFolder.addFolder("☀️ sunlight")
       this.shadowHelper = new THREE.CameraHelper(this.sunLight.shadow.camera)
+      this.shadowHelper.layers.set(2);
       this.scene.add(this.shadowHelper)
 
       this.sunlightDebugFolder
