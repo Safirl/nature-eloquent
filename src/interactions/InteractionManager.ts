@@ -29,16 +29,16 @@ export default class InteractionManager extends EventEmitter implements LifeTime
 
         document.addEventListener("mousemove", this.updateMouseScreenPosition)
         document.addEventListener("mousedown", () => {
-            // this.position = this.getSelectedObjectPosition();
-            // this.me
         })
         this.setDebugObject()
-        console.log(this.experience.camera.instance.layers)
     }
 
     init = () => { };
     update = () => {
         this.position = this.getSelectedObjectPosition();
+        if (this.debug.active) {
+            this.debugSphere.position.copy(this.position)
+        }
     };
 
     destroy = () => { };
@@ -59,17 +59,15 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     }
 
     getSelectedObjectPosition(): Vector3 {
-        const raycaster = new Raycaster()
+        const raycaster = new Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 20)
         raycaster.layers.enable(1);
         raycaster.setFromCamera(this.mousePosition, this.experience.camera.instance)
         const intersections = raycaster.intersectObjects(this.experience.scene.children, true);
         if (intersections.length < 1) {
             return new Vector3();
         }
-        console.log(intersections)
         const pos = intersections[0].point
-        this.debugSphere.position.copy(pos)
-        return new Vector3();
+        return pos;
     }
 
     updateMouseScreenPosition = (event: MouseEvent) => {
@@ -81,7 +79,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
 
     setDebugObject() {
         if (!this.debug.active) return;
-        this.debugSphere = new THREE.Mesh(new THREE.SphereGeometry(.3), new THREE.MeshBasicMaterial({ color: "red" }))
+        this.debugSphere = new THREE.Mesh(new THREE.SphereGeometry(.1), new THREE.MeshBasicMaterial({ color: "red" }))
         this.debugSphere.layers.set(2);
         this.experience.scene.add(this.debugSphere);
     }
