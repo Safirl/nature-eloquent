@@ -1,11 +1,11 @@
 // Core
 export { default as Experience } from './experience/Experience'
 export { default as Camera } from './experience/Camera'
-export { default as Renderer } from './Renderer'
+export { default as Renderer } from './experience/Renderer'
 
 //Inputs
-export { default as InputSystem} from './inputs/InputSystem'
-export { type InputAction, type InputEventArgs, type InputProfile} from './inputs/inputInterfaces'
+export { default as InputSystem } from './inputs/InputSystem'
+export { type InputAction, type InputEventArgs, type InputProfile } from './inputs/inputInterfaces'
 
 // Actor
 export { default as Actor } from './objects/Actor'
@@ -23,18 +23,18 @@ export { default as Debug } from './utils/Debug'
 export { default as World } from './world/World'
 export { default as Environment } from './world/Environment'
 export { default as EnvironmentMap } from './world/EnvironmentMap'
-export { default as CollisionManager} from './world/CollisionManager'
+export { default as CollisionManager } from './world/CollisionManager'
 
 // Types
 export type { Source } from './types/types'
-export type {LifeTimeObject} from "./types/types"
+export type { LifeTimeObject } from "./types/types"
 
 // Objects
 export { default as StaticObject } from './objects/StaticObject'
 
 //Template
-export {default as Floor} from './template/Floor'
-export {default as OrbitCamera} from './template/OrbitCamera'
-export {default as TemplateWorld} from './template/TemplateWorld'
-export {default as templateSources} from './template/templateSources'
+export { default as Floor } from './template/Floor'
+export { default as OrbitCamera } from './template/OrbitCamera'
+export { default as TemplateWorld } from './template/TemplateWorld'
+export { default as templateSources } from './template/templateSources'
 

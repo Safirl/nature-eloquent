@@ -78,6 +78,61 @@ export const BitControllerProfile: InputProfile = {
     // ]
 }
 
+export const orbitControlsProfile = {
+    id: "keyboard",
+    buttons: [
+        // {
+        //     physicalInput: "Spacebar",
+        //     index: "Space",
+        //     event: "jump"
+        // },
+        // {
+        //     physicalInput: "A",
+        //     index: "KeyA",
+        //     event: "left"
+        // },
+        // {
+        //     physicalInput: "D",
+        //     index: "KeyD",
+        //     event: "right"
+        // },
+        // {
+        //     physicalInput: "W",
+        //     index: "KeyW",
+        //     event: "forward"
+        // },
+        // {
+        //     physicalInput: "S",
+        //     index: "KeyS",
+        //     event: "backward"
+        // },
+        // {
+        //     physicalInput: "E",
+        //     index: "KeyE",
+        //     event: "interact"
+        // },
+        // {
+        //     physicalInput: "LeftArrow",
+        //     index: "ArrowLeft",
+        //     event: "left"
+        // },
+        // {
+        //     physicalInput: "RightArrow",
+        //     index: "ArrowRight",
+        //     event: "right"
+        // }, {
+        //     physicalInput: "UpArrow",
+        //     index: "ArrowUp",
+        //     event: "forward"
+        // },
+        {
+            physicalInput: "DownArrow",
+            index: "ArrowDown",
+            event: "backward"
+        },
+    ],
+}
+
 export const keyboardProfile = {
     id: "keyboard",
     buttons: [
@@ -120,11 +175,11 @@ export const keyboardProfile = {
             physicalInput: "RightArrow",
             index: "ArrowRight",
             event: "right"
-        },{
+        }, {
             physicalInput: "UpArrow",
             index: "ArrowUp",
             event: "forward"
-        },{
+        }, {
             physicalInput: "DownArrow",
             index: "ArrowDown",
             event: "backward"

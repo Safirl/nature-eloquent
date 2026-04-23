@@ -22,10 +22,10 @@ const init = () => {
   const camera = new OrbitPlayer();
   const world = new Playground();
   const experience = new Experience(canvas, sources, camera, world);
-  const profiles: InputProfile[] = [keyboardProfile];
+  // const profiles: InputProfile[] = [keyboardProfile];
   const book = new BookInteraction();
 
-  experience.inputSystem.addInputProfiles(profiles);
+  // experience.inputSystem.addInputProfiles(profiles);
 };
 
 init();

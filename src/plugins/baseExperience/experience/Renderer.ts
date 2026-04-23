@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import Experience from "./experience/Experience";
+import Experience from "./Experience";
 import { EffectComposer, RenderPass, ShaderPass, type Pass } from "three/examples/jsm/Addons.js";
 import { GammaCorrectionShader } from "three/examples/jsm/Addons.js";
 
@@ -69,7 +69,7 @@ export default class Renderer {
       800,
       600,
       {
-        samples: this.experience.sizes.pixelRatio < 2 ? 2 : 0
+        samples: this.experience.sizes.pixelRatio < 2 ? 2 : 1
       }
     );
     this.composer = new EffectComposer(this.instance, renderTarget);

@@ -26,7 +26,7 @@ export default class Actor implements LifeTimeObject {
     declare name: string
     private id: string = crypto.randomUUID()
 
-    constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false, collisionResource?: GLTF) {
+    constructor(name: string, resource: GLTF, autoAddToScene: boolean = true, makeUnique: boolean = false, makeMaterialsUnique: boolean = false, collisionResource?: GLTF) {
         if (!Experience.instance) throw new Error("Actor initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating Actor.");
 
         this.experience = Experience.instance
@@ -43,6 +43,9 @@ export default class Actor implements LifeTimeObject {
         this.resource = resource
 
         this.setModel(makeUnique, makeMaterialsUnique)
+        if (autoAddToScene) {
+            this.scene.add(this.model)
+        }
         if (collisionResource) {
             this.collisionResource = collisionResource
             this.setColliderModel(makeUnique)
@@ -76,7 +79,6 @@ export default class Actor implements LifeTimeObject {
         else
             this.model = this.resource.scene
         this.model.name = this.name;
-        this.scene.add(this.model)
 
         this.model.traverse((child: any) => {
             if (child instanceof THREE.Mesh) {

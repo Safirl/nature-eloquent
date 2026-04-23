@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import Camera from "./Camera";
-import Renderer from "../Renderer";
+import Renderer from "./Renderer";
 import { type LifeTimeObject, type Source } from "../types/types";
 import Resources from "../utils/Resources";
 import Sizes from "../utils/Sizes";
@@ -27,12 +27,11 @@ export default class Experience implements LifeTimeObject {
 
   constructor(canvas: HTMLCanvasElement, sources: Source[], camera: Camera, world: World) {
     //Singleton. That means you can't instantiate multiple experiences. 
-    if(Experience.instance)
-    {
+    if (Experience.instance) {
       return;
     }
     Experience.instance = this
-    
+
     // Global access (replaced by the static instance property)
     //@ts-ignore
     window.experience = this;
@@ -48,22 +47,22 @@ export default class Experience implements LifeTimeObject {
     this.resources = new Resources(sources);
     this.inputSystem = new InputSystem();
     this.collisionManager = new CollisionManager();
-    
+
     /**
      * constructor parameter values
     */
-   this.camera = camera
-   this.world = world
-   
-   this.renderer = new Renderer();
-   
-   // Sizes resize event
-   this.sizes.on("resize", () => {
-     this.resize();
+    this.camera = camera
+    this.world = world
+
+    this.renderer = new Renderer();
+
+    // Sizes resize event
+    this.sizes.on("resize", () => {
+      this.resize();
     });
-    
+
     this.resources.on("ready", () => this.onResourcesLoaded());
-    
+
     this.displayPerformances()
     console.log("Experience class instantiated");
   }
@@ -72,11 +71,11 @@ export default class Experience implements LifeTimeObject {
     // if (this.debug.active)
     return;
   }
-  
+
   /**
    * Init classes only when the resources are loaded
   */
- onResourcesLoaded() {
+  onResourcesLoaded() {
     this.time.on("tick", () => {
       this.update();
     });
@@ -85,7 +84,7 @@ export default class Experience implements LifeTimeObject {
     this.world.init()
   }
 
-  init = () => {}
+  init = () => { }
 
   resize() {
     this.camera.resize();
