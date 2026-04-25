@@ -6,24 +6,24 @@ import * as THREE from "three"
 import InstancedMeshManager from "./InstancedMeshManager";
 
 export default class InteractionManager extends EventEmitter implements LifeTimeObject {
-    private declare selectedObject: Actor | undefined;
+    private declare selectedObject: string;
     public enabled: boolean = true;
     private declare experience: Experience
     private declare resources: Resources
-    private markerPosition: Vector3 = new Vector3();
+    private declare markerPosition: Vector3 | undefined;
     private mousePosition = new Vector2()
     private declare debug: Debug;
     private declare debugFolder: GUI;
     private declare debugSphere: THREE.Mesh;
 
-    private declare interactableObjects: { name: string, manager: InstancedMeshManager }[]
+    private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
 
     constructor() {
         super()
         if (!Experience.instance) return;
         this.experience = Experience.instance;
         this.resources = this.experience.resources;
-        this.selectedObject = new Actor("mushroom", this.resources.items.mushroomPaintedModel as GLTF, false);
+        // this.selectedObject = new Actor("mushroom", this.resources.items.mushroomPaintedModel as GLTF, false);
         this.debug = this.experience.debug
         if (this.debug.active) {
             this.debugFolder = this.debug.ui.addFolder("Interaction manager")
@@ -33,13 +33,15 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         document.addEventListener("mousemove", this.updateMouseScreenPosition)
         document.addEventListener("mouseup", this.addSelectedObject)
         this.setDebugObject()
+        this.updateInteractableObjects([{ name: "mushroom", resourceName: "mushroomPaintedModel" }])
+        this.selectedObject = "mushroom";
     }
 
     updateInteractableObjects(newResources: { name: string, resourceName: string }[]) {
-        this.interactableObjects.forEach((pair) => {
+        this.InstancedMeshManagers.forEach((pair) => {
             pair.manager.destroy()
         })
-        this.interactableObjects = [];
+        this.InstancedMeshManagers = [];
         newResources.forEach((pair) => {
             const resource = this.experience.resources.items[pair.resourceName] as GLTF
             if (!resource) {
@@ -47,40 +49,47 @@ export default class InteractionManager extends EventEmitter implements LifeTime
                 return;
             }
             const instancedMeshManager = new InstancedMeshManager(resource.scene.children[0] as THREE.Mesh)
-            this.interactableObjects.push({ name: pair.name, manager: instancedMeshManager })
+            this.InstancedMeshManagers.push({ name: pair.name, manager: instancedMeshManager })
         })
     }
 
-    init = () => { };
+    init = () => {
+    };
     update = () => {
         this.markerPosition = this.getSelectedObjectPosition();
+        if (!this.markerPosition) return;
         if (this.debug.active) {
             this.debugSphere.position.copy(this.markerPosition)
         }
     };
 
     destroy = () => {
-        this.interactableObjects.forEach((pair) => {
+        this.InstancedMeshManagers.forEach((pair) => {
             pair.manager.destroy()
         })
     };
 
-    setCurrentSelectedObject(newSelectedObject: Actor) {
-        if (!newSelectedObject) return;
-        if (this.selectedObject === newSelectedObject) return;
-    }
+    // setCurrentSelectedObject(newSelectedObject: Actor) {
+    //     if (!newSelectedObject) return;
+    //     if (this.selectedObject === newSelectedObject) return;
+    // }
 
     addSelectedObject = (e: MouseEvent) => {
         if (!this.selectedObject) return;
         if (!this.markerPosition) return;
         if (e.button === 2) return;
-        this.selectedObject.setPosition(this.markerPosition.x, this.markerPosition.y, this.markerPosition.z)
+
+        const instancedMeshManager = this.InstancedMeshManagers.find((m) => m.name === this.selectedObject)?.manager;
+        if (!instancedMeshManager) return;
+
+        instancedMeshManager.add(this.markerPosition);
+        // this.selectedObject.setPosition(this.markerPosition.x, this.markerPosition.y, this.markerPosition.z)
         // const mesh = this.selectedObject.model.children[0] as THREE.Mesh
         // const instance = new THREE.InstancedMesh(mesh.geometry, mesh.material, 1)
         // // instance.add()
         // // instance.
-        this.experience.scene.add(this.selectedObject.model)
-        this.trigger("placeObject", [this.selectedObject]);
+        // this.experience.scene.add(this.selectedObject.model)
+        // this.trigger("placeObject", [this.selectedObject]);
     }
 
     onPlayerReleased = () => {
@@ -88,16 +97,17 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         this.trigger("stopPlacingObject");
     }
 
-    getSelectedObjectPosition(): Vector3 {
+    getSelectedObjectPosition(): Vector3 | undefined {
         const raycaster = new Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 20)
         raycaster.layers.enable(1);
         raycaster.setFromCamera(this.mousePosition, this.experience.camera.instance)
+        // let objectsToIntersect = this.experience.scene.children
+        // objectsToIntersect = objectsToIntersect.concat([this.InstancedMeshManagers[0].manager.mesh])
         const intersections = raycaster.intersectObjects(this.experience.scene.children, true);
         if (intersections.length < 1) {
-            return new Vector3();
+            return undefined;
         }
-        const pos = intersections[0].point
-        return pos;
+        return intersections[0].point;
     }
 
     updateMouseScreenPosition = (event: MouseEvent) => {
