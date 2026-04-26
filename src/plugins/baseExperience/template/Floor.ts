@@ -8,8 +8,8 @@ export default class Floor extends StaticObject {
 
   setTextures() {
     this.textures = {
-      color: this.resources.items.grassColorTexture as THREE.Texture,
-      normal: this.resources.items.grassNormalTexture as THREE.Texture,
+      color: this.resources.items.dirtColorTexture as THREE.Texture,
+      normal: this.resources.items.dirtNormalTexture as THREE.Texture,
     };
     if (this.textures.color) {
       this.textures.color.colorSpace = THREE.SRGBColorSpace;

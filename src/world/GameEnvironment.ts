@@ -4,6 +4,7 @@ import * as THREE from "three"
 import Sky from "./Sky";
 import Cloud from "./Cloud";
 import { UnrealBloomPass } from "three/examples/jsm/Addons.js";
+import Grass from "./Grass";
 
 export default class GameEnvironment extends Environment {
     protected declare bloomDebugFolder: GUI
@@ -14,6 +15,7 @@ export default class GameEnvironment extends Environment {
     declare fog: THREE.Fog
     declare bloomPass: UnrealBloomPass
     declare cloud: Cloud;
+    private declare grass: Grass
     private declare sunMesh: THREE.Mesh;
 
     constructor(lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined, useAsBackground?: boolean, backgroundEnvironmentMap?: THREE.CubeTexture) {
@@ -21,6 +23,7 @@ export default class GameEnvironment extends Environment {
         this.sky = new Sky(0, this.debugFolder)
         this.setFog();
         this.setBloom()
+        this.grass = new Grass()
         // this.cloud = new Cloud()
         // const bg = this.createBackground();
         // const sky = new THREE.Mesh(
@@ -177,9 +180,12 @@ export default class GameEnvironment extends Environment {
         }
     }
 
-    // update() {
-    //     this.sunLight.position.set(this.camera.position.x + this.sunlightOffset.x, this.camera.position.y + this.sunlightOffset.y, this.camera.position.z + this.sunlightOffset.z)
-    // }
+    update() {
+        if (this.grass) {
+            this.grass.update();
+        }
+        // this.sunLight.position.set(this.camera.position.x + this.sunlightOffset.x, this.camera.position.y + this.sunlightOffset.y, this.camera.position.z + this.sunlightOffset.z)
+    }
 
     // getSunlightPosition() {
     //     const cameraPosition = this.camera.position.add(this.sunlightOffset)

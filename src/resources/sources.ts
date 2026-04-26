@@ -26,14 +26,24 @@ const sources: Source[] = [
     ],
   },
   {
-    name: "grassColorTexture",
+    name: "dirtColorTexture",
     type: "texture",
     path: "textures/dirt/color.jpg",
   },
   {
-    name: "grassNormalTexture",
+    name: "dirtNormalTexture",
     type: "texture",
     path: "textures/dirt/normal.jpg",
+  },
+  {
+    name: "grassColorTexture",
+    type: "texture",
+    path: "textures/grass/color.png",
+  },
+  {
+    name: "grassAlphaTexture",
+    type: "texture",
+    path: "textures/grass/alpha.png",
   },
   {
     name: "foxModel",

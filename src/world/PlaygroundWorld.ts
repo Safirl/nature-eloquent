@@ -37,5 +37,8 @@ export default class Playground extends World {
     if (this.interactionManager) {
       this.interactionManager.update()
     }
+    if (this.environment) {
+      this.environment.update()
+    }
   }
 }
