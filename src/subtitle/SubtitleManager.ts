@@ -1,5 +1,47 @@
 export default class SubtitleManager {
 
-    constructor() { }
+    declare subtitleElement: HTMLElement;
+    declare dialogElement: HTMLElement;
+    declare isDialogOpen: boolean;
+
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        this.subtitleElement = document.getElementById("subtitle") as HTMLElement;
+        this.dialogElement = document.getElementById("dialog") as HTMLElement;
+        this.subtitleElement.style.opacity = "0"
+        this.isDialogOpen = false;
+    }
+
+    showSubtitle(text: string) {
+        if (!this.subtitleElement) return;
+        this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
+        this.subtitleElement.style.opacity = "1";
+        this.subtitleElement.textContent = text;
+        this.isDialogOpen = true;
+    }
+
+    hideSubtitle() {
+        if (!this.subtitleElement) return;
+        this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
+        this.subtitleElement.style.opacity = "0";
+        this.subtitleElement.textContent = "";
+        this.isDialogOpen = false;
+    }
+
+
+    displayDialog(dialog: string, next = false) {
+        this.showSubtitle(dialog)
+        setTimeout(() => {
+            console.log("Une seconde est passée")
+            if (this.isDialogOpen) {
+                console.log("le dialogue est caché")
+                this.hideSubtitle();
+            }
+        }, 2000);
+    }
+
 
 }

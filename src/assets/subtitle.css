@@ -3,5 +3,8 @@
     bottom: 10%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px 40px;
+
 }
 

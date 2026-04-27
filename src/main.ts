@@ -7,6 +7,7 @@ import { keyboardProfile } from "./resources/inputProfiles";
 import BookInteraction from "./books/BookInteraction";
 import Playground from "./world/PlaygroundWorld";
 import OrbitPlayer from "./camera/OrbitPlayer";
+import SubtitleManager from "./subtitle/SubtitleManager";
 
 const init = () => {
   const canvas: HTMLCanvasElement = document.getElementById(
@@ -22,6 +23,7 @@ const init = () => {
   const camera = new OrbitPlayer();
   const world = new Playground();
   const experience = new Experience(canvas, sources, camera, world);
+  const subtitleManager = new SubtitleManager();
   // const profiles: InputProfile[] = [keyboardProfile];
   // const book = new BookInteraction();
 
