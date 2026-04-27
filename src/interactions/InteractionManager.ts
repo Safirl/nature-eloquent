@@ -18,28 +18,22 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private declare debug: Debug;
     private declare debugFolder: GUI;
     private declare debugSphere: THREE.Mesh;
+    private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
 
     // Subtitle manager
     private declare subtitle: SubtitleManager
-
-    // Dialogues without audio
-    private declare dialogs: { [key: string]: { [value: string]: { dialog: string, step: number } } }
-
     // Dialogue with audio
     private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, character: string, duration: number } } }
-
     private declare countObjectsPlaced: number;
-
-    private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
 
     constructor() {
         super()
         if (!Experience.instance) return;
         this.experience = Experience.instance;
         this.resources = this.experience.resources;
+
         this.subtitle = new SubtitleManager();
-        this.dialogs = dialogData
-        this.dialogsAudio = dialogSubtitleAudio;
+        this.dialogsAudio = dialogSubtitleAudio; // JSON
         this.countObjectsPlaced = 0;
 
         // this.selectedObject = new Actor("mushroom", this.resources.items.mushroomPaintedModel as GLTF, false);

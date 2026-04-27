@@ -10,7 +10,12 @@
     width: 60%;
     height: 60px;
     display: flex;
-    align-items: start;
+    align-items: center;
     gap: 8px;
 }
 
+.wrap-character-dialog{
+    display: flex; 
+    align-items: start;
+    gap: 3px;
+}
