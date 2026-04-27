@@ -5,6 +5,7 @@ import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three"
 import InstancedMeshManager from "./InstancedMeshManager";
 import SubtitleManager from "../subtitle/SubtitleManager";
+import dialogData from "../subtitle/dialog.json"
 
 export default class InteractionManager extends EventEmitter implements LifeTimeObject {
     private declare selectedObject: string;
@@ -17,7 +18,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private declare debugFolder: GUI;
     private declare debugSphere: THREE.Mesh;
     private declare subtitle: SubtitleManager
-    private declare dialogs: { [key: string]: { dialog: string, dialog2: string } }
+    private declare dialogs: { [key: string]: { [value: string]: { dialog: string, step: number } } }
 
     private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
 
@@ -27,6 +28,8 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         this.experience = Experience.instance;
         this.resources = this.experience.resources;
         this.subtitle = new SubtitleManager();
+        this.dialogs = dialogData
+
         // this.selectedObject = new Actor("mushroom", this.resources.items.mushroomPaintedModel as GLTF, false);
         this.debug = this.experience.debug
         if (this.debug.active) {
@@ -94,7 +97,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // // instance.
         // this.experience.scene.add(this.selectedObject.model)
         // this.trigger("placeObject", [this.selectedObject]);
-        this.subtitle.displayDialog("placed object: " + this.selectedObject)
+        this.subtitle.displayDialog(this.dialogs.first_interaction)
     }
 
     onPlayerReleased = () => {
