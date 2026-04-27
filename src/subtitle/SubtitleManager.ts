@@ -10,9 +10,11 @@ export default class SubtitleManager {
     declare dialogElement: HTMLElement;
     declare isDialogOpen: boolean;
     declare currentIndex: number;
+    declare canvas: HTMLCanvasElement;
 
     constructor() {
         this.init();
+        this.currentIndex = 0;
     }
 
     init() {
@@ -21,6 +23,7 @@ export default class SubtitleManager {
         this.subtitleElement.style.opacity = "0";
         this.isDialogOpen = false;
         this.currentIndex = 0;
+        this.canvas = document.getElementById("subtitle") as HTMLCanvasElement;
     }
 
     showSubtitle(text: string) {
@@ -36,6 +39,7 @@ export default class SubtitleManager {
         this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
         this.subtitleElement.style.opacity = "0";
         this.isDialogOpen = false;
+        this.currentIndex = 0;
     }
 
     displayDialog(dialogData: DialogInteraction) {
@@ -59,22 +63,31 @@ export default class SubtitleManager {
     displayDialogOnClick(dialogData: DialogInteraction) {
         const entries = Object.entries(dialogData);
         if (entries.length === 0 || this.isDialogOpen) return;
-        this.currentIndex = 0;
+        this.currentIndex = 1;
         this.isDialogOpen = true;
+
+        this.showSubtitle(entries[0][1].dialog);
 
         const clickNextDialogHandler = () => {
             if (this.currentIndex < entries.length) {
                 const [_, item] = entries[this.currentIndex];
                 this.showSubtitle(item.dialog);
                 this.currentIndex++;
-                console.log("current index: ", this.currentIndex);
+
             } else {
                 this.hideSubtitle();
                 this.isDialogOpen = false;
                 this.currentIndex = 0;
             }
         };
-        document.addEventListener("click", clickNextDialogHandler);
-    }
 
+        const onKeyUp = (e: KeyboardEvent) => {
+            if (e.code === "Enter") {
+                clickNextDialogHandler();
+                if (!this.isDialogOpen) document.removeEventListener("keyup", onKeyUp);
+            }
+        };
+
+        document.addEventListener("keyup", onKeyUp);
+    }
 }
