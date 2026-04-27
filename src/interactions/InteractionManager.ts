@@ -6,6 +6,7 @@ import * as THREE from "three"
 import InstancedMeshManager from "./InstancedMeshManager";
 import SubtitleManager from "../subtitle/SubtitleManager";
 import dialogData from "../subtitle/dialog.json"
+import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json"
 import DialogAudioManager from "../subtitle/DialogAudioManager";
 
 export default class InteractionManager extends EventEmitter implements LifeTimeObject {
@@ -41,6 +42,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         this.subtitle = new SubtitleManager();
         this.dialogAudio = new DialogAudioManager();
         this.dialogs = dialogData
+        this.dialogsAudio = dialogSubtitleAudio;
         this.countObjectsPlaced = 0;
 
         // this.selectedObject = new Actor("mushroom", this.resources.items.mushroomPaintedModel as GLTF, false);
@@ -118,10 +120,10 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // Solution 1: Premier test pour faire avance le dialogue en fonction du nombre d'éléments placés.
         this.countObjectsPlaced++
         if (this.countObjectsPlaced === 1) {
-            this.dialogAudio.subtitle.displayDialogOnClick(this.dialogs.first_interaction)
+            this.dialogAudio.subtitle.displayDialogOnClick(this.dialogsAudio.first_scene)
         }
         else if (this.countObjectsPlaced === 5) {
-            this.dialogAudio.subtitle.displayDialogOnClick(this.dialogs.second_interaction)
+            this.dialogAudio.subtitle.displayDialogOnClick(this.dialogsAudio.second_scene)
         }
 
     }

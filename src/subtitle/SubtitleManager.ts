@@ -1,6 +1,8 @@
 type DialogStep = {
+    audio: string;
     dialog: string;
-    step: number;
+    character: string;
+    duration: number;
 };
 
 type DialogInteraction = Record<string, DialogStep>;
@@ -10,6 +12,7 @@ export default class SubtitleManager {
     declare dialogElement: HTMLElement;
     declare isDialogOpen: boolean;
     declare currentIndex: number;
+    declare characterElement: HTMLElement;
 
     constructor() {
         this.init();
@@ -20,13 +23,15 @@ export default class SubtitleManager {
         this.dialogElement = document.getElementById("dialog") as HTMLElement;
         this.subtitleElement.style.opacity = "0";
         this.isDialogOpen = false;
+        this.characterElement = document.getElementById("character") as HTMLElement;
     }
 
-    showSubtitle(text: string) {
+    showSubtitle(text: string, characterName: string) {
         if (!this.subtitleElement) return;
         this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
         this.subtitleElement.style.opacity = "1";
         this.dialogElement.textContent = text;
+        this.characterElement.textContent = characterName;
         this.isDialogOpen = true;
     }
 
@@ -46,9 +51,9 @@ export default class SubtitleManager {
 
         entries.forEach(([_, item]) => {
             setTimeout(() => {
-                this.showSubtitle(item.dialog);
+                this.showSubtitle(item.dialog, item.character);
             }, totalDelayToClose);
-            totalDelayToClose += item.step;
+            totalDelayToClose += item.duration;
         });
 
         setTimeout(() => {
@@ -68,7 +73,7 @@ export default class SubtitleManager {
         const clickNextDialogHandler = () => {
             if (this.currentIndex < entries.length) {
                 const [_, item] = entries[this.currentIndex];
-                this.showSubtitle(item.dialog);
+                this.showSubtitle(item.dialog, item.character);
                 this.currentIndex++;
             } else {
                 this.hideSubtitle();
