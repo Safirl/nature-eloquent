@@ -7,7 +7,6 @@ import InstancedMeshManager from "./InstancedMeshManager";
 import SubtitleManager from "../subtitle/SubtitleManager";
 import dialogData from "../subtitle/dialog.json"
 import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json"
-import DialogAudioManager from "../subtitle/DialogAudioManager";
 
 export default class InteractionManager extends EventEmitter implements LifeTimeObject {
     private declare selectedObject: string;
@@ -30,7 +29,6 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, character: string, duration: number } } }
 
     private declare countObjectsPlaced: number;
-    declare dialogAudio: DialogAudioManager;
 
     private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
 
@@ -40,7 +38,6 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         this.experience = Experience.instance;
         this.resources = this.experience.resources;
         this.subtitle = new SubtitleManager();
-        this.dialogAudio = new DialogAudioManager();
         this.dialogs = dialogData
         this.dialogsAudio = dialogSubtitleAudio;
         this.countObjectsPlaced = 0;
@@ -120,10 +117,10 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // Solution 1: Premier test pour faire avance le dialogue en fonction du nombre d'éléments placés.
         this.countObjectsPlaced++
         if (this.countObjectsPlaced === 1) {
-            this.dialogAudio.subtitle.displayDialogOnClick(this.dialogsAudio.first_scene)
+            this.subtitle.displayDialogOnClick(this.dialogsAudio.first_scene)
         }
         else if (this.countObjectsPlaced === 5) {
-            this.dialogAudio.subtitle.displayDialogOnClick(this.dialogsAudio.second_scene)
+            this.subtitle.displayDialogOnClick(this.dialogsAudio.second_scene)
         }
 
     }
