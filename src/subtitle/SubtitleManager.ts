@@ -11,7 +11,6 @@ export default class SubtitleManager {
     declare subtitleElement: HTMLElement;
     declare dialogElement: HTMLElement;
     declare characterElement: HTMLElement;
-    // declare isDialogOpen: boolean;
     declare currentIndex: number;
     declare audioPlayer: HTMLAudioElement;
 
@@ -24,7 +23,6 @@ export default class SubtitleManager {
         this.dialogElement = document.getElementById("dialog") as HTMLElement;
         this.characterElement = document.getElementById("character") as HTMLElement;
         this.subtitleElement.style.opacity = "0";
-        // this.isDialogOpen = false;
 
         this.audioPlayer = new Audio();
         this.audioPlayer.preload = "auto";
@@ -38,13 +36,6 @@ export default class SubtitleManager {
         this.audioPlayer.play()
     }
 
-    // Test récupération de la durée de l'audio
-    // Objectif synchroniser avec la duration du dialogue
-    getDurationAudio(audioSrc: string) {
-        this.audioPlayer.src = audioSrc;
-        return this.audioPlayer.duration;
-    }
-
     showSubtitle(text: string, characterName: string, audioSrc: string) {
         if (!this.subtitleElement) return;
         this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
@@ -52,7 +43,6 @@ export default class SubtitleManager {
         this.dialogElement.textContent = text;
         this.characterElement.textContent = characterName;
         this.playAudio(audioSrc);
-        // this.isDialogOpen = true;
     }
 
     hideSubtitle() {
@@ -61,26 +51,21 @@ export default class SubtitleManager {
         this.subtitleElement.style.opacity = "0";
         this.audioPlayer.pause();
         this.audioPlayer.currentTime = 0;
-        // this.isDialogOpen = false;
     }
 
     // Changement de dialogue automatique
-    displayDialog(dialogData: DialogInteraction) {
-        // if (this.isDialogOpen) return;
+    async displayDialog(dialogData: DialogInteraction) {
         const entries = Object.entries(dialogData);
-        let totalDelayToClose = 0;
+        if (entries.length === 0) return;
 
-        entries.forEach(([_key, item]) => {
-            setTimeout(() => {
-                this.showSubtitle(item.dialog, item.character, item.audio);
-            }, totalDelayToClose);
-            totalDelayToClose += this.getDurationAudio(item.audio);
-        });
-
-        setTimeout(() => {
-            this.hideSubtitle();
-            // this.isDialogOpen = false;
-        }, totalDelayToClose);
+        for (const [_key, item] of entries) {
+            this.showSubtitle(item.dialog, item.character, item.audio);
+            await new Promise<void>((resolve) => {
+                this.audioPlayer.addEventListener("ended", () => resolve(), { once: true });
+                this.audioPlayer.addEventListener("error", () => resolve(), { once: true });
+            });
+        }
+        this.hideSubtitle();
     }
 
     // Changement dialogue au clic
@@ -88,7 +73,6 @@ export default class SubtitleManager {
         const entries = Object.entries(dialogData);
         if (entries.length === 0) return;
         this.currentIndex = 0;
-        // this.isDialogOpen = true;
 
         const clickNextDialogHandler = () => {
             if (this.currentIndex < entries.length) {

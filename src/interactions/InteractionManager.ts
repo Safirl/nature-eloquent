@@ -5,7 +5,6 @@ import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three"
 import InstancedMeshManager from "./InstancedMeshManager";
 import SubtitleManager from "../subtitle/SubtitleManager";
-import dialogData from "../subtitle/dialog.json"
 import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json"
 
 export default class InteractionManager extends EventEmitter implements LifeTimeObject {
@@ -111,10 +110,10 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // Solution 1: Premier test pour faire avance le dialogue en fonction du nombre d'éléments placés.
         this.countObjectsPlaced++
         if (this.countObjectsPlaced === 1) {
-            this.subtitle.displayDialogOnClick(this.dialogsAudio.first_scene)
+            this.subtitle.displayDialog(this.dialogsAudio.first_scene)
         }
         else if (this.countObjectsPlaced === 5) {
-            this.subtitle.displayDialogOnClick(this.dialogsAudio.second_scene)
+            this.subtitle.displayDialog(this.dialogsAudio.second_scene)
         }
 
     }
