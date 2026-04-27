@@ -6,5 +6,8 @@
     background-color: white;
     padding: 20px 40px;
     width: 60%;
+    height: 60px;
+    display: flex;
+    align-items: center;
 }
 

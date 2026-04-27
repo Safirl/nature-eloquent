@@ -97,7 +97,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // // instance.
         // this.experience.scene.add(this.selectedObject.model)
         // this.trigger("placeObject", [this.selectedObject]);
-        this.subtitle.displayDialog(this.dialogs.first_interaction)
+        this.subtitle.displayDialogOnClick(this.dialogs.first_interaction)
     }
 
     onPlayerReleased = () => {
