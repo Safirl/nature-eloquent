@@ -1,8 +1,8 @@
 {
     "first_interaction": {
         "first_dialog": {
-            "dialog": "Welcome1",
-            "step": 5000
+            "dialog": "Bienvenue dans la forêt de Petit Pois, découvrez une forêt magique où l'imagination de petit pois prend vie.",
+            "step": 3000
         },
         "second_dialog": {
             "dialog": "Welcome2",
