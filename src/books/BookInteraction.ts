@@ -127,17 +127,17 @@
 // 	}
 
 // 	registerEventsProximityDetection(instance: Experience): void {
-// 		instance.camera.on("onSelectedObjectChanged", (args: (InteractableObject | null)[]) => {
-// 			const object = Array.isArray(args) ? args[0] : args;
-// 			this.isCloseToInteractable = object;
+// instance.camera.on("onSelectedObjectChanged", (args: (InteractableObject | null)[]) => {
+// 	const object = Array.isArray(args) ? args[0] : args;
+// 	this.isCloseToInteractable = object;
 
-// 			if (!object) {
-// 				this.onCloseBookDrawing();
-// 				return;
-// 			}
-// 			if (this.isOpenBookSelector) this.setBookSelectorOpen(false);
-// 			this.halfOpenBookDrawing(args);
-// 		});
+// 	if (!object) {
+// 		this.onCloseBookDrawing();
+// 		return;
+// 	}
+// 	if (this.isOpenBookSelector) this.setBookSelectorOpen(false);
+// 	this.halfOpenBookDrawing(args);
+// });
 // 	}
 
 

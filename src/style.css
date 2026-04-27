@@ -11,9 +11,10 @@
 #book-interface {
     position: fixed;
     top: 50%;
-    left: 5%;
+    left: 50%;
     /* 5% / 30% - 20% */
     transform: translate(-50%, -50%);
+     /* transform: translate(-50%, -50%) perspective(1200px) rotateX(20deg); */
     width: 70vw;
     display: flex;
     flex-direction: column;
