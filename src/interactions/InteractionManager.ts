@@ -6,6 +6,7 @@ import * as THREE from "three"
 import InstancedMeshManager from "./InstancedMeshManager";
 import SubtitleManager from "../subtitle/SubtitleManager";
 import dialogData from "../subtitle/dialog.json"
+import DialogAudioManager from "../subtitle/DialogAudioManager";
 
 export default class InteractionManager extends EventEmitter implements LifeTimeObject {
     private declare selectedObject: string;
@@ -17,8 +18,18 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private declare debug: Debug;
     private declare debugFolder: GUI;
     private declare debugSphere: THREE.Mesh;
+
+    // Subtitle manager
     private declare subtitle: SubtitleManager
+
+    // Dialogues without audio
     private declare dialogs: { [key: string]: { [value: string]: { dialog: string, step: number } } }
+
+    // Dialogue with audio
+    private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, character: string, duration: number } } }
+
+    private declare countObjectsPlaced: number;
+    declare dialogAudio: DialogAudioManager;
 
     private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
 
@@ -28,7 +39,9 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         this.experience = Experience.instance;
         this.resources = this.experience.resources;
         this.subtitle = new SubtitleManager();
+        this.dialogAudio = new DialogAudioManager();
         this.dialogs = dialogData
+        this.countObjectsPlaced = 0;
 
         // this.selectedObject = new Actor("mushroom", this.resources.items.mushroomPaintedModel as GLTF, false);
         this.debug = this.experience.debug
@@ -97,7 +110,20 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // // instance.
         // this.experience.scene.add(this.selectedObject.model)
         // this.trigger("placeObject", [this.selectedObject]);
-        this.subtitle.displayDialogOnClick(this.dialogs.first_interaction)
+
+
+        // Test dialogues pour un objet placé
+        // this.subtitle.displayDialogOnClick(this.dialogs.first_interaction)
+
+        // Solution 1: Premier test pour faire avance le dialogue en fonction du nombre d'éléments placés.
+        this.countObjectsPlaced++
+        if (this.countObjectsPlaced === 1) {
+            this.dialogAudio.subtitle.displayDialogOnClick(this.dialogs.first_interaction)
+        }
+        else if (this.countObjectsPlaced === 5) {
+            this.dialogAudio.subtitle.displayDialogOnClick(this.dialogs.second_interaction)
+        }
+
     }
 
     onPlayerReleased = () => {

@@ -60,6 +60,7 @@ export default class SubtitleManager {
     // Si on décide de play le dialogue avec l'intéraction de l'utilisateur
     displayDialogOnClick(dialogData: DialogInteraction) {
         const entries = Object.entries(dialogData);
+        console.log("entries: ", entries);
         if (entries.length === 0 || this.isDialogOpen) return;
         this.currentIndex = 0;
         this.isDialogOpen = true;
