@@ -4,6 +4,7 @@ import { Raycaster, Vector2, Vector3 } from "three";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three"
 import InstancedMeshManager from "./InstancedMeshManager";
+import InteractableInstancedMesh from "./InteractableInstancedMesh";
 
 export default class InteractionManager extends EventEmitter implements LifeTimeObject {
     private declare selectedObject: string;
@@ -15,6 +16,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private declare debug: Debug;
     private declare debugFolder: GUI;
     private declare debugSphere: THREE.Mesh;
+    private buttonContainerId = "tool-selector"
 
     private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
 
@@ -30,17 +32,24 @@ export default class InteractionManager extends EventEmitter implements LifeTime
             this.debugFolder.close()
         }
 
-        document.addEventListener("mousemove", this.updateMouseScreenPosition)
-        document.addEventListener("mouseup", this.addSelectedObject)
+        this.experience.canvas.addEventListener("mousemove", this.updateMouseScreenPosition)
+        this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
         this.setDebugObject()
-        this.updateInteractableObjects([{ name: "mushroom", resourceName: "mushroomPaintedModel" }])
-        this.selectedObject = "mushroom";
+        this.updateInteractableObjects([
+            { name: "mushroom", resourceName: "mushroomPaintedModel" },
+            { name: "mushroom2", resourceName: "mushroomModel" },
+        ])
+        this.selectedObject = "mushroom2";
     }
 
     updateInteractableObjects(newResources: { name: string, resourceName: string }[]) {
         this.InstancedMeshManagers.forEach((pair) => {
             pair.manager.destroy()
         })
+        const buttonContainer = document.getElementById("tool-selector");
+        if (!buttonContainer) throw new Error("Can't refresh buttons: buttonContainer is null");
+
+        buttonContainer.innerHTML = '';
         this.InstancedMeshManagers = [];
         newResources.forEach((pair) => {
             const resource = this.experience.resources.items[pair.resourceName] as GLTF
@@ -50,7 +59,18 @@ export default class InteractionManager extends EventEmitter implements LifeTime
             }
             const instancedMeshManager = new InstancedMeshManager(resource.scene.children[0] as THREE.Mesh)
             this.InstancedMeshManagers.push({ name: pair.name, manager: instancedMeshManager })
+            const button = document.createElement('button')
+            button.style.marginRight = '4px'
+            button.innerHTML = pair.name
+            buttonContainer.appendChild(button)
+            button.onclick = (event) => {
+                this.setCurrentSelectedObject(pair.name)
+                event.preventDefault()
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+            }
         })
+
     }
 
     init = () => {
@@ -69,10 +89,10 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         })
     };
 
-    // setCurrentSelectedObject(newSelectedObject: Actor) {
-    //     if (!newSelectedObject) return;
-    //     if (this.selectedObject === newSelectedObject) return;
-    // }
+    setCurrentSelectedObject(newSelectedObject: string) {
+        if (!newSelectedObject) return;
+        this.selectedObject = newSelectedObject;
+    }
 
     addSelectedObject = (e: MouseEvent) => {
         if (!this.selectedObject) return;
@@ -105,6 +125,9 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // objectsToIntersect = objectsToIntersect.concat([this.InstancedMeshManagers[0].manager.mesh])
         const intersections = raycaster.intersectObjects(this.experience.scene.children, true);
         if (intersections.length < 1) {
+            return undefined;
+        }
+        if (intersections[0].object instanceof InteractableInstancedMesh && intersections[0].object.isInteractable === false) {
             return undefined;
         }
         return intersections[0].point;

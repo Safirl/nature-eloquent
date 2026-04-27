@@ -23,7 +23,7 @@ export default class GameEnvironment extends Environment {
         this.sky = new Sky(0, this.debugFolder)
         this.setFog();
         this.setBloom()
-        this.grass = new Grass()
+        // this.grass = new Grass()
         // this.cloud = new Cloud()
         // const bg = this.createBackground();
         // const sky = new THREE.Mesh(

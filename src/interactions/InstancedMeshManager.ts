@@ -1,8 +1,9 @@
 import { Experience, type LifeTimeObject } from "@plugins/baseExperience";
 import * as THREE from "three"
+import InteractableInstancedMesh from "./InteractableInstancedMesh";
 
 export default class InstancedMeshManager implements LifeTimeObject {
-    public declare mesh: THREE.InstancedMesh
+    public declare mesh: InteractableInstancedMesh
     private count = 0;
     private dummy = new THREE.Object3D()
     private declare experience: Experience
@@ -11,9 +12,8 @@ export default class InstancedMeshManager implements LifeTimeObject {
         if (!Experience.instance) return;
         this.experience = Experience.instance
 
-        this.mesh = new THREE.InstancedMesh(baseObject.geometry, baseObject.material, max)
-        // this.mesh.frustumCulled = false;
-        // this.dummy = baseObject
+        this.mesh = new InteractableInstancedMesh(baseObject.geometry, baseObject.material, max)
+        this.mesh.isInteractable = false;
         this.mesh.castShadow = true;
         this.mesh.receiveShadow = true;
         this.count = 0

@@ -2,9 +2,6 @@ import "./assets/reset.css";
 import "./assets/style.css";
 import { Experience } from "@plugins/baseExperience";
 import sources from "./resources/sources";
-import { type InputProfile } from "@plugins/baseExperience";
-import { keyboardProfile } from "./resources/inputProfiles";
-import BookInteraction from "./books/BookInteraction";
 import Playground from "./world/PlaygroundWorld";
 import OrbitPlayer from "./camera/OrbitPlayer";
 
