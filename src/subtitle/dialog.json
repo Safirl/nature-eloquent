@@ -1,0 +1,10 @@
+{
+    "first_scene": {
+        "dialog": "Welcome 1",
+        "dialog2": "Welcome 2"
+    },
+    "second_scene": {
+        "dialog": "Welcome 3",
+        "dialog2": "Welcome 4"
+    }
+}
