@@ -24,7 +24,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     // Subtitle manager
     private declare subtitle: SubtitleManager
     // Dialogue with audio
-    private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, character: string } } }
+    private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, speaker: string } } }
 
     constructor() {
         super()
@@ -129,10 +129,10 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         if (!flower) return;
 
         if (flower.count === 1) {
-            this.subtitle.displayDialog(this.dialogsAudio.first_scene)
+            this.subtitle.displayDialog(this.dialogsAudio.dinosaur_interaction_1)
         }
         else if (flower.count === 5) {
-            this.subtitle.displayDialog(this.dialogsAudio.second_scene)
+            this.subtitle.displayDialog(this.dialogsAudio.dinosaur_interaction_2)
         }
 
     }

@@ -1,7 +1,7 @@
 type DialogStep = {
     audio: string;
     dialog: string;
-    character: string;
+    speaker: string;
 };
 
 type DialogInteraction = Record<string, DialogStep>;
@@ -75,7 +75,7 @@ export default class SubtitleManager {
         if (entries.length === 0) return;
 
         for (const [_key, item] of entries) {
-            this.showSubtitle(item.dialog, item.character, item.audio);
+            this.showSubtitle(item.dialog, item.speaker, item.audio);
             await new Promise<void>((resolve) => {
                 this.audioPlayer.addEventListener("ended", () => resolve(), { once: true });
                 this.audioPlayer.addEventListener("error", () => resolve(), { once: true });
@@ -93,7 +93,7 @@ export default class SubtitleManager {
         const clickNextDialogHandler = () => {
             if (this.currentIndex < entries.length) {
                 const [_key, item] = entries[this.currentIndex];
-                this.showSubtitle(item.dialog, item.character, item.audio);
+                this.showSubtitle(item.dialog, item.speaker, item.audio);
                 this.currentIndex++;
             } else {
                 this.hideSubtitle();
