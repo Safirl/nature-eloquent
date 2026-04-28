@@ -24,7 +24,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
 
     // Subtitle manager
     private declare subtitle: SubtitleManager
-    // Dialogue with audio
+    // Dialogue with audio (JSON)
     private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, speaker: string } } }
     declare worldOctree: Octree;
 
@@ -35,9 +35,8 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         this.resources = this.experience.resources;
 
         this.subtitle = new SubtitleManager();
-        this.dialogsAudio = dialogSubtitleAudio; // JSON
+        this.dialogsAudio = dialogSubtitleAudio;
 
-        // InteractableObjects tableau d'objet
         const interactableObjects = [
             { name: "mushroomCouc", resourceName: "mushroomPaintedModel" },
             { name: "mushroom2", resourceName: "mushroomModel" },
@@ -64,17 +63,14 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         const keyIndex = parseInt(event.key) - 1
 
         const binding = this.keyboardBindings[keyIndex]
-        console.log("keyIndex", keyIndex)
-        console.log("binding", binding)
         if (!binding) return
 
         const buttonContainer = document.getElementById(this.buttonContainerId)
         if (!buttonContainer) return
-        console.log("biding", binding)
 
         this.setCurrentSelectedObject(binding.name)
-        console.log("binding name", binding.name)
         this.updateActiveButton(buttonContainer, binding.button)
+
         event.preventDefault()
         event.stopPropagation()
         event.stopImmediatePropagation()
@@ -92,8 +88,6 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         this.keyboardBindings = [];
 
         newResources.forEach((pair) => {
-            console.log("pair.resourceName", pair.resourceName);
-            console.log("pair", pair)
             const resource = this.experience.resources.items[pair.resourceName] as GLTF
             if (!resource) {
                 console.warn("found invalid resource for: ", pair.resourceName);
@@ -107,7 +101,6 @@ export default class InteractionManager extends EventEmitter implements LifeTime
             button.innerHTML = pair.name
             button.classList.remove("active")
             buttonContainer.appendChild(button)
-            console.log("buttonContainer", buttonContainer)
             // button.onclick = (event) => {
             //     this.setCurrentSelectedObject(pair.name)
             //     this.updateActiveButton(buttonContainer, button)
@@ -116,7 +109,6 @@ export default class InteractionManager extends EventEmitter implements LifeTime
             //     event.stopImmediatePropagation();
             // }
             this.keyboardBindings.push({ name: pair.name, button })
-            console.log("Binds", this.keyboardBindings);
         }
         )
     }
