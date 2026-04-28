@@ -21,7 +21,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private buttonContainerId = "tool-selector"
     private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
     private keyboardBindings: { name: string, button: HTMLButtonElement }[] = []
-    private declare lastPressedKeyIndex: number | null;
+    private lastPressedKeyIndex: number | null = null;
 
     // Subtitle manager
     private declare subtitle: SubtitleManager
@@ -171,13 +171,11 @@ export default class InteractionManager extends EventEmitter implements LifeTime
 
         // EX d'enchaînement du dialogue et en fonction du nombre d'objets placés
         // Logique à mettre dans une autre fonction ?
-        const flower = this.InstancedMeshManagers.find((m) => m.name === "mushroom")?.manager;
-        if (!flower) return;
+        if (this.selectedObject !== "mushroom") return;
 
-        if (flower.count === 1) {
+        if (instancedMeshManager.count === 1) {
             this.subtitle.displayDialog(this.dialogsAudio.dinosaur_interaction_1)
-        }
-        else if (flower.count === 5) {
+        } else if (instancedMeshManager.count === 5) {
             this.subtitle.displayDialog(this.dialogsAudio.dinosaur_interaction_2)
         }
 
