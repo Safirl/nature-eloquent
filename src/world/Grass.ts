@@ -14,9 +14,9 @@ export default class Grass implements LifeTimeObject {
     private declare geometry: THREE.InstancedBufferGeometry;
     private declare mesh: THREE.Mesh;
     private grassFieldSizes = { x: 50, y: 50 };
-    public windStrength = .15;
-    public windFrequency = .0009;
-    public windScale = .4;
+    public windStrength = .54;
+    public windFrequency = .0006;
+    public windScale = .18;
 
     constructor() {
         if (!Experience.instance) return;
