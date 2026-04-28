@@ -21,11 +21,12 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private buttonContainerId = "tool-selector"
     private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
     private keyboardBindings: { name: string, button: HTMLButtonElement }[] = []
+    private declare lastPressedKeyIndex: number | null;
 
     // Subtitle manager
     private declare subtitle: SubtitleManager
-    // Dialogue with audio (JSON)
     private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, speaker: string } } }
+
     declare worldOctree: Octree;
 
     constructor() {
@@ -67,8 +68,15 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         const buttonContainer = document.getElementById(this.buttonContainerId)
         if (!buttonContainer) return
 
-        this.setCurrentSelectedObject(binding.name)
-        this.updateActiveButton(buttonContainer, binding.button)
+        if (this.lastPressedKeyIndex === keyIndex) {
+            this.selectedObject = ""
+            this.updateActiveButton(buttonContainer, null)
+            this.lastPressedKeyIndex = null
+        } else {
+            this.setCurrentSelectedObject(binding.name)
+            this.updateActiveButton(buttonContainer, binding.button)
+            this.lastPressedKeyIndex = keyIndex
+        }
 
         event.preventDefault()
         event.stopPropagation()
@@ -184,13 +192,11 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         const raycaster = new Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 20)
         raycaster.layers.enable(1);
 
-
         raycaster.ray.origin.copy(this.experience.camera.instance.position);
         this.experience.camera.instance.getWorldDirection(raycaster.ray.direction);
 
         // Si on joue en god mode -> pour l'ajout à la souris
         // raycaster.setFromCamera(this.mousePosition, this.experience.camera.instance)
-
 
         // let objectsToIntersect = this.experience.scene.children
         // objectsToIntersect = objectsToIntersect.concat([this.InstancedMeshManagers[0].manager.mesh])
