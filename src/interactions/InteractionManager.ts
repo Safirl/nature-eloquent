@@ -20,6 +20,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private declare debugSphere: THREE.Mesh;
     private buttonContainerId = "tool-selector"
     private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
+    private keyboardBindings: { name: string, button: HTMLButtonElement }[] = []
 
     // Subtitle manager
     private declare subtitle: SubtitleManager
@@ -40,6 +41,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         const interactableObjects = [
             { name: "mushroomCouc", resourceName: "mushroomPaintedModel" },
             { name: "mushroom2", resourceName: "mushroomModel" },
+            { name: "mushroomCouc", resourceName: "mushroomPaintedModel" },
         ]
 
         // this.selectedObject = new Actor("mushroom", this.resources.items.mushroomPaintedModel as GLTF, false);
@@ -52,20 +54,42 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         this.experience.canvas.addEventListener("mousemove", this.updateMouseScreenPosition)
         // this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
         this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
+        document.addEventListener("keyup", this.onToolSelectorKeyUp)
         this.setDebugObject()
         this.updateInteractableObjects(interactableObjects)
-        this.selectedObject = "mushroom2";
+        // this.selectedObject = "mushroom2";
+    }
+
+    onToolSelectorKeyUp = (event: KeyboardEvent) => {
+        const keyIndex = parseInt(event.key) - 1
+
+        const binding = this.keyboardBindings[keyIndex]
+        console.log("keyIndex", keyIndex)
+        console.log("binding", binding)
+        if (!binding) return
+
+        const buttonContainer = document.getElementById(this.buttonContainerId)
+        if (!buttonContainer) return
+        console.log("biding", binding)
+
+        this.setCurrentSelectedObject(binding.name)
+        console.log("binding name", binding.name)
+        this.updateActiveButton(buttonContainer, binding.button)
+        event.preventDefault()
+        event.stopPropagation()
+        event.stopImmediatePropagation()
     }
 
     updateInteractableObjects(newResources: { name: string, resourceName: string }[]) {
         this.InstancedMeshManagers.forEach((pair) => {
             pair.manager.destroy()
         })
-        const buttonContainer = document.getElementById("tool-selector");
+        const buttonContainer = document.getElementById(this.buttonContainerId);
         if (!buttonContainer) throw new Error("Can't refresh buttons: buttonContainer is null");
 
         buttonContainer.innerHTML = '';
         this.InstancedMeshManagers = [];
+        this.keyboardBindings = [];
 
         newResources.forEach((pair) => {
             console.log("pair.resourceName", pair.resourceName);
@@ -84,21 +108,27 @@ export default class InteractionManager extends EventEmitter implements LifeTime
             button.classList.remove("active")
             buttonContainer.appendChild(button)
             console.log("buttonContainer", buttonContainer)
-            button.onclick = (event) => {
-                this.setCurrentSelectedObject(pair.name)
-                for (const child of buttonContainer.children) {
-                    if (child === button) {
-                        child.classList.add("active")
-                    } else {
-                        child.classList.remove("active")
-                    }
-                }
-                event.preventDefault()
-                event.stopPropagation();
-                event.stopImmediatePropagation();
-            }
-        })
+            // button.onclick = (event) => {
+            //     this.setCurrentSelectedObject(pair.name)
+            //     this.updateActiveButton(buttonContainer, button)
+            //     event.preventDefault()
+            //     event.stopPropagation();
+            //     event.stopImmediatePropagation();
+            // }
+            this.keyboardBindings.push({ name: pair.name, button })
+            console.log("Binds", this.keyboardBindings);
+        }
+        )
+    }
 
+    updateActiveButton(container: HTMLElement, activeButton: HTMLElement | null = null) {
+        for (const child of container.children) {
+            if (child === activeButton) {
+                child.classList.add("active")
+            } else {
+                child.classList.remove("active")
+            }
+        }
     }
 
     init = () => {
@@ -112,6 +142,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     };
 
     destroy = () => {
+        document.removeEventListener("keyup", this.onToolSelectorKeyUp)
         this.InstancedMeshManagers.forEach((pair) => {
             pair.manager.destroy()
         })
