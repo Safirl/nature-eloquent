@@ -36,6 +36,12 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         this.subtitle = new SubtitleManager();
         this.dialogsAudio = dialogSubtitleAudio; // JSON
 
+        // InteractableObjects tableau d'objet
+        const interactableObjects = [
+            { name: "mushroomCouc", resourceName: "mushroomPaintedModel" },
+            { name: "mushroom2", resourceName: "mushroomModel" },
+        ]
+
         // this.selectedObject = new Actor("mushroom", this.resources.items.mushroomPaintedModel as GLTF, false);
         this.debug = this.experience.debug
         if (this.debug.active) {
@@ -47,10 +53,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
         this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
         this.setDebugObject()
-        this.updateInteractableObjects([
-            { name: "mushroom", resourceName: "mushroomPaintedModel" },
-            { name: "mushroom2", resourceName: "mushroomModel" },
-        ])
+        this.updateInteractableObjects(interactableObjects)
         this.selectedObject = "mushroom2";
     }
 
@@ -63,7 +66,10 @@ export default class InteractionManager extends EventEmitter implements LifeTime
 
         buttonContainer.innerHTML = '';
         this.InstancedMeshManagers = [];
+
         newResources.forEach((pair) => {
+            console.log("pair.resourceName", pair.resourceName);
+            console.log("pair", pair)
             const resource = this.experience.resources.items[pair.resourceName] as GLTF
             if (!resource) {
                 console.warn("found invalid resource for: ", pair.resourceName);
@@ -71,12 +77,22 @@ export default class InteractionManager extends EventEmitter implements LifeTime
             }
             const instancedMeshManager = new InstancedMeshManager(resource.scene.children[0] as THREE.Mesh)
             this.InstancedMeshManagers.push({ name: pair.name, manager: instancedMeshManager })
+
             const button = document.createElement('button')
             button.style.marginRight = '4px'
             button.innerHTML = pair.name
+            button.classList.remove("active")
             buttonContainer.appendChild(button)
+            console.log("buttonContainer", buttonContainer)
             button.onclick = (event) => {
                 this.setCurrentSelectedObject(pair.name)
+                for (const child of buttonContainer.children) {
+                    if (child === button) {
+                        child.classList.add("active")
+                    } else {
+                        child.classList.remove("active")
+                    }
+                }
                 event.preventDefault()
                 event.stopPropagation();
                 event.stopImmediatePropagation();
