@@ -1,7 +1,7 @@
 import { Actor, Debug, EventEmitter, Experience, Resources, type LifeTimeObject } from "@plugins/baseExperience";
 import type GUI from "lil-gui";
 import { Raycaster, Vector2, Vector3 } from "three";
-import type { GLTF } from "three/examples/jsm/Addons.js";
+import type { GLTF, Octree } from "three/examples/jsm/Addons.js";
 import * as THREE from "three"
 import InstancedMeshManager from "./InstancedMeshManager";
 import SubtitleManager from "../subtitle/SubtitleManager";
@@ -25,6 +25,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private declare subtitle: SubtitleManager
     // Dialogue with audio
     private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, speaker: string } } }
+    declare worldOctree: Octree;
 
     constructor() {
         super()
@@ -43,7 +44,8 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         }
 
         this.experience.canvas.addEventListener("mousemove", this.updateMouseScreenPosition)
-        this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
+        // this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
+        document.addEventListener("mouseup", this.addSelectedObject)
         this.setDebugObject()
         this.updateInteractableObjects([
             { name: "mushroom", resourceName: "mushroomPaintedModel" },
@@ -145,7 +147,15 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     getSelectedObjectPosition(): Vector3 | undefined {
         const raycaster = new Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 20)
         raycaster.layers.enable(1);
-        raycaster.setFromCamera(this.mousePosition, this.experience.camera.instance)
+
+        if (document.pointerLockElement === document.body) {
+            raycaster.ray.origin.copy(this.experience.camera.instance.position);
+            this.experience.camera.instance.getWorldDirection(raycaster.ray.direction);
+        }
+        else {
+            raycaster.setFromCamera(this.mousePosition, this.experience.camera.instance)
+        }
+
         // let objectsToIntersect = this.experience.scene.children
         // objectsToIntersect = objectsToIntersect.concat([this.InstancedMeshManagers[0].manager.mesh])
         const intersections = raycaster.intersectObjects(this.experience.scene.children, true);

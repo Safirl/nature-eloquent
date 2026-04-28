@@ -24,7 +24,7 @@ export default class Playground extends World {
     this.environment = new GameEnvironment(this.resources.items.environmentMapTexture1 as THREE.CubeTexture, true);
 
     //Fox is just an actor because it doesn't have any logic in it.
-    this.fox = new Actor("fox", this.resources.items.foxModel as GLTF, true, false, this.resources.items.foxModel as GLTF)
+    this.fox = new Actor("fox", this.resources.items.foxModel as GLTF, true, false, true, this.resources.items.foxModel as GLTF)
     this.fox.setScale(.02, .02, .02)
 
     this.interactionManager = new InteractionManager();

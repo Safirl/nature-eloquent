@@ -6,19 +6,27 @@ export default class InstancedMeshManager implements LifeTimeObject {
     public declare mesh: InteractableInstancedMesh
     public count = 0; // Changement en public (?) -> pour pouvoir l'appeler dans InteractionManager 
     private dummy = new THREE.Object3D()
-    private declare experience: Experience
+    private declare collisionMesh: THREE.Mesh
+    private declare experience: Experience;
 
-    constructor(baseObject: THREE.Mesh, max = 500) {
+    constructor(baseObject: THREE.Mesh, max = 500, hasCollisions = true) {
         if (!Experience.instance) return;
         this.experience = Experience.instance
+        const material = baseObject.material as THREE.MeshStandardMaterial
+        material.wireframe = true;
 
-        this.mesh = new InteractableInstancedMesh(baseObject.geometry, baseObject.material, max)
+        this.mesh = new InteractableInstancedMesh(baseObject.geometry, material, max)
         this.mesh.isInteractable = false;
         this.mesh.castShadow = true;
         this.mesh.receiveShadow = true;
         this.count = 0
         this.mesh.count = this.count
         this.experience.scene.add(this.mesh)
+        if (hasCollisions) {
+            console.log("added collision mesh");
+            this.collisionMesh = baseObject.clone()
+        }
+        // this.experience.collisionManager.worldOctree.layers.enable(1);
     }
 
     add(position: THREE.Vector3) {
@@ -30,6 +38,10 @@ export default class InstancedMeshManager implements LifeTimeObject {
         this.mesh.instanceMatrix.needsUpdate = true;
         this.mesh.computeBoundingSphere()
         this.mesh.computeBoundingBox()
+        if (this.collisionMesh) {
+            this.collisionMesh.position.copy(position)
+            this.experience.collisionManager.worldOctree.fromGraphNode(this.collisionMesh)
+        }
     }
 
     init = () => { };
