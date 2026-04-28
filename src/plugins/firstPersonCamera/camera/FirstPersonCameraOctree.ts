@@ -1,6 +1,6 @@
 import Experience from "@plugins/baseExperience/experience/Experience";
 import Camera from "@plugins/baseExperience/experience/Camera";
-import {type InputEventArgs} from "@plugins/baseExperience/inputs/inputInterfaces";
+import { type InputEventArgs } from "@plugins/baseExperience/inputs/inputInterfaces";
 import * as THREE from "three";
 import { Capsule } from "three/examples/jsm/Addons.js";
 
@@ -160,7 +160,7 @@ export default class FirstPersonCameraOctree extends Camera {
   private playerCollisions(): void {
     const collisionManager = this.experience.collisionManager;
     if (!collisionManager) throw new Error("Experience instance is not defined");
-    
+
     const result = collisionManager.worldOctree.capsuleIntersect(this.playerCollider);
     this.canJump = false;
 
@@ -249,7 +249,7 @@ export default class FirstPersonCameraOctree extends Camera {
       .max(800)
       .step(0.1);
     movementsFolder.add(this, "height").name("height").min(1).max(5).step(0.1).onChange(() => {
-        this.playerCollider.end.set(0, this.height, 0);
+      this.playerCollider.end.set(0, this.height, 0);
     });
   }
 }

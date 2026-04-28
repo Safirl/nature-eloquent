@@ -4,6 +4,8 @@ import { Raycaster, Vector2, Vector3 } from "three";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three"
 import InstancedMeshManager from "./InstancedMeshManager";
+import SubtitleManager from "../subtitle/SubtitleManager";
+import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json"
 import InteractableInstancedMesh from "./InteractableInstancedMesh";
 
 export default class InteractionManager extends EventEmitter implements LifeTimeObject {
@@ -17,14 +19,22 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private declare debugFolder: GUI;
     private declare debugSphere: THREE.Mesh;
     private buttonContainerId = "tool-selector"
-
     private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
+
+    // Subtitle manager
+    private declare subtitle: SubtitleManager
+    // Dialogue with audio
+    private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, speaker: string } } }
 
     constructor() {
         super()
         if (!Experience.instance) return;
         this.experience = Experience.instance;
         this.resources = this.experience.resources;
+
+        this.subtitle = new SubtitleManager();
+        this.dialogsAudio = dialogSubtitleAudio; // JSON
+
         // this.selectedObject = new Actor("mushroom", this.resources.items.mushroomPaintedModel as GLTF, false);
         this.debug = this.experience.debug
         if (this.debug.active) {
@@ -110,6 +120,21 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // // instance.
         // this.experience.scene.add(this.selectedObject.model)
         // this.trigger("placeObject", [this.selectedObject]);
+
+
+        // Enchaînement de dialogues en fonction du nombre d'objets placés pour un nom donné.
+        // console.log("instanceMeshManager", instancedMeshManager);
+        // console.log("InstancedMeshManagers", this.InstancedMeshManagers.filter((m) => m.name === this.selectedObject));
+        const flower = this.InstancedMeshManagers.find((m) => m.name === "mushroom")?.manager;
+        if (!flower) return;
+
+        if (flower.count === 1) {
+            this.subtitle.displayDialog(this.dialogsAudio.dinosaur_interaction_1)
+        }
+        else if (flower.count === 5) {
+            this.subtitle.displayDialog(this.dialogsAudio.dinosaur_interaction_2)
+        }
+
     }
 
     onPlayerReleased = () => {

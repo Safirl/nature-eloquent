@@ -1,0 +1,28 @@
+#subtitle {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    background-color: rgba(255, 255, 255, 0.581);
+    backdrop-filter: blur(2px);
+    padding: 20px 40px;
+    width: 60%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    #dialog {
+    padding-right: 4px;
+    border-right: 2px solid #0000003d;
+    animation: caret-blink .75s infinite;
+}
+}
+
+
+
+@keyframes caret-blink {
+  from, to { border-color: transparent }
+  50% { border-color: #0000009d; }
+}
