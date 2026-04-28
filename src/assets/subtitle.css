@@ -11,20 +11,16 @@
     height: 60px;
     display: flex;
     align-items: center;
-    gap: 8px;
-}
+    gap: 3px;
 
-#dialog {
+    #dialog {
     padding-right: 4px;
     border-right: 2px solid #0000003d;
     animation: caret-blink .75s infinite;
 }
-
-.wrap-character-dialog {
-    display: flex;
-    align-items: start;
-    gap: 3px;
 }
+
+
 
 @keyframes caret-blink {
   from, to { border-color: transparent }
