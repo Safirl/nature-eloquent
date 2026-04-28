@@ -4,7 +4,7 @@ import InteractableInstancedMesh from "./InteractableInstancedMesh";
 
 export default class InstancedMeshManager implements LifeTimeObject {
     public declare mesh: InteractableInstancedMesh
-    private count = 0;
+    public count = 0; // Changement en public (?) -> pour pouvoir l'appeler dans InteractionManager 
     private dummy = new THREE.Object3D()
     private declare experience: Experience
 

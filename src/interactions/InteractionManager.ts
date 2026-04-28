@@ -25,7 +25,6 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private declare subtitle: SubtitleManager
     // Dialogue with audio
     private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, character: string } } }
-    private declare countObjectsPlaced: number;
 
     constructor() {
         super()
@@ -35,7 +34,6 @@ export default class InteractionManager extends EventEmitter implements LifeTime
 
         this.subtitle = new SubtitleManager();
         this.dialogsAudio = dialogSubtitleAudio; // JSON
-        this.countObjectsPlaced = 0;
 
         // this.selectedObject = new Actor("mushroom", this.resources.items.mushroomPaintedModel as GLTF, false);
         this.debug = this.experience.debug
@@ -124,12 +122,16 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // this.trigger("placeObject", [this.selectedObject]);
 
 
-        // Enchaînement de dialogues en fonction du nombre d'objets placés
-        this.countObjectsPlaced++
-        if (this.countObjectsPlaced === 1) {
+        // Enchaînement de dialogues en fonction du nombre d'objets placés pour un nom donné.
+        // console.log("instanceMeshManager", instancedMeshManager);
+        // console.log("InstancedMeshManagers", this.InstancedMeshManagers.filter((m) => m.name === this.selectedObject));
+        const flower = this.InstancedMeshManagers.find((m) => m.name === "mushroom")?.manager;
+        if (!flower) return;
+
+        if (flower.count === 1) {
             this.subtitle.displayDialog(this.dialogsAudio.first_scene)
         }
-        else if (this.countObjectsPlaced === 5) {
+        else if (flower.count === 5) {
             this.subtitle.displayDialog(this.dialogsAudio.second_scene)
         }
 
