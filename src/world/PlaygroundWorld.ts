@@ -28,6 +28,12 @@ export default class Playground extends World {
     this.fox.setScale(.02, .02, .02)
 
     this.interactionManager = new InteractionManager();
+
+    // Add colisions
+    const collisionManager = Experience.instance?.collisionManager
+    if (!collisionManager) throw new Error("Playground initialization failed: CollisionManager is not available.");
+    collisionManager?.addCollisionObjects([this.floor]);
+    collisionManager?.addCollisionObjects([this.fox])
   }
 
   update() {
