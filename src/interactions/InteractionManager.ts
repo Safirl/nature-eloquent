@@ -1,7 +1,7 @@
 import { Actor, Debug, EventEmitter, Experience, Resources, type LifeTimeObject } from "@plugins/baseExperience";
 import type GUI from "lil-gui";
 import { Raycaster, Vector2, Vector3 } from "three";
-import type { GLTF } from "three/examples/jsm/Addons.js";
+import type { GLTF, Octree } from "three/examples/jsm/Addons.js";
 import * as THREE from "three"
 import InstancedMeshManager from "./InstancedMeshManager";
 import SubtitleManager from "../subtitle/SubtitleManager";
@@ -25,6 +25,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private declare subtitle: SubtitleManager
     // Dialogue with audio
     private declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, speaker: string } } }
+    declare worldOctree: Octree;
 
     constructor() {
         super()
