@@ -69,8 +69,8 @@ export default class FirstPersonCameraOctree extends Camera {
   setControls() {
     Experience.instance?.canvas.addEventListener("mousedown", this.lockPointer);
 
-    document.body.addEventListener("mousemove", (e: MouseEvent) => {
-      if (document.pointerLockElement === document.body) {
+    Experience.instance?.canvas.addEventListener("mousemove", (e: MouseEvent) => {
+      if (document.pointerLockElement === Experience.instance?.canvas) {
         this.instance.rotation.y -= e.movementX / 500;
         this.instance.rotation.x -= e.movementY / 500;
         this.instance.rotation.x = THREE.MathUtils.clamp(
@@ -85,7 +85,7 @@ export default class FirstPersonCameraOctree extends Camera {
   }
 
   lockPointer = () => {
-    document.body.requestPointerLock();
+    this.experience.canvas.requestPointerLock();
   }
 
   bindInputs() {
@@ -206,7 +206,7 @@ export default class FirstPersonCameraOctree extends Camera {
     if (!Experience.instance) {
       return;
     }
-    if (document.pointerLockElement !== document.body) return;
+    if (document.pointerLockElement !== Experience.instance.canvas) return;
 
     const delta = Experience.instance.time.delta / 1000;
 

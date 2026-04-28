@@ -45,7 +45,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
 
         this.experience.canvas.addEventListener("mousemove", this.updateMouseScreenPosition)
         // this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
-        document.addEventListener("mouseup", this.addSelectedObject)
+        this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
         this.setDebugObject()
         this.updateInteractableObjects([
             { name: "mushroom", resourceName: "mushroomPaintedModel" },
