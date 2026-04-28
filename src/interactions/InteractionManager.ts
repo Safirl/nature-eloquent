@@ -38,7 +38,7 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         this.dialogsAudio = dialogSubtitleAudio;
 
         const interactableObjects = [
-            { name: "mushroomCouc", resourceName: "mushroomPaintedModel" },
+            { name: "mushroom", resourceName: "mushroomPaintedModel" },
             { name: "mushroom2", resourceName: "mushroomModel" },
             { name: "mushroomCouc", resourceName: "mushroomPaintedModel" },
         ]
@@ -51,7 +51,6 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         }
 
         this.experience.canvas.addEventListener("mousemove", this.updateMouseScreenPosition)
-        // this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
         this.experience.canvas.addEventListener("mouseup", this.addSelectedObject)
         document.addEventListener("keyup", this.onToolSelectorKeyUp)
         this.setDebugObject()
@@ -162,10 +161,8 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         // this.experience.scene.add(this.selectedObject.model)
         // this.trigger("placeObject", [this.selectedObject]);
 
-
-        // Enchaînement de dialogues en fonction du nombre d'objets placés pour un nom donné.
-        // console.log("instanceMeshManager", instancedMeshManager);
-        // console.log("InstancedMeshManagers", this.InstancedMeshManagers.filter((m) => m.name === this.selectedObject));
+        // EX d'enchaînement du dialogue et en fonction du nombre d'objets placés
+        // Logique à mettre dans une autre fonction ?
         const flower = this.InstancedMeshManagers.find((m) => m.name === "mushroom")?.manager;
         if (!flower) return;
 
@@ -187,13 +184,13 @@ export default class InteractionManager extends EventEmitter implements LifeTime
         const raycaster = new Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 20)
         raycaster.layers.enable(1);
 
-        if (document.pointerLockElement === document.body) {
-            raycaster.ray.origin.copy(this.experience.camera.instance.position);
-            this.experience.camera.instance.getWorldDirection(raycaster.ray.direction);
-        }
-        else {
-            raycaster.setFromCamera(this.mousePosition, this.experience.camera.instance)
-        }
+
+        raycaster.ray.origin.copy(this.experience.camera.instance.position);
+        this.experience.camera.instance.getWorldDirection(raycaster.ray.direction);
+
+        // Si on joue en god mode -> pour l'ajout à la souris
+        // raycaster.setFromCamera(this.mousePosition, this.experience.camera.instance)
+
 
         // let objectsToIntersect = this.experience.scene.children
         // objectsToIntersect = objectsToIntersect.concat([this.InstancedMeshManagers[0].manager.mesh])
