@@ -2,7 +2,6 @@ type DialogStep = {
     audio: string;
     dialog: string;
     character: string;
-    duration: number;
 };
 
 type DialogInteraction = Record<string, DialogStep>;
@@ -13,6 +12,7 @@ export default class SubtitleManager {
     declare characterElement: HTMLElement;
     declare currentIndex: number;
     declare audioPlayer: HTMLAudioElement;
+    declare typingInterval: number | null;
 
     constructor() {
         this.init();
@@ -26,6 +26,7 @@ export default class SubtitleManager {
 
         this.audioPlayer = new Audio();
         this.audioPlayer.preload = "auto";
+        this.typingInterval = null;
     }
 
     playAudio(audioSrc: string) {
@@ -40,9 +41,24 @@ export default class SubtitleManager {
         if (!this.subtitleElement) return;
         this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
         this.subtitleElement.style.opacity = "1";
-        this.dialogElement.textContent = text;
+        this.typeText(text);
         this.characterElement.textContent = characterName;
         this.playAudio(audioSrc);
+    }
+
+    typeText(text: string, speed: number = 35) {
+        if (this.typingInterval) clearInterval(this.typingInterval);
+        this.dialogElement.textContent = "";
+        let i = 0;
+
+        this.typingInterval = setInterval(() => {
+            this.dialogElement.textContent += text[i];
+            i++;
+            if (i >= text.length) {
+                clearInterval(this.typingInterval!);
+                this.typingInterval = null;
+            }
+        }, speed);
     }
 
     hideSubtitle() {

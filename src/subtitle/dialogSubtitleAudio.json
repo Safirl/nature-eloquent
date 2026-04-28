@@ -2,29 +2,25 @@
     "first_scene": {
         "first_dialog": {
             "audio": "/audio/welcome.mp3",
-            "dialog": "Bienvenue dans la forêt de Petit Pois, découvrez une forêt magique où l'imagination de petit pois prend vie.",
-            "character": "Aria: ",
-            "duration": 3000
+            "dialog": "Welcome traveler",
+            "character": "Aria: "
         },
         "second_dialog": {
             "audio": "/audio/02_dialog.mp3",
-            "dialog": "Débale tes objets ",
-            "character": "Petit Pois: ",
-            "duration": 2000
+            "dialog": "Hello",
+            "character": "Petit Pois: "
         }
     },
     "second_scene": {
         "first_dialog": {
             "audio": "/audio/welcome.mp3",
-            "dialog": "Tu as déballe tous tes objets, tu peux les placer dans la forêt.",
-            "character": "Aria: ",
-            "duration": 2000
+            "dialog": "Coucou",
+            "character": "Aria: "
         },
         "second_dialog": {
             "audio": "/audio/02_dialog.mp3",
-            "dialog": "Place les dans la forêt pour les faire vivre !",
-            "character": "Petit Pois: ",
-            "duration": 2000
+            "dialog": "Bienvenue",
+            "character": "Petit Pois: "
         }
     }
 }
