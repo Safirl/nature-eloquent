@@ -70,8 +70,6 @@ export default class Tree {
         const matrix = new THREE.Matrix4();
 
 
-        console.log(this.treeData)
-
         for (let i = 0; i < this.count; i++) {
 
 
@@ -104,7 +102,7 @@ export default class Tree {
         console.log(this.model)
         this.model.traverse((child: any) => {
             if (child instanceof THREE.Mesh) {
-                child.castShadow = false
+                child.castShadow = true
                 child.material = new THREE.MeshBasicMaterial({ color: "#ffffff" })
                 this.geometry = child.geometry
 

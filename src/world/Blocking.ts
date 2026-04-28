@@ -6,6 +6,7 @@ import * as THREE from "three"
 import OutlinerManager from "./OutlinerManager";
 import Tree from "../assets/components/Tree";
 import Leafs from "../assets/components/Leafs";
+import FirTree from "../assets/components/FirTree";
 export default class BlockingWorld extends World {
     declare experience: Experience;
     declare scene: Experience["scene"];
@@ -17,6 +18,7 @@ export default class BlockingWorld extends World {
     declare outlineManager: OutlinerManager
     declare tree: Tree
     declare bushes: Leafs
+    declare firTree: FirTree
 
     init() {
         super.init()
@@ -68,8 +70,7 @@ export default class BlockingWorld extends World {
         }
         this.bushes.create()
 
-
-        console.log(this.bushes)
+        this.firTree = new FirTree(300, surface)
 
     }
 
@@ -80,6 +81,7 @@ export default class BlockingWorld extends World {
                 o.update()
             })
             this.bushes.update()
+            this.firTree.update()
         }
     }
 }
