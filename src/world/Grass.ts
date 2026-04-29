@@ -103,8 +103,9 @@ export default class Grass implements LifeTimeObject {
                 uWindStrength: { value: this.windStrength },
                 uWindFrequency: { value: this.windFrequency },
                 uWindScale: { value: this.windScale },
+                uDarkFactor: {value : new THREE.Color(0xffffff)}
             },
-            transparent: true,
+            // transparent: true, // Not sure wether it's usefull or not. Let's see in the future.
             // depthTest: false,
             // depthWrite: false
         })
