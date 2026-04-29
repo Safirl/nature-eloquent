@@ -15,9 +15,9 @@ export default class CollisionManager implements LifeTimeObject {
         this.currentCollisionObjects = []
     }
 
-    init = () => {};
-    update = () => {};
-    destroy = () => {};
+    init = () => { };
+    update = () => { };
+    destroy = () => { };
 
     addCollisionObjects(objects: (StaticObject | Actor)[]) {
         const addedObjects: (StaticObject | Actor)[] = []
@@ -58,8 +58,8 @@ export default class CollisionManager implements LifeTimeObject {
                 }
             }
             const index = this.currentCollisionObjects.findIndex((o) => o.getId() === object.getId());
-            if (index > -1) { 
-                this.currentCollisionObjects.splice(index, 1); 
+            if (index > -1) {
+                this.currentCollisionObjects.splice(index, 1);
             }
         }))
         this.rebuildCollisions()
