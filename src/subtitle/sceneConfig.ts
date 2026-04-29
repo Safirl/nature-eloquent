@@ -52,5 +52,6 @@ export const sceneConfig: SceneType = [
                 callbackName: "onDinosaure02Completed"
             }
         ]
-    }
+    },
+
 ]

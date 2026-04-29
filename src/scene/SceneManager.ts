@@ -41,7 +41,7 @@ export default class SceneManager extends EventEmitter {
 
         this.playScene(0)
         this.interactionManager.on('onObjectPlaced', this.onObjectPlaced)
-        this.subtitle.on("dialogFinished", this.nextStepAfterStepDialogFinished)
+        this.subtitle.on("dialogFinished", this.nextStepOrSceneAfterStepDialogFinished)
     }
 
     // Jouer une scène en fonction de son identifiant
@@ -68,9 +68,23 @@ export default class SceneManager extends EventEmitter {
         this.stepDescriptions.push({ count: 0, relatedStep: step })
     }
 
-    nextStepAfterStepDialogFinished = () => {
+    nextStepOrSceneAfterStepDialogFinished = () => {
         this.currentStepIndex++;
-        this.playStep(this.currentStepIndex);
+
+        if (this.currentStepIndex < this.sceneConfig[this.currentSceneId].steps.length) {
+            this.playStep(this.currentStepIndex);
+        }
+
+        else {
+            if (this.currentSceneId >= this.sceneConfig.length)
+                return;
+
+            console.log("scene finished")
+            this.currentStepIndex = 0;
+            this.currentSceneId++;
+            this.playScene(this.currentSceneId);
+        }
+
     }
 
     onObjectPlaced = (callbacks: string) => {
