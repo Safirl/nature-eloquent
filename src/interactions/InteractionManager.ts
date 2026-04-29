@@ -7,6 +7,8 @@ import InstancedMeshManager from "./InstancedMeshManager";
 import SubtitleManager from "../subtitle/SubtitleManager";
 import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json"
 import InteractableInstancedMesh from "./InteractableInstancedMesh";
+import mushroomIcon from "../books/mushroom.png";
+import mushroom2Icon from "../books/mushroom2.png";
 
 export default class InteractionManager extends EventEmitter implements LifeTimeObject {
     private declare selectedObject: string;
@@ -22,6 +24,12 @@ export default class InteractionManager extends EventEmitter implements LifeTime
     private InstancedMeshManagers: { name: string, manager: InstancedMeshManager }[] = []
     private keyboardBindings: { name: string, button: HTMLButtonElement }[] = []
     private lastPressedKeyIndex: number | null = null;
+
+    private buttonIcons: { [key: string]: string } = {
+        mushroom: mushroomIcon,
+        mushroom2: mushroom2Icon,
+        mushroomCouc: mushroomIcon,
+    }
 
     // Subtitle manager
     private declare subtitle: SubtitleManager
@@ -107,6 +115,16 @@ export default class InteractionManager extends EventEmitter implements LifeTime
             button.style.marginRight = '4px'
             button.innerHTML = pair.name
             button.classList.remove("active")
+
+            const objectImage = document.createElement('img')
+            objectImage.src = this.buttonIcons[pair.name];
+            console.log("objectImage src: ", objectImage.src);
+            objectImage.style.width = '40px';
+            objectImage.style.height = '40px';
+            objectImage.style.objectFit = 'cover';
+            objectImage.style.marginRight = '4px';
+            button.appendChild(objectImage);
+
             buttonContainer.appendChild(button)
             // button.onclick = (event) => {
             //     this.setCurrentSelectedObject(pair.name)
