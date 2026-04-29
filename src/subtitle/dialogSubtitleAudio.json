@@ -1,31 +1,31 @@
 {
-    "dinosaur_interaction_1": {
-        "dialog_1": {
-            "audio": "/audio/welcome.mp3",
-            "dialog": "Tu m'avais jamais dit que t'étais un fan des Tyrannosaures !",
-            "speaker": "Aria: "
-        },
-        "dialog_2": {
-            "audio": "/audio/02_dialog.mp3",
-            "dialog": "Oui j'adorais ça quand j'étais enfant ! J'avais même une encyclopédie.",
-            "speaker": "Petit Pois: "
-        }
-    },
-    "dinosaur_interaction_2": {
-        "dialog_1": {
-            "audio": "/audio/welcome.mp3",
-            "dialog": "Wohoho, attends mais c'est bien plus qu'une passion là, t'as carrément une collection ! J'avais jamais vu autant de dinausores en plastique dans une même pièce de ma vie.",
-            "speaker": "Aria: "
-        },
-        "dialog_2": {
-            "audio": "/audio/02_dialog.mp3",
-            "dialog": "Et t'as pas tout vu ! Ma mère m'a obligé d'en laisser sinon j'aurais pris trois cartons de plus de la même taille !",
-            "speaker": "Petit Pois: "
-        },
-        "dialog_3": {
-            "audio": "/audio/02_dialog.mp3",
-            "dialog": "Merci Madame FOURCADE ! je vous revaudrai ça.",
-            "speaker": "Aria: "
-        }
-    }
+	"dinosaur_interaction_1": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Tu m'avais jamais dit que t'étais un fan des Tyrannosaures !",
+			"speaker": "Aria: "
+		},
+		"dialog_2": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Oui j'adorais ça quand j'étais enfant ! J'avais même une encyclopédie.",
+			"speaker": "Petit Pois: "
+		}
+	},
+	"dinosaur_interaction_2": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Wohoho, attends mais c'est bien plus qu'une passion là, t'as carrément une collection ! J'avais jamais vu autant de dinausores en plastique dans une même pièce de ma vie.",
+			"speaker": "Aria: "
+		},
+		"dialog_2": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Et t'as pas tout vu ! Ma mère m'a obligé d'en laisser sinon j'aurais pris trois cartons de plus de la même taille !",
+			"speaker": "Petit Pois: "
+		},
+		"dialog_3": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Merci Madame FOURCADE ! je vous revaudrai ça.",
+			"speaker": "Aria: "
+		}
+	}
 }

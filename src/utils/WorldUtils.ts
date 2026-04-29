@@ -1,4 +1,4 @@
-import { Experience } from "@plugins/baseExperience"
+import { Experience } from "@plugins/baseExperience";
 import { Camera } from "three";
 
 // export const findPlayerCamera = (): Camera | undefined => {
