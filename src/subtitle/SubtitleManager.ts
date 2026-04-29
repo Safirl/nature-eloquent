@@ -1,12 +1,15 @@
-type DialogStep = {
+import { EventEmitter } from "@plugins/baseExperience";
+import type { DialogStep } from "./sceneConfig";
+
+type DialogSubtitleStep = {
 	audio: string;
 	dialog: string;
 	speaker: string;
 };
 
-type DialogInteraction = Record<string, DialogStep>;
+type DialogInteraction = Record<string, DialogSubtitleStep>;
 
-export default class SubtitleManager {
+export default class SubtitleManager extends EventEmitter {
 	declare subtitleElement: HTMLElement;
 	declare dialogElement: HTMLElement;
 	declare characterElement: HTMLElement;
@@ -66,22 +69,20 @@ export default class SubtitleManager {
 	}
 
 	// Changement de dialogue automatique
-	async displayDialog(dialogData: DialogInteraction) {
+	async displayDialog(dialogData: DialogInteraction, currentStep: any) {
 		const entries = Object.entries(dialogData);
+		console.log('entries', entries)
 		if (entries.length === 0) return;
 
 		for (const [_key, item] of entries) {
 			this.showSubtitle(item.dialog, item.speaker, item.audio);
 			await new Promise<void>((resolve) => {
-				this.audioPlayer.addEventListener("ended", () => resolve(), {
-					once: true,
-				});
-				this.audioPlayer.addEventListener("error", () => resolve(), {
-					once: true,
-				});
+				this.audioPlayer.addEventListener("ended", () => resolve(), { once: true });
+				this.audioPlayer.addEventListener("error", () => resolve(), { once: true });
 			});
 		}
 		this.hideSubtitle();
+		this.trigger("dialogFinished", currentStep);
 	}
 
 	// Changement dialogue au clic

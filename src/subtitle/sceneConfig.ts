@@ -41,7 +41,7 @@ export const sceneConfig: SceneType = [
                     triggerCount: 2,
                 },],
                 dialogId: "dinosaure_01",
-                callbackName: "onMainCompleted"
+                callbackName: "onDinosaure01Completed"
             },
             {
                 objectsAdded: [{
@@ -49,7 +49,7 @@ export const sceneConfig: SceneType = [
                     triggerCount: 5,
                 },],
                 dialogId: "dinosaure_02",
-                callbackName: "onMainCompleted"
+                callbackName: "onDinosaure02Completed"
             }
         ]
     }

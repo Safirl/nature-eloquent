@@ -2,7 +2,7 @@
 //             console.log(callbacks)
 //         })
 
-import { Experience } from "@plugins/baseExperience";
+import { EventEmitter, Experience } from "@plugins/baseExperience";
 import InteractionManager, { type ObjectPlacedArgs } from "../interactions/InteractionManager";
 import SubtitleManager from "../subtitle/SubtitleManager";
 import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json"
@@ -10,7 +10,7 @@ import type Playground from "../world/PlaygroundWorld";
 import type GameExperience from "../GameExperience";
 import { sceneConfig, type DialogStep, type SceneType } from "../subtitle/sceneConfig";
 
-export default class SceneManager {
+export default class SceneManager extends EventEmitter {
     declare subtitle: SubtitleManager;
     declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, speaker: string } } }
     declare stepDescriptions: { count: number, relatedStep: DialogStep }[]
@@ -18,9 +18,10 @@ export default class SceneManager {
     declare sceneConfig: SceneType
 
     private currentSceneId: number = 0;
+    private currentStepIndex: number = 0;
 
     init() {
-        this.sceneConfig = sceneConfig as SceneType
+        this.sceneConfig = sceneConfig
         this.stepDescriptions = []
         const exp = Experience.instance as GameExperience
         if (!exp)
@@ -36,12 +37,11 @@ export default class SceneManager {
 
         this.interactionManager = world.interactionManager
         console.log(this.interactionManager)
-        // this.interactionManager.on("onObjectPlaced", this.onObjectPlaced)
-        // this.introductionScene();
         //this.allInstancedMeshManagers = this.interactionManager.InstancedMeshManagers
 
         this.playScene(1)
         this.interactionManager.on('onObjectPlaced', this.onObjectPlaced)
+        this.subtitle.on("dialogFinished", this.nextStepAfterStepDialogFinished)
     }
 
     // Jouer une scène en fonction de son identifiant
@@ -51,7 +51,6 @@ export default class SceneManager {
         if (!scene) {
             throw new Error("sceneConfig not found")
         }
-
         this.playStep(0)
     }
 
@@ -64,26 +63,26 @@ export default class SceneManager {
         this.stepDescriptions.push({ count: 0, relatedStep: step })
     }
 
+    nextStepAfterStepDialogFinished = () => {
+        this.currentStepIndex++;
+        this.playStep(this.currentStepIndex);
+    }
+
     onObjectPlaced = (callbacks: string) => {
         this.stepDescriptions.forEach(stepDescription => {
             const object = stepDescription.relatedStep.objectsAdded.find(obj => obj.objectId === callbacks)
             if (!object) return;
             stepDescription.count++
-
+            console.log("stepDescription", stepDescription)
             if (stepDescription.count == object.triggerCount) {
-                this.triggerDialog(stepDescription.relatedStep.dialogId)
+                this.triggerDialog(stepDescription.relatedStep.dialogId, stepDescription.relatedStep)
             }
         })
     }
 
-    triggerDialog(dialogId: string) {
+    triggerDialog(dialogId: string, relatedStep: DialogStep) {
         if (!dialogId) return
-        return this.subtitle.displayDialog(this.dialogsAudio[dialogId])
-
-        // const obj = this.stepDescriptions.find(obj => obj.objectName === objectName)
-        // if (obj) {
-        //     this.subtitle.displayDialog(this.dialogsAudio[dialogId])
-        //     console.log("coucou")
-        // }
+        console.log("triggerDialog", dialogId, relatedStep)
+        return this.subtitle.displayDialog(this.dialogsAudio[dialogId], relatedStep)
     }
 }
