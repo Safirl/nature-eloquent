@@ -8,18 +8,20 @@ import SubtitleManager from "../subtitle/SubtitleManager";
 import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json"
 import type Playground from "../world/PlaygroundWorld";
 import type GameExperience from "../GameExperience";
-import { sceneConfig, type SceneType } from "../subtitle/sceneConfig";
+import { sceneConfig, type DialogStep, type SceneType } from "../subtitle/sceneConfig";
 
 export default class SceneManager {
     declare subtitle: SubtitleManager;
     declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, speaker: string } } }
-    declare objectsCount: { objectName: string, count: number }[]
+    declare stepDescriptions: { count: number, relatedStep: DialogStep }[]
     private declare interactionManager: InteractionManager
     declare sceneConfig: SceneType
 
+    private currentSceneId: number = 0;
+
     init() {
         this.sceneConfig = sceneConfig as SceneType
-        this.objectsCount = []
+        this.stepDescriptions = []
         const exp = Experience.instance as GameExperience
         if (!exp)
             throw new Error("Can't initialize SceneManager: Experience is not valid")
@@ -34,39 +36,54 @@ export default class SceneManager {
 
         this.interactionManager = world.interactionManager
         console.log(this.interactionManager)
-        this.interactionManager.on("onObjectPlaced", this.onObjectPlaced)
+        // this.interactionManager.on("onObjectPlaced", this.onObjectPlaced)
+        // this.introductionScene();
         //this.allInstancedMeshManagers = this.interactionManager.InstancedMeshManagers
 
-        // this.onTriggerDialog(0, "introduction")
+        this.playScene(1)
+        this.interactionManager.on('onObjectPlaced', this.onObjectPlaced)
+    }
+
+    // Jouer une scène en fonction de son identifiant
+    playScene(sceneId: number) {
+        this.currentSceneId = sceneId
+        const scene = this.sceneConfig[sceneId]
+        if (!scene) {
+            throw new Error("sceneConfig not found")
+        }
+
+        this.playStep(0)
+    }
+
+    playStep(stepId: number) {
+        const scene = this.sceneConfig[this.currentSceneId]
+        const step = scene.steps[stepId]
+        if (!step) {
+            return;
+        }
+        this.stepDescriptions.push({ count: 0, relatedStep: step })
     }
 
     onObjectPlaced = (callbacks: string) => {
-        console.log("callbacks", callbacks)
+        this.stepDescriptions.forEach(stepDescription => {
+            const object = stepDescription.relatedStep.objectsAdded.find(obj => obj.objectId === callbacks)
+            if (!object) return;
+            stepDescription.count++
 
-        if (this.objectsCount.find(obj => obj.objectName === callbacks)) {
-            console.log("obj", this.objectsCount)
-            const objIndex = this.objectsCount.findIndex(obj => obj.objectName === callbacks)
-            this.objectsCount[objIndex].count++
-        } else {
-            this.objectsCount.push({ objectName: callbacks, count: 1 })
-        }
-        // Ajouter plusieurs conditions -> déclenche différents dialogues
-        if (this.objectsCount.find(obj => obj.objectName === "mushroom" && obj.count === 2)) {
-            this.onTriggerDialog(2, "dinosaure_01", "mushroom")
-        }
-        else return
-
+            if (stepDescription.count == object.triggerCount) {
+                this.triggerDialog(stepDescription.relatedStep.dialogId)
+            }
+        })
     }
 
+    triggerDialog(dialogId: string) {
+        if (!dialogId) return
+        return this.subtitle.displayDialog(this.dialogsAudio[dialogId])
 
-    onTriggerDialog(count: number, dialogId: string, objectName?: string) {
-        if (!objectName)
-            return this.subtitle.displayDialog(this.dialogsAudio[dialogId])
-
-        const obj = this.objectsCount.find(obj => obj.objectName === objectName)
-        if (obj && obj.count === count) {
-            this.subtitle.displayDialog(this.dialogsAudio[dialogId])
-            console.log("coucou")
-        }
+        // const obj = this.stepDescriptions.find(obj => obj.objectName === objectName)
+        // if (obj) {
+        //     this.subtitle.displayDialog(this.dialogsAudio[dialogId])
+        //     console.log("coucou")
+        // }
     }
 }

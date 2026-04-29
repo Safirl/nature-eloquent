@@ -1,12 +1,14 @@
-export type SceneType = [{
-    id: number,
+export type SceneType = {
     name: string,
     steps: DialogStep[]
-}]
+}[]
 
 export type DialogStep = {
-    id: number,
-    objects: {
+    objectsAdded: {
+        objectId: string,
+        triggerCount: number,
+    }[],
+    objectsRemoved?: {
         objectId: string,
         triggerCount: number,
     }[],
@@ -16,17 +18,38 @@ export type DialogStep = {
 
 export const sceneConfig: SceneType = [
     {
-        id: 0,
+        // scène 0 d'introduction
         name: "introduction",
         steps: [
             {
-                id: 0,
-                objects: [{
+                objectsAdded: [{
                     objectId: "",
                     triggerCount: 0,
                 },],
                 dialogId: "introduction",
                 callbackName: "onIntroductionCompleted"
+            }
+        ]
+    },
+    {
+        // scène 1 : dinosaure
+        name: "dinosaure",
+        steps: [
+            {
+                objectsAdded: [{
+                    objectId: "dinosaure",
+                    triggerCount: 2,
+                },],
+                dialogId: "dinosaure_01",
+                callbackName: "onMainCompleted"
+            },
+            {
+                objectsAdded: [{
+                    objectId: "dinosaure",
+                    triggerCount: 5,
+                },],
+                dialogId: "dinosaure_02",
+                callbackName: "onMainCompleted"
             }
         ]
     }
