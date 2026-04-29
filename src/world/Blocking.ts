@@ -32,7 +32,7 @@ export default class BlockingWorld extends World {
 			this.resources.items.levelDesignModel as GLTF,
 			true,
 			false,
-			false, // Here is a fourth boolean parameter before the collision model which was missing. Please @safirl review the bolean values to ensure it match the expected ones (i followed the default values).
+			false, // Here is a fourth boolean parameter before the collision model which was missing. Could you please @Safirl and @neroliprak review the bolean values and confirm it match the expected ones (i followed the default values).
 			this.resources.items.levelDesignModel as GLTF
 		);
 		this.interactableObjects = [];
