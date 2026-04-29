@@ -39,6 +39,7 @@ export default class Camera extends EventEmitter implements LifeTimeObject {
 		this.setInstance();
 		this.setControls();
 		this.setDebugObject();
+		this.instance.layers.enable(2);
 	}
 
 	setInstance() {
