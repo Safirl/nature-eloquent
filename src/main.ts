@@ -28,6 +28,13 @@ const init = () => {
   const profiles: InputProfile[] = [keyboardProfile];
 
   experience.inputSystem.addInputProfiles(profiles);
+  canvas.requestPointerLock();
 };
 
-init();
+const startBtn = document.querySelector(".start-btn") as HTMLDivElement;
+
+startBtn.addEventListener("click", () => {
+  startBtn.style.display = "none";
+  init();
+})
+// init();
