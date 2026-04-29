@@ -53,7 +53,7 @@ const sources: Source[] = [
   {
     name: "pineModel",
     type: "gltfModel",
-    path: "models/pine/pinetree.gltf",
+    path: "models/pine/glb/PineeTree.glb",
   },
   {
     name: "mushroomModel",

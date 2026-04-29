@@ -17,46 +17,45 @@ export default class Playground extends World {
   declare fox: Actor
   private declare interactionManager: InteractionManager
 
-	init() {
-		super.init();
-		this.floor = new Floor();
-		this.environment = new GameEnvironment(
-			this.resources.items.environmentMapTexture1 as THREE.CubeTexture,
-			true
-		);
+  init() {
+    super.init();
+    this.floor = new Floor();
+    this.environment = new GameEnvironment(
+      this.resources.items.environmentMapTexture1 as THREE.CubeTexture,
+      true
+    );
 
-		//Fox is just an actor because it doesn't have any logic in it.
-		this.fox = new Actor(
-			"fox",
-			this.resources.items.foxModel as GLTF,
-			true,
-			false,
-			true,
-			this.resources.items.foxModel as GLTF
-		);
-		this.fox.setScale(0.02, 0.02, 0.02);
+    this.fox = new Actor(
+      "pineTree",
+      this.resources.items.pineModel as GLTF,
+      true,
+      false,
+      true,
+      this.resources.items.pineModel as GLTF
+    );
+    this.fox.setScale(1, 1, 1);
 
-		this.interactionManager = new InteractionManager();
+    this.interactionManager = new InteractionManager();
 
-		// Add colisions
-		const collisionManager = Experience.instance?.collisionManager;
-		if (!collisionManager)
-			throw new Error(
-				"Playground initialization failed: CollisionManager is not available."
-			);
-		collisionManager?.addCollisionObjects([this.floor]);
-		collisionManager?.addCollisionObjects([this.fox]);
-	}
+    // Add colisions
+    const collisionManager = Experience.instance?.collisionManager;
+    if (!collisionManager)
+      throw new Error(
+        "Playground initialization failed: CollisionManager is not available."
+      );
+    collisionManager?.addCollisionObjects([this.floor]);
+    // collisionManager?.addCollisionObjects([this.fox]);
+  }
 
-	update() {
-		if (this.fox) {
-			this.fox.update();
-		}
-		if (this.interactionManager) {
-			this.interactionManager.update();
-		}
-		if (this.environment) {
-			this.environment.update();
-		}
-	}
+  update() {
+    if (this.fox) {
+      this.fox.update();
+    }
+    if (this.interactionManager) {
+      this.interactionManager.update();
+    }
+    if (this.environment) {
+      this.environment.update();
+    }
+  }
 }

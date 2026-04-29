@@ -13,7 +13,7 @@ export default class InstancedMeshManager implements LifeTimeObject {
 		if (!Experience.instance) return;
 		this.experience = Experience.instance;
 		const material = baseObject.material as THREE.MeshStandardMaterial;
-		material.wireframe = true;
+		// material.wireframe = true;
 
 		this.mesh = new InteractableInstancedMesh(
 			baseObject.geometry,
@@ -48,8 +48,8 @@ export default class InstancedMeshManager implements LifeTimeObject {
 		}
 	}
 
-	init = () => {};
-	update = () => {};
+	init = () => { };
+	update = () => { };
 	destroy = () => {
 		this.mesh.dispose();
 	};

@@ -31,7 +31,6 @@ export default class Actor implements LifeTimeObject {
 		resource: GLTF,
 		autoAddToScene: boolean = true,
 		makeUnique: boolean = false,
-		makeMaterialsUnique: boolean = false,
 		collisionResource?: GLTF
 	) {
 		if (!Experience.instance)
@@ -52,7 +51,7 @@ export default class Actor implements LifeTimeObject {
 		// Setup
 		this.resource = resource;
 
-		this.setModel(makeUnique, makeMaterialsUnique);
+		this.setModel(makeUnique);
 		if (autoAddToScene) {
 			this.scene.add(this.model);
 		}
@@ -68,7 +67,7 @@ export default class Actor implements LifeTimeObject {
 		return this.id;
 	}
 
-	init = () => {};
+	init = () => { };
 	destroy = () => {
 		this.model.traverse((child) => {
 			if (child instanceof THREE.Mesh) {
@@ -83,7 +82,7 @@ export default class Actor implements LifeTimeObject {
 		});
 	};
 
-	setModel(makeUnique: boolean, makeMaterialsUnique: boolean) {
+	setModel(makeUnique: boolean) {
 		if (makeUnique) this.model = SkeletonUtils.clone(this.resource.scene);
 		else this.model = this.resource.scene;
 		this.model.name = this.name;
@@ -93,8 +92,10 @@ export default class Actor implements LifeTimeObject {
 				child.castShadow = true;
 				child.receiveShadow = true;
 			}
-			if (makeMaterialsUnique && child instanceof THREE.Material) {
-				child = child.clone();
+			if (child.material && child.material.transparent) {
+				child.material.transparent = false;
+				child.material.alphaTest = 0.5;
+				child.material.depthWrite = true;
 			}
 		});
 	}

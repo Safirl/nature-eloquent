@@ -3,32 +3,45 @@ import type GUI from "lil-gui";
 import * as THREE from "three";
 import Sky from "./Sky";
 import Cloud from "./Cloud";
-import { UnrealBloomPass, RenderPass } from "three/examples/jsm/Addons.js";
+import { RenderPass, type GLTF } from "three/examples/jsm/Addons.js";
 import Grass from "./Grass";
 import SelectiveBloom from "../plugins/baseExperience/utils/SelectiveBloom";
-import RenderingLayers from "../common/RenderingLayers"
+import RenderingLayers from "../common/RenderingLayers";
 import FogVariables from "../common/Fog";
+import InstancedMeshManager from "../interactions/InstancedMeshManager";
+import InteractableInstancedMesh from "../interactions/InteractableInstancedMesh";
+
 export default class GameEnvironment extends Environment {
-	protected declare bloomDebugFolder: GUI
-	declare fogDebugFolder: GUI
-	declare camera: THREE.Camera
-	declare sunlightOffset: THREE.Vector3
-	declare sky: Sky
-	declare fog: THREE.Fog
-	declare bloomPass: UnrealBloomPass
+	declare protected bloomDebugFolder: GUI;
+	declare fogDebugFolder: GUI;
+	declare camera: THREE.Camera;
+	declare sunlightOffset: THREE.Vector3;
+
+	declare sky: Sky;
+	declare fog: THREE.Fog;
 	declare cloud: Cloud;
-	private declare grass: Grass
-	private declare sunMesh: THREE.Mesh;
-	private declare selectiveBloom: SelectiveBloom
-	public declare renderScene: RenderPass
+	declare private grass: Grass;
+	declare private pineTreesManager: InstancedMeshManager;
 
+	declare private sunMesh: THREE.Mesh;
+	declare private selectiveBloom: SelectiveBloom;
+	declare public renderScene: RenderPass;
 
-	constructor(lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined, useAsBackground?: boolean, backgroundEnvironmentMap?: THREE.CubeTexture) {
-		super(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap)
-		this.sky = new Sky(0, this.debugFolder)
+	constructor(
+		lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined,
+		useAsBackground?: boolean,
+		backgroundEnvironmentMap?: THREE.CubeTexture
+	) {
+		super(
+			lightingEnvironmentMap,
+			useAsBackground,
+			backgroundEnvironmentMap
+		);
+		this.sky = new Sky(0, this.debugFolder);
 		this.setFog();
-		this.setBloom()
-		this.grass = new Grass()
+		this.setBloom();
+		this.setForest();
+		this.grass = new Grass();
 		// this.cloud = new Cloud()
 		// const bg = this.createBackground();
 		// const sky = new THREE.Mesh(
@@ -45,13 +58,13 @@ export default class GameEnvironment extends Environment {
 		 * Add debugger
 		 */
 		if (this.debugFolder) {
-			this.fogDebugFolder = this.debugFolder.addFolder("🌫️ fog")
+			this.fogDebugFolder = this.debugFolder.addFolder("🌫️ fog");
 			this.fogDebugFolder
 				.add(this.fog, "near")
-				.name('fog near')
+				.name("fog near")
 				.min(0)
 				.max(100)
-				.step(0.1)
+				.step(0.1);
 
 			this.fogDebugFolder
 				.add(this.fog, "far")
@@ -63,18 +76,18 @@ export default class GameEnvironment extends Environment {
 	}
 
 	disableFog() {
-		if (!this.fog) return
-		this.fog.color = new THREE.Color(0x00000000)
+		if (!this.fog) return;
+		this.fog.color = new THREE.Color(0x00000000);
 	}
 	enableFog() {
-		if (!this.fog) return
-		this.fog.color = new THREE.Color(FogVariables.color)
+		if (!this.fog) return;
+		this.fog.color = new THREE.Color(FogVariables.color);
 	}
 
 	setSunlight(): void {
-		const player = Experience.instance?.camera.instance
+		const player = Experience.instance?.camera.instance;
 		if (!player) return;
-		this.camera = player
+		this.camera = player;
 
 		this.sunLight = new THREE.DirectionalLight("#ffffff", 3);
 		this.sunLight.castShadow = true;
@@ -103,6 +116,28 @@ export default class GameEnvironment extends Environment {
 		 * Add debugger
 		 */
 		// this.sunLight.target =  this.camera
+	}
+
+	setForest() {
+		const resource = this.experience.resources.items["pineModel"] as GLTF;
+		// const dummy = resource.scene.children[0].children[0] as THREE.Mesh
+		// console.log(resource.scene.children[0].children[0])
+		// const mesh = new THREE.InstancedMesh(
+		// 	dummy.geometry,
+		// 	dummy.material,
+		// 	1
+		// );
+		// this.experience.scene.add(mesh)
+		// console.log(resource)
+		// this.pineTreesManager = new InstancedMeshManager(resource.scene.children[0].children[0] as THREE.Mesh, 500, false)
+		// const pineLeavesManager = new InstancedMeshManager(resource.scene.children[0].children[1] as THREE.Mesh, 500, false)
+		// const count = 10
+		// for (let i = 0; i < count; i++) {
+		// 	const randX = (Math.random() - .5) * count;
+		// 	const randZ = (Math.random() - .5) * count;
+		// 	pineLeavesManager.add(new THREE.Vector3(randX, 0, randZ))
+		// 	this.pineTreesManager.add(new THREE.Vector3(randX, 0, randZ))
+		// }
 	}
 
 	setDebugObject(): void {
@@ -171,22 +206,38 @@ export default class GameEnvironment extends Environment {
 	// }
 
 	setSunPlane() {
-		this.sunMesh = new THREE.Mesh(new THREE.CircleGeometry(), new THREE.MeshBasicMaterial())
-		this.sunMesh.position.set(this.sunLight.position.x, this.sunLight.position.y, this.sunLight.position.z)
-		this.sunMesh.lookAt(new THREE.Vector3())
-		this.sunLight.attach(this.sunMesh)
-		this.sunMesh.layers.enable(RenderingLayers.bloom)
+		this.sunMesh = new THREE.Mesh(
+			new THREE.CircleGeometry(),
+			new THREE.MeshBasicMaterial()
+		);
+		this.sunMesh.position.set(
+			this.sunLight.position.x,
+			this.sunLight.position.y,
+			this.sunLight.position.z
+		);
+		this.sunMesh.lookAt(new THREE.Vector3());
+		this.sunLight.attach(this.sunMesh);
+		this.sunMesh.layers.enable(RenderingLayers.bloom);
 	}
 
 	setBloom() {
-		Experience.instance?.renderer.initializeComposer()
+		Experience.instance?.renderer.initializeComposer();
 		//@ts-ignore
-		this.renderScene = Experience.instance?.renderer.renderPass
-		this.selectiveBloom = new SelectiveBloom(this.renderScene, RenderingLayers.bloom)
+		this.renderScene = Experience.instance?.renderer.renderPass;
+		this.selectiveBloom = new SelectiveBloom(
+			this.renderScene,
+			RenderingLayers.bloom
+		);
 
-		Experience.instance?.renderer.addComposerPass(this.renderScene, true)
-		Experience.instance?.renderer.addComposerPass(this.selectiveBloom.getMixPass, true);
-		Experience.instance?.renderer.addComposerPass(this.selectiveBloom.getOutputPass, true);
+		Experience.instance?.renderer.addComposerPass(this.renderScene, true);
+		Experience.instance?.renderer.addComposerPass(
+			this.selectiveBloom.getMixPass,
+			true
+		);
+		Experience.instance?.renderer.addComposerPass(
+			this.selectiveBloom.getOutputPass,
+			true
+		);
 	}
 
 	update() {
@@ -194,8 +245,8 @@ export default class GameEnvironment extends Environment {
 			this.grass.update();
 		}
 
-		this.disableFog()
-		this.selectiveBloom.update()
-		this.enableFog()
+		this.disableFog();
+		this.selectiveBloom.update();
+		this.enableFog();
 	}
-} 
+}

@@ -18,14 +18,13 @@ export default class OrbitPlayer extends Camera {
 
 	setControls() {
 		this.controls = new OrbitControls(this.instance, this.canvas);
-		this.controls.maxDistance = 30;
+		this.controls.maxDistance = 100;
 		this.controls.minDistance = 5;
 		this.controls.enableDamping = true;
-		this.controls.mouseButtons = {
-			RIGHT: THREE.MOUSE.ROTATE,
-			MIDDLE: THREE.MOUSE.DOLLY,
-			// RIGHT: THREE.MOUSE.PAN
-		};
+		// this.controls.mouseButtons = {
+		// 	RIGHT: THREE.MOUSE.ROTATE,
+		// 	MIDDLE: THREE.MOUSE.DOLLY,
+		// };
 		// this.controls.addEventListener("start", (e) => {
 		//   console.log("coucou")
 		// })
@@ -49,7 +48,7 @@ export default class OrbitPlayer extends Camera {
 			.add(this.controls, "maxDistance")
 			.name("max distance")
 			.min(5)
-			.max(30)
+			.max(100)
 			.step(0.1);
 
 		this.debugFolder
