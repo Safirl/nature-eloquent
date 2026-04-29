@@ -1,7 +1,7 @@
 
-export const BloomLayer = 12
+export const BLOOMLAYER = 12
 
 const RenderingLayers = {
-    bloom : BloomLayer
+    bloom: BLOOMLAYER
 }
 export default RenderingLayers

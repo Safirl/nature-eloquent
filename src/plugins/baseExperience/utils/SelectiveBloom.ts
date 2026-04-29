@@ -42,7 +42,7 @@ export default class SelectiveBloom {
         strength?: number
         threshold?: number
     }) {
-        if (!Experience.instance) throw new Error("Renderer initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating the Renderer.");
+        if (!Experience.instance) throw new Error("SelectiveBloom initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating the Renderer.");
         this.experience = Experience.instance;
 
 
@@ -112,9 +112,6 @@ export default class SelectiveBloom {
             }), 'baseTexture'
         );
 
-        this.darkenNonBloomed = this.darkenNonBloomed.bind(this)
-        this.restoreMaterial = this.restoreMaterial.bind(this)
-
         this.outputPass = new OutputPass();
         this.mixPass.needsSwap = true;
         this.setDebugObject()
@@ -160,14 +157,14 @@ export default class SelectiveBloom {
             this.bloomPass.radius = Number(value);
         });
 
-        folder.add(this.params, 'bloom').step(0.01).onChange((value: boolean) => {
+        folder.add(this.params, 'bloom').onChange((value: boolean) => {
             this.bloomPass.enabled = value
         });
 
 
     }
 
-    darkenNonBloomed(obj: any) {
+    darkenNonBloomed = (obj: any) => {
 
         if (obj.isMesh && this.bloomLayer.test(obj.layers) === false) {
             if (obj.material && obj.material.uniforms && obj.material.uniforms.uDarkFactor) {
@@ -181,7 +178,7 @@ export default class SelectiveBloom {
         }
     }
 
-    restoreMaterial(obj: any) {
+    restoreMaterial = (obj: any) => {
         if (this.materials[obj.uuid]) {
             if (obj.material && obj.material.uniforms && obj.material.uniforms.uDarkFactor) {
                 obj.material.uniforms.uDarkFactor.value = new THREE.Color(0xffffff);
