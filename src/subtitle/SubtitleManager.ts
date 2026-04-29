@@ -14,18 +14,10 @@ export default class SubtitleManager {
 	declare audioPlayer: HTMLAudioElement;
 	declare typingInterval: number | null;
 
-	constructor() {
-		this.init();
-	}
-
 	init() {
-		this.subtitleElement = document.getElementById(
-			"subtitle"
-		) as HTMLElement;
+		this.subtitleElement = document.getElementById("subtitle") as HTMLElement;
 		this.dialogElement = document.getElementById("dialog") as HTMLElement;
-		this.characterElement = document.getElementById(
-			"character"
-		) as HTMLElement;
+		this.characterElement = document.getElementById("character") as HTMLElement;
 		this.subtitleElement.style.opacity = "0";
 
 		this.audioPlayer = new Audio();

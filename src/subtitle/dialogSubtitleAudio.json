@@ -1,17 +1,65 @@
 {
-	"dinosaur_interaction_1": {
+	"introduction": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Coucou, bien dormi ?",
+			"speaker": "Petit Pois: "
+		},
+		"dialog_2": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Ouaiiis... La chambre d'ami de tes parents est ''super'' confortable.",
+			"speaker": "Aria: "
+		},
+		"dialog_3": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Ahah, je suis contente que tu te sentes à l'aise ici !",
+			"speaker": "Petit Pois: "
+		},
+		"dialog_4": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Alors on va vraiment prendre tous ces cartons ?",
+			"speaker": "Aria: "
+		},
+		"dialog_5": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Et oui, tout est là je crois... J'ai demandé à ma mère de m'aider à les trier hier.",
+			"speaker": "Petit Pois: "
+		},
+		"dialog_6": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "On a vraiment besoin de tout ?",
+			"speaker": "Aria: "
+		},
+		"dialog_7": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "C'était important pour moi. Et puis... on va bientôt pouvoir réutiliser certains de mes vieux vêtements !",
+			"speaker": "Petit Pois: "
+		},
+		"dialog_8": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Je suis pas sûr qu'il rentre dans du 14 ans par contre !",
+			"speaker": "Aria: "
+		},
+		"dialog_9": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Alors, qu'est-ce qu'on a là ?",
+			"speaker": "Aria: "
+		}
+	},
+
+	"dinosaure_01": {
 		"dialog_1": {
 			"audio": "/audio/welcome.mp3",
 			"dialog": "Tu m'avais jamais dit que t'étais un fan des Tyrannosaures !",
 			"speaker": "Aria: "
 		},
-		"dialog_2": {
+		"dialog_02": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Oui j'adorais ça quand j'étais enfant ! J'avais même une encyclopédie.",
 			"speaker": "Petit Pois: "
 		}
 	},
-	"dinosaur_interaction_2": {
+	"dinosaure_02": {
 		"dialog_1": {
 			"audio": "/audio/welcome.mp3",
 			"dialog": "Wohoho, attends mais c'est bien plus qu'une passion là, t'as carrément une collection ! J'avais jamais vu autant de dinausores en plastique dans une même pièce de ma vie.",
@@ -25,6 +73,34 @@
 		"dialog_3": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Merci Madame FOURCADE ! je vous revaudrai ça.",
+			"speaker": "Aria: "
+		}
+	},
+
+	"herbarium_01": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Oh un herbier ! C'est donc de là que te vient ta passion pour la biologie ?",
+			"speaker": "Aria: "
+		},
+		"dialog_2": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "J'avais totalement oublié cet herbier ! Oui, comme mes parents vivent près d'une forêt j'adorais m'y balader quand j'avais 7 ou 8 ans je pense...",
+			"speaker": "Petit Pois: "
+		},
+		"dialog_3": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Tiens, le carnet s'arrête d'un coup. T'en avais marre ?",
+			"speaker": "Aria: "
+		},
+		"dialog_4": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Non pas vraiment... On va dire que j'ai eu une mauvaise expérience et j'ai arrêté après ça.",
+			"speaker": "Petit Pois: "
+		},
+		"dialog_5": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Ah bon ? Qu'est-ce qu'il s'est passé ?",
 			"speaker": "Aria: "
 		}
 	}
