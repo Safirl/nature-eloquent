@@ -1,4 +1,8 @@
-import { EventEmitter, Experience, type InputEventArgs } from "@plugins/baseExperience";
+import {
+	EventEmitter,
+	Experience,
+	type InputEventArgs,
+} from "@plugins/baseExperience";
 import type InteractableObject from "../interactable/InteractableObject";
 import BookDrawing from "./BookDrawing";
 
@@ -25,24 +29,23 @@ export default class BookInteraction extends EventEmitter {
 
 	declare stickerObject: string[];
 
-
 	constructor() {
 		super();
 
 		const bookSelectorInterface = document.getElementById(
-			"book-selector-interface",
+			"book-selector-interface"
 		);
 		const bookDrawingInterface = document.getElementById(
-			"book-drawing-interface",
+			"book-drawing-interface"
 		);
 		const bookInterface = document.getElementById("book-interface");
 		const closeBookSelectorButton = document.getElementById(
-			"close-book-selector",
+			"close-book-selector"
 		);
 		const closeBookDrawingButton =
 			document.getElementById("close-book-drawing");
 		const nameObjectSelectedElement = document.querySelector(
-			".name-object-selected",
+			".name-object-selected"
 		);
 		const bookDrawingInterfaceValidate = document.querySelector(
 			".validate-book-drawing"
@@ -63,10 +66,14 @@ export default class BookInteraction extends EventEmitter {
 		this.bookSelectorInterface = bookSelectorInterface;
 		this.bookDrawingInterface = bookDrawingInterface;
 		this.bookInterface = bookInterface;
-		this.nameObjectSelectedElement = nameObjectSelectedElement as HTMLElement;
-		this.closeBookSelectorButton = closeBookSelectorButton as HTMLButtonElement;
-		this.closeBookDrawingButton = closeBookDrawingButton as HTMLButtonElement;
-		this.bookDrawingInterfaceValidate = bookDrawingInterfaceValidate as HTMLButtonElement;
+		this.nameObjectSelectedElement =
+			nameObjectSelectedElement as HTMLElement;
+		this.closeBookSelectorButton =
+			closeBookSelectorButton as HTMLButtonElement;
+		this.closeBookDrawingButton =
+			closeBookDrawingButton as HTMLButtonElement;
+		this.bookDrawingInterfaceValidate =
+			bookDrawingInterfaceValidate as HTMLButtonElement;
 
 		this.isFullOpenBookDrawing = false;
 		this.isHalfOpenBookDrawing = false;
@@ -76,7 +83,7 @@ export default class BookInteraction extends EventEmitter {
 		this.objectsCollected = [];
 		this.bookSelectionInterfaceValidate = null;
 
-		this.stickerObject = ['champignon', 'interactableMushroom2'];
+		this.stickerObject = ["champignon", "interactableMushroom2"];
 
 		// this.bookDrawing = new BookDrawing();
 
@@ -100,11 +107,11 @@ export default class BookInteraction extends EventEmitter {
 	registerEventsUI(): void {
 		this.closeBookSelectorButton.addEventListener(
 			"click",
-			this.onCloseBookSelector,
+			this.onCloseBookSelector
 		);
 		this.closeBookDrawingButton.addEventListener(
 			"click",
-			this.onCloseBookDrawing,
+			this.onCloseBookDrawing
 		);
 		this.bookDrawingInterfaceValidate.addEventListener(
 			"click",
@@ -121,31 +128,33 @@ export default class BookInteraction extends EventEmitter {
 				} else {
 					this.halfOpenBookDrawing(args);
 				}
-			},
+			}
 		);
 		instance.inputSystem.on("interact", this.onOpenBookSelector);
 	}
 
 	registerEventsProximityDetection(instance: Experience): void {
-		instance.camera.on("onSelectedObjectChanged", (args: (InteractableObject | null)[]) => {
-			const object = Array.isArray(args) ? args[0] : args;
-			this.isCloseToInteractable = object;
+		instance.camera.on(
+			"onSelectedObjectChanged",
+			(args: (InteractableObject | null)[]) => {
+				const object = Array.isArray(args) ? args[0] : args;
+				this.isCloseToInteractable = object;
 
-			if (!object) {
-				this.onCloseBookDrawing();
-				return;
+				if (!object) {
+					this.onCloseBookDrawing();
+					return;
+				}
+				if (this.isOpenBookSelector) this.setBookSelectorOpen(false);
+				this.halfOpenBookDrawing(args);
 			}
-			if (this.isOpenBookSelector) this.setBookSelectorOpen(false);
-			this.halfOpenBookDrawing(args);
-		});
+		);
 	}
-
 
 	validateDropObject = (): void => {
 		if (!this.isCloseToInteractable) return;
 
 		const alreadyCollected = this.objectsCollected.find(
-			(obj) => obj.getId() === this.isCloseToInteractable?.getId(),
+			(obj) => obj.getId() === this.isCloseToInteractable?.getId()
 		);
 		if (!alreadyCollected) {
 			this.objectsCollected.push(this.isCloseToInteractable);
@@ -164,7 +173,10 @@ export default class BookInteraction extends EventEmitter {
 		this.setBookDrawingOpen(object, true);
 	}
 
-	setBookDrawingOpen(object: (InteractableObject | null)[], isBookDrawingFullOpen: boolean): void {
+	setBookDrawingOpen(
+		object: (InteractableObject | null)[],
+		isBookDrawingFullOpen: boolean
+	): void {
 		if (!this.isCloseToInteractable) return;
 
 		this.displayTargetNameObjectUI(object);
@@ -250,7 +262,7 @@ export default class BookInteraction extends EventEmitter {
 	// Affiche les objets collectés dans le carnet de sélection
 	renderCollectedObjects(): void {
 		const collectedObjectsUI = this.bookSelectorInterface.querySelectorAll(
-			".collected-object-btn, .collected-object-sticker-button, .collected-object-sticker",
+			".collected-object-btn, .collected-object-sticker-button, .collected-object-sticker"
 		);
 		collectedObjectsUI.forEach((el) => el.remove());
 
@@ -265,7 +277,9 @@ export default class BookInteraction extends EventEmitter {
 
 		// Création des stickers d'ilmage
 		for (const obj of this.objectsCollected) {
-			const stickerName = this.stickerObject.find(sticker => obj.name.toLowerCase().includes(sticker.toLowerCase()));
+			const stickerName = this.stickerObject.find((sticker) =>
+				obj.name.toLowerCase().includes(sticker.toLowerCase())
+			);
 			if (stickerName) {
 				const img = document.createElement("img");
 				img.src = `./src/books/${stickerName}.png`;

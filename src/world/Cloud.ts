@@ -1,89 +1,105 @@
-import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
-import * as THREE from "three"
-import { Debug, Experience, type LifeTimeObject } from "@plugins/baseExperience";
-import type GUI from 'lil-gui';
+import { ImprovedNoise } from "three/addons/math/ImprovedNoise.js";
+import * as THREE from "three";
+import {
+	Debug,
+	Experience,
+	type LifeTimeObject,
+} from "@plugins/baseExperience";
+import type GUI from "lil-gui";
 
 export default class Cloud implements LifeTimeObject {
-    declare texture: THREE.Data3DTexture;
-    declare material: THREE.RawShaderMaterial;
-    declare mesh: THREE.Mesh
-    declare geometry: THREE.BufferGeometry
+	declare texture: THREE.Data3DTexture;
+	declare material: THREE.RawShaderMaterial;
+	declare mesh: THREE.Mesh;
+	declare geometry: THREE.BufferGeometry;
 
-    /**
-     * parameters
-     */
-    declare debug: Debug
-    declare debugFolder: GUI
-    declare threshold: number
-    declare opacity: number
-    declare range: number 
-    declare steps: number
+	/**
+	 * parameters
+	 */
+	declare debug: Debug;
+	declare debugFolder: GUI;
+	declare threshold: number;
+	declare opacity: number;
+	declare range: number;
+	declare steps: number;
 
-    constructor() {
-        if (!Experience.instance) throw new Error("Cloud initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating a Cloud.");
-        this.threshold = .25
-        this.opacity = .25
-        this.range = 0.1
-        this.steps = 100
-        this.init()
+	constructor() {
+		if (!Experience.instance)
+			throw new Error(
+				"Cloud initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating a Cloud."
+			);
+		this.threshold = 0.25;
+		this.opacity = 0.25;
+		this.range = 0.1;
+		this.steps = 100;
+		this.init();
 
-        this.debug = Experience.instance.debug
+		this.debug = Experience.instance.debug;
 
-        if (this.debug.active) {
-            this.debugFolder = this.debug.ui.addFolder('cloud')
-        }
-        this.setDebugObject()
-    }
+		if (this.debug.active) {
+			this.debugFolder = this.debug.ui.addFolder("cloud");
+		}
+		this.setDebugObject();
+	}
 
-    init = () => {
-        this.setTexture()
-        this.setMaterial()
-        this.setGeometry()
-        this.setMesh()
-        this.mesh.position.set(0,100,0)
-        this.mesh.scale.set(100,100,100)
-    };
-    destroy = () => {};
+	init = () => {
+		this.setTexture();
+		this.setMaterial();
+		this.setGeometry();
+		this.setMesh();
+		this.mesh.position.set(0, 100, 0);
+		this.mesh.scale.set(100, 100, 100);
+	};
+	destroy = () => {};
 
-    setGeometry(): void {
-        this.geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    }
+	setGeometry(): void {
+		this.geometry = new THREE.BoxGeometry(1, 1, 1);
+	}
 
-    setTexture(): void {
-        const size = 128;
-        const data = new Uint8Array( size * size * size );
+	setTexture(): void {
+		const size = 128;
+		const data = new Uint8Array(size * size * size);
 
-        let i = 0;
-        const scale = 0.05;
-        const perlin = new ImprovedNoise();
-        const vector = new THREE.Vector3();
+		let i = 0;
+		const scale = 0.05;
+		const perlin = new ImprovedNoise();
+		const vector = new THREE.Vector3();
 
-        for ( let z = 0; z < size; z ++ ) {
+		for (let z = 0; z < size; z++) {
+			for (let y = 0; y < size; y++) {
+				for (let x = 0; x < size; x++) {
+					const d =
+						1.0 -
+						vector
+							.set(x, y, z)
+							.subScalar(size / 2)
+							.divideScalar(size)
+							.length();
+					data[i] =
+						(128 +
+							128 *
+								perlin.noise(
+									(x * scale) / 1.5,
+									y * scale,
+									(z * scale) / 1.5
+								)) *
+						d *
+						d;
+					i++;
+				}
+			}
+		}
 
-            for ( let y = 0; y < size; y ++ ) {
+		this.texture = new THREE.Data3DTexture(data, size, size, size);
+		this.texture.format = THREE.RedFormat;
+		this.texture.minFilter = THREE.LinearFilter;
+		this.texture.magFilter = THREE.LinearFilter;
+		this.texture.unpackAlignment = 1;
+		this.texture.needsUpdate = true;
+	}
 
-                for ( let x = 0; x < size; x ++ ) {
-
-                    const d = 1.0 - vector.set( x, y, z ).subScalar( size / 2 ).divideScalar( size ).length();
-                    data[ i ] = ( 128 + 128 * perlin.noise( x * scale / 1.5, y * scale, z * scale / 1.5 ) ) * d * d;
-                    i ++;
-
-                }
-
-            }
-
-        }
-
-        this.texture = new THREE.Data3DTexture( data, size, size, size );
-        this.texture.format = THREE.RedFormat;
-        this.texture.minFilter = THREE.LinearFilter;
-        this.texture.magFilter = THREE.LinearFilter;
-        this.texture.unpackAlignment = 1;
-        this.texture.needsUpdate = true;
-    }
-
-    setMaterial(): void {
-        const vertexShader = /* glsl */`
+	setMaterial(): void {
+		const vertexShader = /* glsl */ `
             in vec3 position;
 
             uniform mat4 modelMatrix;
@@ -104,7 +120,7 @@ export default class Cloud implements LifeTimeObject {
             }
         `;
 
-        const fragmentShader = /* glsl */`
+		const fragmentShader = /* glsl */ `
             precision highp float;
             precision highp sampler3D;
 
@@ -217,52 +233,62 @@ export default class Cloud implements LifeTimeObject {
             }
         `;
 
-        this.material = new THREE.RawShaderMaterial( {
-        glslVersion: THREE.GLSL3,
-        uniforms: {
-            base: { value: new THREE.Color( 0x798aa0 ) },
-            map: { value: this.texture },
-            cameraPos: { value: new THREE.Vector3() },
-            threshold: { value: this.threshold },
-            opacity: { value: this.opacity },
-            range: { value: this.range },
-            steps: { value: this.steps },
-            frame: { value: 0 }
-        },
-        vertexShader,
-        fragmentShader,
-        side: THREE.BackSide,
-        transparent: true
-    } );
-    }
+		this.material = new THREE.RawShaderMaterial({
+			glslVersion: THREE.GLSL3,
+			uniforms: {
+				base: { value: new THREE.Color(0x798aa0) },
+				map: { value: this.texture },
+				cameraPos: { value: new THREE.Vector3() },
+				threshold: { value: this.threshold },
+				opacity: { value: this.opacity },
+				range: { value: this.range },
+				steps: { value: this.steps },
+				frame: { value: 0 },
+			},
+			vertexShader,
+			fragmentShader,
+			side: THREE.BackSide,
+			transparent: true,
+		});
+	}
 
-    setMesh(): void {
-        this.mesh = new THREE.Mesh( this.geometry, this.material );
-        Experience.instance?.scene.add(this.mesh)
-    }
+	setMesh(): void {
+		this.mesh = new THREE.Mesh(this.geometry, this.material);
+		Experience.instance?.scene.add(this.mesh);
+	}
 
-    updateMaterial = () => {
-        this.material.uniforms.threshold.value = this.threshold;
-        this.material.uniforms.opacity.value = this.opacity;
-        this.material.uniforms.range.value = this.range;
-        this.material.uniforms.steps.value = this.steps;
-    }
+	updateMaterial = () => {
+		this.material.uniforms.threshold.value = this.threshold;
+		this.material.uniforms.opacity.value = this.opacity;
+		this.material.uniforms.range.value = this.range;
+		this.material.uniforms.steps.value = this.steps;
+	};
 
-    update = () => {
-        const material = this.mesh.material as THREE.RawShaderMaterial
-        material.uniforms.cameraPos.value.copy( Experience.instance?.camera.instance.position );
-        this.mesh.rotation.y = - performance.now() / 7500;
-        //@ts-ignore
-        if (!material.frame) return;
-        //@ts-ignore
-        material.frame.value ++;
-    };
+	update = () => {
+		const material = this.mesh.material as THREE.RawShaderMaterial;
+		material.uniforms.cameraPos.value.copy(
+			Experience.instance?.camera.instance.position
+		);
+		this.mesh.rotation.y = -performance.now() / 7500;
+		//@ts-ignore
+		if (!material.frame) return;
+		//@ts-ignore
+		material.frame.value++;
+	};
 
-    setDebugObject() {
-        if(!this.debug.active) return;
-        this.debugFolder.add( this, 'threshold', 0, 1, 0.01 ).onChange( this.updateMaterial );
-        this.debugFolder.add( this, 'opacity', 0, 1, 0.01 ).onChange( this.updateMaterial );
-        this.debugFolder.add( this, 'range', 0, 1, 0.01 ).onChange( this.updateMaterial );
-        this.debugFolder.add( this, 'steps', 0, 200, 1 ).onChange( this.updateMaterial );
-    }
-} 
+	setDebugObject() {
+		if (!this.debug.active) return;
+		this.debugFolder
+			.add(this, "threshold", 0, 1, 0.01)
+			.onChange(this.updateMaterial);
+		this.debugFolder
+			.add(this, "opacity", 0, 1, 0.01)
+			.onChange(this.updateMaterial);
+		this.debugFolder
+			.add(this, "range", 0, 1, 0.01)
+			.onChange(this.updateMaterial);
+		this.debugFolder
+			.add(this, "steps", 0, 200, 1)
+			.onChange(this.updateMaterial);
+	}
+}
