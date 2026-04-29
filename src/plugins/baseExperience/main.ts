@@ -20,13 +20,7 @@ const init = () => {
 	const camera = new OrbitCamera();
 	const world = new TemplateWorld();
 	new Experience(canvas, templateSources, camera, world);
-	// const profiles: InputProfile[] = [keyboardProfile, BitControllerProfile]
 
-	// experience.inputSystem.addInputProfiles(profiles)
-	// experience.inputSystem.on("jump", (args: InputEventArgs) => {
-	//   const gamepad = args.controller as Gamepad
-	//   console.log("controller: ", gamepad.id, " triggered: ", args.type)
-	// })
 };
 
 init();

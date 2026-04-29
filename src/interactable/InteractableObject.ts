@@ -1,7 +1,19 @@
 import { Actor, Experience } from "@plugins/baseExperience";
 import { SkeletonUtils, type GLTF } from "three/examples/jsm/Addons.js";
-import Player from "../player/Player";
+import Player from "../camera/Player";
 import * as THREE from "three";
+
+
+
+/**
+ * 
+ * 
+ * This code is legacy. It shouldn't be used
+ * 
+ * 
+ */
+
+
 export default class InteractableObject extends Actor {
 	declare player: Player;
 	declare threshold: number;
@@ -26,8 +38,8 @@ export default class InteractableObject extends Actor {
 		this.threshold = 5;
 	}
 
-	init = () => {};
-	destroy = () => {};
+	init = () => { };
+	destroy = () => { };
 
 	hideObject() {
 		this.model.visible = false;
@@ -57,10 +69,10 @@ export default class InteractableObject extends Actor {
 				child.receiveShadow = true;
 				const material = child.material as THREE.Material;
 
-				material.side = THREE.FrontSide; // important
+				material.side = THREE.FrontSide;
 				material.alphaTest = 0.5;
-				material.transparent = false; // 🔥 souvent la cause
-				material.depthWrite = true; // utile pour les ombres
+				material.transparent = false;
+				material.depthWrite = true;
 			}
 		});
 		this.scene.add(this.model);

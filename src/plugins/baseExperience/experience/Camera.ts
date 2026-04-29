@@ -42,13 +42,6 @@ export default class Camera extends EventEmitter implements LifeTimeObject {
 	}
 
 	setInstance() {
-		// this.instance = new THREE.PerspectiveCamera(
-		//   35,
-		//   this.sizes.width / this.sizes.height,
-		//   0.1,
-		//   100,
-		// );
-		// this.instance.position.set(6, 4, 8);
 		this.scene.add(this.instance);
 	}
 
@@ -56,16 +49,16 @@ export default class Camera extends EventEmitter implements LifeTimeObject {
 	 * Override to add controls to the camera
 	 * @TODO The Camera should be attached to an actor and not directly passed to the experience ?
 	 */
-	setControls() {}
+	setControls() { }
 
 	resize() {
 		this.instance.aspect = this.sizes.width / this.sizes.height;
 		this.instance.updateProjectionMatrix();
 	}
 
-	update() {}
+	update() { }
 
-	destroy() {}
+	destroy() { }
 
 	setDebugObject() {
 		if (this.debug.active) {
