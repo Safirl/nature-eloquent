@@ -39,7 +39,7 @@ export default class SceneManager extends EventEmitter {
         console.log(this.interactionManager)
         //this.allInstancedMeshManagers = this.interactionManager.InstancedMeshManagers
 
-        this.playScene(1)
+        this.playScene(0)
         this.interactionManager.on('onObjectPlaced', this.onObjectPlaced)
         this.subtitle.on("dialogFinished", this.nextStepAfterStepDialogFinished)
     }
@@ -51,11 +51,16 @@ export default class SceneManager extends EventEmitter {
         if (!scene) {
             throw new Error("sceneConfig not found")
         }
+        // Ajout de l'introduction
+        if (scene.name === "introduction") {
+            this.triggerDialog(scene.steps[0].dialogId, scene.steps[0])
+        }
         this.playStep(0)
     }
 
     playStep(stepId: number) {
         const scene = this.sceneConfig[this.currentSceneId]
+        console.log("playStep", stepId, scene)
         const step = scene.steps[stepId]
         if (!step) {
             return;
@@ -83,6 +88,6 @@ export default class SceneManager extends EventEmitter {
     triggerDialog(dialogId: string, relatedStep: DialogStep) {
         if (!dialogId) return
         console.log("triggerDialog", dialogId, relatedStep)
-        return this.subtitle.displayDialog(this.dialogsAudio[dialogId], relatedStep)
+        return this.subtitle.displayDialog(this.dialogsAudio[dialogId])
     }
 }
