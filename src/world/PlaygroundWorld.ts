@@ -9,14 +9,13 @@ import GameEnvironment from "./GameEnvironment";
 import InteractionManager from "../interactions/InteractionManager";
 
 export default class Playground extends World {
-	declare experience: Experience;
-	declare scene: Experience["scene"];
-	declare environment: Environment;
-	declare resources: Experience["resources"];
-	declare floor: Floor;
-	declare fox: Actor;
-	declare fox1: Actor;
-	declare private interactionManager: InteractionManager;
+  declare experience: Experience;
+  declare scene: Experience["scene"];
+  declare environment: Environment;
+  declare resources: Experience["resources"];
+  declare floor: Floor;
+  declare fox: Actor
+  private declare interactionManager: InteractionManager
 
 	init() {
 		super.init();
