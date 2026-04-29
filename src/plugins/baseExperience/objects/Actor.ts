@@ -48,7 +48,7 @@ export default class Actor implements LifeTimeObject {
         }
         if (collisionResource) {
             this.collisionResource = collisionResource
-            this.setColliderModel(makeUnique)
+            this.setColliderModel()
         }
         this.setAnimation()
         this.setDebugObject()
@@ -122,11 +122,8 @@ export default class Actor implements LifeTimeObject {
         }
     }
 
-    setColliderModel(makeUnique: boolean) {
-        if (makeUnique)
-            this.colliderModel = SkeletonUtils.clone(this.collisionResource.scene);
-        else
-            this.colliderModel = this.collisionResource.scene
+    setColliderModel() {
+        this.colliderModel = SkeletonUtils.clone(this.collisionResource.scene);
     }
 
     setAnimation() {
