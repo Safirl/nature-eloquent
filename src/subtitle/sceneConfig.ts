@@ -37,6 +37,17 @@ export const sceneConfig: SceneType = [
         // scène 1 : dinosaure
         name: "dinosaure",
         steps: [
+            // Test avec un autre truc
+
+            {
+                objectsAdded: [{
+                    objectId: "chocolat",
+                    resourceName: "mushroomModel",
+                    triggerCount: 4,
+                },],
+                dialogId: "dinosaure_02",
+                callbackName: "onDinosaure03Completed"
+            },
             {
                 objectsAdded: [{
                     objectId: "dinosaure",
@@ -52,49 +63,9 @@ export const sceneConfig: SceneType = [
                     resourceName: "mushroomPaintedModel",
                     triggerCount: 5,
                 },],
-                dialogId: "dinosaure_02",
+                dialogId: "dinosaure_01",
                 callbackName: "onDinosaure02Completed"
             },
-            // Test avec un autre truc
-            {
-                objectsAdded: [{
-                    objectId: "chocolat",
-                    resourceName: "mushroomModel",
-                    triggerCount: 4,
-                },],
-                dialogId: "dinosaure_03",
-                callbackName: "onDinosaure03Completed"
-            }
         ]
     },
-
 ]
-
-
-// NOTE
-// Pour la scène d'intro = pas d'objet de sélection
-// Pour la scène de la box dino = juste un dinosaure à sélectionner
-// Pour la scène de la box primaire = juste ??????? carnet et...
-
-// Pour la scène de l'herbier = un objet de carnet à sélectionner
-// Après l'avoir sélectionné alors on affiche le dialogue de l'herbier
-// Puis on affiche en même temps (fleur, liane, herbe)
-
-// [
-//     {
-//         "name": "",
-//         "resourceName": ""
-//     },
-//     {
-//         "name": "dinosaure",
-//         "resourceName": "mushroomPaintedModel"
-//     },
-//     {
-//         "name": "dinosaure",
-//         "resourceName": "mushroomPaintedModel"
-//     },
-//     {
-//         "name": "chocolat",
-//         "resourceName": "mushroomModel"
-//     }
-// ]

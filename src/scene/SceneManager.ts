@@ -33,10 +33,10 @@ export default class SceneManager extends EventEmitter {
         if (!world)
             throw new Error("nullos")
 
-        console.log("world", world.interactionManager)
+        // console.log("world", world.interactionManager)
 
         this.interactionManager = world.interactionManager
-        console.log(this.interactionManager)
+        // console.log(this.interactionManager)
         //this.allInstancedMeshManagers = this.interactionManager.InstancedMeshManagers
 
         this.playScene(0)
@@ -45,11 +45,16 @@ export default class SceneManager extends EventEmitter {
     }
 
     playScene(sceneId: number) {
+        if (sceneId >= this.sceneConfig.length) {
+            console.log("All scenes finished")
+            return;
+        }
         this.currentSceneId = sceneId
         const scene = this.sceneConfig[sceneId]
         if (!scene) {
             throw new Error("sceneConfig not found")
         }
+
         // Ajout de l'introduction
         if (scene.name === "introduction") {
             this.triggerDialog(scene.steps[0].dialogId, scene.steps[0])
@@ -70,12 +75,12 @@ export default class SceneManager extends EventEmitter {
             return
         }
 
-        console.log("scene", scene)
+        // console.log("scene", scene)
         scene.steps.forEach(step => {
-            console.log("step", step)
+            // console.log("step", step)
             // console.log("step.objectAdded", step.objectsAdded.objectId)
             step.objectsAdded.forEach(obj => {
-                console.log("obj", obj)
+                // console.log("obj", obj)
 
                 if (this.interactionManager.interactableObjects.find((o: any) => o.name === obj.objectId || o.objectId === null)) return
 
@@ -83,39 +88,42 @@ export default class SceneManager extends EventEmitter {
                     this.interactionManager.addInteractableObject(obj.objectId, obj.resourceName)
                 }
 
-
-
-                console.log("all object displayed", this.interactionManager.interactableObjects)
+                // console.log("all object displayed", this.interactionManager.interactableObjects)
             })
         })
     }
 
     playStep(stepId: number) {
         const scene = this.sceneConfig[this.currentSceneId]
-        console.log("playStep", stepId, scene)
+        // console.log("playStep", stepId, scene)
         const step = scene.steps[stepId]
         if (!step) {
-            return;
+            throw new Error("step not found")
         }
         this.stepDescriptions.push({ count: 0, relatedStep: step })
     }
 
     nextStepOrSceneAfterStepDialogFinished = () => {
+        console.log(this.stepDescriptions)
         this.currentStepIndex++;
+
+        // Si il reste des étapes alors on joue l'étape suivante
         if (this.currentStepIndex < this.sceneConfig[this.currentSceneId].steps.length) {
+            console.log("----------- step finished -----------")
             this.playStep(this.currentStepIndex);
         }
 
+        // Sinon on passe à la scène suivante
         else {
-            if (this.currentSceneId >= this.sceneConfig.length)
-                return;
+            // S'il n'y a plus de scène on return
+            if (this.currentSceneId >= this.sceneConfig.length) return
 
-            console.log("scene finished")
+            console.log("----------- scene finished -----------")
             this.currentStepIndex = 0;
             this.currentSceneId++;
             this.playScene(this.currentSceneId);
-        }
 
+        }
     }
 
     onObjectPlaced = (callbacks: string) => {
@@ -123,7 +131,7 @@ export default class SceneManager extends EventEmitter {
             const object = stepDescription.relatedStep.objectsAdded.find(obj => obj.objectId === callbacks)
             if (!object) return;
             stepDescription.count++
-            console.log("stepDescription", stepDescription)
+            // console.log("stepDescription", stepDescription)
             if (stepDescription.count == object.triggerCount) {
                 this.triggerDialog(stepDescription.relatedStep.dialogId, stepDescription.relatedStep)
             }
@@ -132,7 +140,7 @@ export default class SceneManager extends EventEmitter {
 
     triggerDialog(dialogId: string, relatedStep: DialogStep) {
         if (!dialogId) return
-        console.log("triggerDialog", dialogId, relatedStep)
+        // console.log("triggerDialog", dialogId, relatedStep)
         return this.subtitle.displayDialog(this.dialogsAudio[dialogId])
     }
 }

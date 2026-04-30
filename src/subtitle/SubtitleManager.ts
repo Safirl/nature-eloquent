@@ -70,9 +70,8 @@ export default class SubtitleManager extends EventEmitter {
 	}
 
 	// Changement de dialogue automatique
-	async displayDialog(dialogData: DialogInteraction, currentStep: any) {
+	async displayDialog(dialogData: DialogInteraction) {
 		const entries = Object.entries(dialogData);
-		console.log('entries', entries)
 		if (entries.length === 0) return;
 
 		for (const [_key, item] of entries) {
