@@ -52,7 +52,7 @@ export default class GameEnvironment extends Environment {
 	}
 
 	setFog() {
-		this.fog = new THREE.Fog(FogVariables.color, 0, 120);
+		this.fog = new THREE.Fog(FogVariables.color, 20, 225);
 		this.scene.fog = this.fog;
 		/**
 		 * Add debugger
@@ -120,24 +120,17 @@ export default class GameEnvironment extends Environment {
 
 	setForest() {
 		const resource = this.experience.resources.items["pineModel"] as GLTF;
-		// const dummy = resource.scene.children[0].children[0] as THREE.Mesh
-		// console.log(resource.scene.children[0].children[0])
-		// const mesh = new THREE.InstancedMesh(
-		// 	dummy.geometry,
-		// 	dummy.material,
-		// 	1
-		// );
-		// this.experience.scene.add(mesh)
-		// console.log(resource)
-		// this.pineTreesManager = new InstancedMeshManager(resource.scene.children[0].children[0] as THREE.Mesh, 500, false)
-		// const pineLeavesManager = new InstancedMeshManager(resource.scene.children[0].children[1] as THREE.Mesh, 500, false)
-		// const count = 10
-		// for (let i = 0; i < count; i++) {
-		// 	const randX = (Math.random() - .5) * count;
-		// 	const randZ = (Math.random() - .5) * count;
-		// 	pineLeavesManager.add(new THREE.Vector3(randX, 0, randZ))
-		// 	this.pineTreesManager.add(new THREE.Vector3(randX, 0, randZ))
-		// }
+		this.pineTreesManager = new InstancedMeshManager(
+			resource.scene.children[0] as THREE.Group,
+			800,
+			true
+		);
+		const count = 10;
+		for (let i = 0; i < count; i++) {
+			const randX = (Math.random() - 0.5) * i * 10;
+			const randZ = (Math.random() - 0.5) * i * 10;
+			this.pineTreesManager.add(new THREE.Vector3(randX, 0, randZ));
+		}
 	}
 
 	setDebugObject(): void {
