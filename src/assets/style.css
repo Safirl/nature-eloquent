@@ -5,6 +5,16 @@
   background-color: #485345;
 }
 
+.next-dialog{
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: rgb(255, 142, 142);
+    cursor: pointer;
+}
+
 .start-btn{
     position: absolute;
     top: 50%;

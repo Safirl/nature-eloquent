@@ -18,9 +18,18 @@ export default class SceneManager extends EventEmitter {
 
     private objectCounts: { [key: string]: number } = {}
 
+    private waitingForInteraction: boolean = false;
+    declare nextDialogButton: HTMLElement
+
     init() {
+        this.nextDialogButton = document.getElementById("next-dialog") as HTMLElement;
+        this.nextDialogButton.addEventListener("click", () => {
+            if (this.waitingForInteraction) {
+                this.waitingForInteraction = false;
+                this.nextStepOrSceneAfterStepDialogFinished("onIntroductionCompleted");
+            }
+        })
         this.sceneConfig = sceneConfig
-        // this.stepDescriptions = []
         const exp = Experience.instance as GameExperience
         if (!exp)
             throw new Error("Can't initialize SceneManager: Experience is not valid")
@@ -30,19 +39,23 @@ export default class SceneManager extends EventEmitter {
         const world = Experience.instance?.world as Playground
         if (!world)
             throw new Error("nullos")
-
-        // console.log("world", world.interactionManager)
-
         this.interactionManager = world.interactionManager
-        // console.log(this.interactionManager)
-        //this.allInstancedMeshManagers = this.interactionManager.InstancedMeshManagers
-
         this.playScene(0)
         this.interactionManager.on('onObjectPlaced', this.onObjectPlaced)
-        // this.subtitle.on("dialogFinished", this.nextStepOrSceneAfterStepDialogFinished)
 
         this.subtitle.on("dialogFinished", (callbackName: string) => {
-            console.log("Callback name", callbackName);
+            console.log("dialog finished:", callbackName);
+
+            if (callbackName === "onIntroductionCompleted") {
+                this.waitingForInteraction = true;
+                return;
+            }
+
+            if (callbackName === "onDinosaure02Completed") {
+                this.waitingForInteraction = true;
+                return;
+            }
+
             this.nextStepOrSceneAfterStepDialogFinished(callbackName);
         });
     }
@@ -74,12 +87,8 @@ export default class SceneManager extends EventEmitter {
             return
         }
 
-        // console.log("scene", scene)
         scene.steps.forEach(step => {
-            // console.log("step", step)
-            // console.log("step.objectAdded", step.objectsAdded.objectId)
             step.objectsAdded.forEach(obj => {
-                // console.log("obj", obj)
                 if (this.interactionManager.interactableObjects.find((o: any) => o.name === obj.objectId || o.objectId === null)) return
 
                 if (obj.objectId && obj.resourceName) {
