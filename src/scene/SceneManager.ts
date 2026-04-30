@@ -46,16 +46,24 @@ export default class SceneManager extends EventEmitter {
         this.subtitle.on("dialogFinished", (callbackName: string) => {
             console.log("dialog finished:", callbackName);
 
-            if (callbackName === "onIntroductionCompleted") {
-                this.waitingForInteraction = true;
-                return;
-            }
+            // Si on souhaite que l'utilisateur interagisse pour passer à la step suivante.
 
-            if (callbackName === "onDinosaure02Completed") {
-                this.waitingForInteraction = true;
-                return;
-            }
+            // if (callbackName === "onIntroductionCompleted") {
+            //     this.waitingForInteraction = true;
+            //     return;
+            // }
 
+            // if (callbackName === "onDinosaure02Completed") {
+            //     this.waitingForInteraction = true;
+            //     return;
+            // }
+
+            // if (callbackName === "onToybox01Completed") {
+            //     this.waitingForInteraction = true;
+            //     return;
+            // }
+
+            // Pour faire passer les scène automatiquement après dialogue
             this.nextStepOrSceneAfterStepDialogFinished(callbackName);
         });
     }

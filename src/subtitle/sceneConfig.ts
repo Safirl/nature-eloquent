@@ -100,5 +100,40 @@ export const sceneConfig: SceneType = [
                 callbackName: "onHerbarium01Completed"
             },
         ]
+    },
+
+    {
+        name: "gardenroom",
+        steps: [
+            {
+                // Si on rajoute des objets qui n'ont pas besoin de dialogues
+                objectsAdded: [{
+                    objectId: "flower",
+                    resourceName: "mushroomModel",
+                    triggerCount: 0,
+                }, {
+                    objectId: "vines",
+                    resourceName: "mushroomModel",
+                    triggerCount: 0,
+                },
+                {
+                    objectId: "grass",
+                    resourceName: "mushroomModel",
+                    triggerCount: 0,
+                }],
+                objectsRemoved: [{
+                    objectId: "herbier",
+                    triggerCount: 0,
+                }, {
+                    objectId: "carnet",
+                    triggerCount: 0,
+                }, {
+                    objectId: "dinosaure",
+                    triggerCount: 0,
+                }],
+                dialogId: "gardenroom_01",
+                callbackName: "onGardenRoom01Completed"
+            },
+        ]
     }
 ]
