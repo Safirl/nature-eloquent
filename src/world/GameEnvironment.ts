@@ -41,7 +41,7 @@ export default class GameEnvironment extends Environment {
 		this.setFog();
 		this.setBloom();
 		this.setForest();
-		this.grass = new Grass();
+		// this.grass = new Grass();
 		// this.cloud = new Cloud()
 		// const bg = this.createBackground();
 		// const sky = new THREE.Mesh(
@@ -123,7 +123,7 @@ export default class GameEnvironment extends Environment {
 		this.pineTreesManager = new InstancedMeshManager(
 			resource.scene.children[0] as THREE.Group,
 			800,
-			true
+			false
 		);
 		const count = 10;
 		for (let i = 0; i < count; i++) {

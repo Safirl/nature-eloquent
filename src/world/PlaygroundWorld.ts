@@ -15,6 +15,7 @@ export default class Playground extends World {
 	declare resources: Experience["resources"];
 	declare floor: Floor;
 	declare fox: Actor;
+	declare layout: Actor;
 	declare private interactionManager: InteractionManager;
 
 	init() {
@@ -25,14 +26,14 @@ export default class Playground extends World {
 			true
 		);
 
-		// this.fox = new Actor(
-		// 	"pineTree",
-		// 	this.resources.items.pineModel as GLTF,
-		// 	true,
-		// 	false,
-		// 	this.resources.items.pineModel as GLTF
-		// );
-		// this.fox.setScale(1, 1, 1);
+		this.layout = new Actor(
+			"layout",
+			this.resources.items.pineModel as GLTF,
+			true,
+			false,
+			this.resources.items.pineModel as GLTF
+		);
+		// this.layout.setScale(1, 1, 1);
 
 		this.interactionManager = new InteractionManager();
 
