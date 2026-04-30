@@ -69,10 +69,18 @@ export default class SceneManager extends EventEmitter {
         if (!scene) {
             return
         }
+
+        console.log("scene", scene)
         scene.steps.forEach(step => {
+            console.log("step", step)
+            // console.log("step.objectAdded", step.objectsAdded.objectId)
             step.objectsAdded.forEach(obj => {
+                console.log("obj", obj)
+
+                if (this.interactionManager.interactableObjects.find((o: any) => o.name === obj.objectId)) return
                 this.interactionManager.addInteractableObject(obj.objectId, obj.resourceName)
-                // objetsToSelect.push({ objectId: obj.objectId, resourceName: obj.resourceName })
+
+                console.log("all object displayed", this.interactionManager.interactableObjects)
             })
         })
     }
@@ -123,3 +131,4 @@ export default class SceneManager extends EventEmitter {
         return this.subtitle.displayDialog(this.dialogsAudio[dialogId])
     }
 }
+

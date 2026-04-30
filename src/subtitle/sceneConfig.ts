@@ -42,7 +42,7 @@ export const sceneConfig: SceneType = [
                     objectId: "dinosaure",
                     resourceName: "mushroomPaintedModel",
                     triggerCount: 2,
-                },],
+                }],
                 dialogId: "dinosaure_01",
                 callbackName: "onDinosaure01Completed"
             },
@@ -79,3 +79,22 @@ export const sceneConfig: SceneType = [
 // Pour la scène de l'herbier = un objet de carnet à sélectionner
 // Après l'avoir sélectionné alors on affiche le dialogue de l'herbier
 // Puis on affiche en même temps (fleur, liane, herbe)
+
+// [
+//     {
+//         "name": "",
+//         "resourceName": ""
+//     },
+//     {
+//         "name": "dinosaure",
+//         "resourceName": "mushroomPaintedModel"
+//     },
+//     {
+//         "name": "dinosaure",
+//         "resourceName": "mushroomPaintedModel"
+//     },
+//     {
+//         "name": "chocolat",
+//         "resourceName": "mushroomModel"
+//     }
+// ]
