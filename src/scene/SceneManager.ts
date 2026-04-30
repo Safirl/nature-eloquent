@@ -44,7 +44,6 @@ export default class SceneManager extends EventEmitter {
         this.subtitle.on("dialogFinished", this.nextStepOrSceneAfterStepDialogFinished)
     }
 
-    // Jouer une scène en fonction de son identifiant
     playScene(sceneId: number) {
         this.currentSceneId = sceneId
         const scene = this.sceneConfig[sceneId]
@@ -55,7 +54,27 @@ export default class SceneManager extends EventEmitter {
         if (scene.name === "introduction") {
             this.triggerDialog(scene.steps[0].dialogId, scene.steps[0])
         }
+
+        // NOO
+        // if (scene.name === "dinosaure") {
+        //     this.interactionManager.addInteractableObject(scene.steps[0].objectsAdded[0].objectId, scene.steps[0].objectsAdded[0].resourceName)
+        // }
+        this.getInteractableObjects(sceneId);
+
         this.playStep(0)
+    }
+
+    getInteractableObjects(sceneId: number) {
+        const scene = this.sceneConfig[sceneId]
+        if (!scene) {
+            return
+        }
+        scene.steps.forEach(step => {
+            step.objectsAdded.forEach(obj => {
+                this.interactionManager.addInteractableObject(obj.objectId, obj.resourceName)
+                // objetsToSelect.push({ objectId: obj.objectId, resourceName: obj.resourceName })
+            })
+        })
     }
 
     playStep(stepId: number) {
@@ -70,7 +89,6 @@ export default class SceneManager extends EventEmitter {
 
     nextStepOrSceneAfterStepDialogFinished = () => {
         this.currentStepIndex++;
-
         if (this.currentStepIndex < this.sceneConfig[this.currentSceneId].steps.length) {
             this.playStep(this.currentStepIndex);
         }

@@ -14,39 +14,8 @@
 			"audio": "/audio/welcome.mp3",
 			"dialog": "Ahah, je suis contente que tu te sentes à l'aise ici !",
 			"speaker": "Petit Pois: "
-		},
-		"dialog_4": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "Alors on va vraiment prendre tous ces cartons ?",
-			"speaker": "Aria: "
-		},
-		"dialog_5": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "Et oui, tout est là je crois... J'ai demandé à ma mère de m'aider à les trier hier.",
-			"speaker": "Petit Pois: "
-		},
-		"dialog_6": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "On a vraiment besoin de tout ?",
-			"speaker": "Aria: "
-		},
-		"dialog_7": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "C'était important pour moi. Et puis... on va bientôt pouvoir réutiliser certains de mes vieux vêtements !",
-			"speaker": "Petit Pois: "
-		},
-		"dialog_8": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "Je suis pas sûr qu'il rentre dans du 14 ans par contre !",
-			"speaker": "Aria: "
-		},
-		"dialog_9": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "Alors, qu'est-ce qu'on a là ?",
-			"speaker": "Aria: "
 		}
 	},
-
 	"dinosaure_01": {
 		"dialog_1": {
 			"audio": "/audio/welcome.mp3",
@@ -74,6 +43,19 @@
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Merci Madame FOURCADE ! je vous revaudrai ça.",
 			"speaker": "Aria: "
+		}
+	},
+
+	"toybox_01": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Mardi 16 septembre 2001. Samedi et dimanche on est allés au parc des dinosaures à côté de mes grands parents. Elle marque une pause en riant. Tu écrivais dinosaures avec un y et deux o haha !",
+			"speaker": "Aria: "
+		},
+		"dialog_2": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Ah oui je me souviens de ce parc ! Il y avait un brachiosaure en taille réelle ! Il faisait 10m de haut pour 20m de long. J'étais vraiment impressionné.",
+			"speaker": "Petit Pois: "
 		}
 	},
 
