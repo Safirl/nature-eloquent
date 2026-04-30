@@ -70,7 +70,7 @@ export default class SubtitleManager extends EventEmitter {
 	}
 
 	// Changement de dialogue automatique
-	async displayDialog(dialogData: DialogInteraction) {
+	async displayDialog(dialogData: DialogInteraction, relatedStep: DialogStep) {
 		const entries = Object.entries(dialogData);
 		if (entries.length === 0) return;
 
@@ -81,8 +81,9 @@ export default class SubtitleManager extends EventEmitter {
 				this.audioPlayer.addEventListener("error", () => resolve(), { once: true });
 			});
 		}
+		console.log("relatedStep", relatedStep)
 		this.hideSubtitle();
-		this.trigger("dialogFinished", currentStep);
+		this.trigger("dialogFinished", [relatedStep.callbackName]);
 	}
 
 	// Changement dialogue au clic

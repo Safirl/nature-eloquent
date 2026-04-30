@@ -38,16 +38,15 @@ export const sceneConfig: SceneType = [
         name: "dinosaure",
         steps: [
             // Test avec un autre truc
-
-            {
-                objectsAdded: [{
-                    objectId: "chocolat",
-                    resourceName: "mushroomModel",
-                    triggerCount: 4,
-                },],
-                dialogId: "dinosaure_02",
-                callbackName: "onDinosaure03Completed"
-            },
+            // {
+            //     objectsAdded: [{
+            //         objectId: "chocolat",
+            //         resourceName: "mushroomModel",
+            //         triggerCount: 4,
+            //     }],
+            //     dialogId: "dinosaure_02",
+            //     callbackName: "onDinosaure03Completed"
+            // },
             {
                 objectsAdded: [{
                     objectId: "dinosaure",
@@ -68,4 +67,38 @@ export const sceneConfig: SceneType = [
             },
         ]
     },
+
+    {
+        name: "toybox",
+        steps: [
+            {
+                objectsAdded: [{
+                    objectId: "carnet",
+                    resourceName: "mushroomModel",
+                    triggerCount: 1,
+                }],
+                // objectsRemoved: [{
+                //     objectId: "dinosaure",
+                //     triggerCount: 1,
+                // }],
+                dialogId: "toybox_01",
+                callbackName: "onToybox01Completed"
+            },
+        ]
+    },
+
+    {
+        name: "herbarium",
+        steps: [
+            {
+                objectsAdded: [{
+                    objectId: "herbier",
+                    resourceName: "mushroomPaintedModel",
+                    triggerCount: 1,
+                }],
+                dialogId: "herbarium_01",
+                callbackName: "onHerbarium01Completed"
+            },
+        ]
+    }
 ]
