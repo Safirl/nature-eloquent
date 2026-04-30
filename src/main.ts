@@ -5,36 +5,36 @@ import sources from "./resources/sources";
 import Playground from "./world/PlaygroundWorld";
 import SubtitleManager from "./subtitle/SubtitleManager";
 import {
-  FirstPersonCameraOctree,
-  keyboardProfile,
+	FirstPersonCameraOctree,
+	keyboardProfile,
 } from "@plugins/firstPersonCamera";
 import GameExperience from "./GameExperience";
 
 const init = () => {
-  const canvas: HTMLCanvasElement = document.getElementById(
-    "three"
-  ) as HTMLCanvasElement;
-  if (!canvas) {
-    console.error("no canvas found with three identifier");
-    return;
-  }
+	const canvas: HTMLCanvasElement = document.getElementById(
+		"three"
+	) as HTMLCanvasElement;
+	if (!canvas) {
+		console.error("no canvas found with three identifier");
+		return;
+	}
 
-  canvas.style.width = "100%";
-  canvas.style.height = "100%";
-  const camera = new FirstPersonCameraOctree();
-  const world = new Playground();
-  const experience = new GameExperience(canvas, sources, camera, world);
-  new SubtitleManager();
-  const profiles: InputProfile[] = [keyboardProfile];
+	canvas.style.width = "100%";
+	canvas.style.height = "100%";
+	const camera = new FirstPersonCameraOctree();
+	const world = new Playground();
+	const experience = new GameExperience(canvas, sources, camera, world);
+	new SubtitleManager();
+	const profiles: InputProfile[] = [keyboardProfile];
 
-  experience.inputSystem.addInputProfiles(profiles);
-  canvas.requestPointerLock();
+	experience.inputSystem.addInputProfiles(profiles);
+	canvas.requestPointerLock();
 };
 
 const startBtn = document.querySelector(".start-btn") as HTMLDivElement;
 
 startBtn.addEventListener("click", () => {
-  startBtn.style.display = "none";
-  init();
+	startBtn.style.display = "none";
+	init();
 })
 // init();
