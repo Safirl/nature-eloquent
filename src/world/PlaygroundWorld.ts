@@ -6,7 +6,7 @@ import { Actor } from "@plugins/baseExperience";
 import { World } from "@plugins/baseExperience";
 import * as THREE from "three";
 import GameEnvironment from "./GameEnvironment";
-import InteractionManager from "../interactions/InteractionManager";
+import Menu from "../Menu";
 
 export default class Playground extends World {
 	declare experience: Experience;
@@ -15,8 +15,8 @@ export default class Playground extends World {
 	declare resources: Experience["resources"];
 	declare floor: Floor;
 	declare fox: Actor;
+	declare private menu: Menu;
 	declare layout: Actor;
-	declare interactionManager: InteractionManager;
 
 	init() {
 		super.init();
@@ -33,7 +33,7 @@ export default class Playground extends World {
 		// this.layout.model;
 		this.layout.setScale(1, 1, 1);
 
-		this.interactionManager = new InteractionManager();
+		this.menu = new Menu();
 
 		// Add colisions
 		const collisionManager = Experience.instance?.collisionManager;
@@ -46,8 +46,8 @@ export default class Playground extends World {
 		if (this.fox) {
 			this.fox.update();
 		}
-		if (this.interactionManager) {
-			this.interactionManager.update();
+		if (this.menu) {
+			this.menu.update();
 		}
 		if (this.environment) {
 			this.environment.update();
