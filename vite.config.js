@@ -1,6 +1,6 @@
 // import restart from 'vite-plugin-restart'
 import glsl from "vite-plugin-glsl";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import { resolve } from "path";
 
 export default defineConfig({
@@ -13,5 +13,8 @@ export default defineConfig({
 			"@plugins": resolve(__dirname, "src/plugins"),
 			"@shaders": resolve(__dirname, "src/shaders"),
 		},
+	},
+	test: {
+		environment: "node",
 	},
 });
