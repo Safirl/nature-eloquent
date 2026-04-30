@@ -5,8 +5,8 @@ export type SceneType = {
 
 export type DialogStep = {
     objectsAdded: {
-        objectId: string,
-        resourceName: string,
+        objectId: string | null,
+        resourceName: string | null,
         triggerCount: number,
     }[],
     objectsRemoved?: {
@@ -24,8 +24,8 @@ export const sceneConfig: SceneType = [
         steps: [
             {
                 objectsAdded: [{
-                    objectId: "",
-                    resourceName: "",
+                    objectId: null,
+                    resourceName: null,
                     triggerCount: 0,
                 },],
                 dialogId: "introduction",

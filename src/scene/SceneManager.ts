@@ -77,8 +77,13 @@ export default class SceneManager extends EventEmitter {
             step.objectsAdded.forEach(obj => {
                 console.log("obj", obj)
 
-                if (this.interactionManager.interactableObjects.find((o: any) => o.name === obj.objectId)) return
-                this.interactionManager.addInteractableObject(obj.objectId, obj.resourceName)
+                if (this.interactionManager.interactableObjects.find((o: any) => o.name === obj.objectId || o.objectId === null)) return
+
+                if (obj.objectId && obj.resourceName) {
+                    this.interactionManager.addInteractableObject(obj.objectId, obj.resourceName)
+                }
+
+
 
                 console.log("all object displayed", this.interactionManager.interactableObjects)
             })
