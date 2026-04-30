@@ -16,7 +16,7 @@ export default class Playground extends World {
 	declare floor: Floor;
 	declare fox: Actor;
 	declare layout: Actor;
-	declare private interactionManager: InteractionManager;
+	declare interactionManager: InteractionManager;
 
 	init() {
 		super.init();

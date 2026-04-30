@@ -18,17 +18,18 @@ export default class SceneManager extends EventEmitter {
 
     private objectCounts: { [key: string]: number } = {}
 
-    private waitingForInteraction: boolean = false;
-    declare nextDialogButton: HTMLElement
+    // private waitingForInteraction: boolean = false;
+    // declare nextDialogButton: HTMLElement
 
     init() {
-        this.nextDialogButton = document.getElementById("next-dialog") as HTMLElement;
-        this.nextDialogButton.addEventListener("click", () => {
-            if (this.waitingForInteraction) {
-                this.waitingForInteraction = false;
-                this.nextStepOrSceneAfterStepDialogFinished("onIntroductionCompleted");
-            }
-        })
+        // Bouton pour passer à la scène suivante
+        // this.nextDialogButton = document.getElementById("next-dialog") as HTMLElement;
+        // this.nextDialogButton.addEventListener("click", () => {
+        //     if (this.waitingForInteraction) {
+        //         this.waitingForInteraction = false;
+        //         this.nextStepOrSceneAfterStepDialogFinished("onIntroductionCompleted");
+        //     }
+        // })
         this.sceneConfig = sceneConfig
         const exp = Experience.instance as GameExperience
         if (!exp)
@@ -44,8 +45,6 @@ export default class SceneManager extends EventEmitter {
         this.interactionManager.on('onObjectPlaced', this.onObjectPlaced)
 
         this.subtitle.on("dialogFinished", (callbackName: string) => {
-            console.log("dialog finished:", callbackName);
-
             // Si on souhaite que l'utilisateur interagisse pour passer à la step suivante.
 
             // if (callbackName === "onIntroductionCompleted") {
@@ -80,7 +79,6 @@ export default class SceneManager extends EventEmitter {
             throw new Error("sceneConfig not found")
         }
 
-        // Ajout de l'introduction
         if (scene.name === "introduction") {
             this.triggerDialog(scene.steps[0].dialogId, scene.steps[0])
         }
@@ -166,12 +164,10 @@ export default class SceneManager extends EventEmitter {
             this.objectCounts[objectName] = 0;
         }
 
-        // Incrémente au fur et à mesure dans le tableau
         this.objectCounts[objectName]++;
         console.log("counts", this.objectCounts);
 
         const scene = this.sceneConfig[this.currentSceneId];
-        // Pour chaque step on vérifie l'objet ajouté et son count (triggerCount) -> pour déclencher le dialogue
         scene.steps.forEach(step => {
             step.objectsAdded.forEach(obj => {
                 if (obj.objectId !== objectName) return;
@@ -180,7 +176,6 @@ export default class SceneManager extends EventEmitter {
                 if (count === obj.triggerCount) {
                     this.triggerDialog(step.dialogId, step);
                 }
-
             });
         });
     }
