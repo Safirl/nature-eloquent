@@ -16,7 +16,7 @@ const init = () => {
 
 	canvas.style.width = "100%";
 	canvas.style.height = "100%";
-	const camera = new OrbitPlayer();
+	const camera = new FirstPersonCameraOctree();
 	const world = new Playground();
 	const experience = new Experience(canvas, sources, camera, world);
 	new SubtitleManager();

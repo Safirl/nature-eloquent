@@ -23,13 +23,13 @@ export default class Grass implements LifeTimeObject {
 
 	declare private grassMap: THREE.Texture;
 	declare private grassAlphaMap: THREE.Texture;
-	private grassFieldSizes = { x: 20, y: 20 };
+	private grassFieldSizes = { x: 50, y: 50 };
 	// public windStrength = 0.54;
 	// public windFrequency = 0.0006;
 	//  public windScale = 0.18;
 	private uniforms = {
 		uTime: { value: 0 },
-		uWindStrength: { value: 0.54 },
+		uWindStrength: { value: 0.118 },
 		uWindFrequency: { value: 0.0006 },
 		uWindScale: { value: 0.18 },
 		uCameraPosition: { value: new THREE.Vector3() },
@@ -54,10 +54,24 @@ export default class Grass implements LifeTimeObject {
 	}
 
 	setGeometry() {
-		const count = 5000;
-		const positions = new Float32Array([0.5, -0.5, 0, -0.5, -0.5, 0, -0.5, 0.5, 0, 0.5, 0.5, 0]);
+		const count = 30000;
+		//prettier-ignore
+		const positions = new Float32Array([
+      0.5, -0.5, 0,
+      -0.5, -0.5, 0,
+      -0.5, 0.5, 0,
+      0.5, 0.5, 0
+    ]);
+		//prettier-ignore
 		const indexs = [0, 1, 2, 2, 3, 0];
-		const normals = [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1];
+		//prettier-ignore
+		const normals = [
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1
+    ];
+		//prettier-ignore
 		const uvs = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0];
 		const globalPositions = new Float32Array(3 * count);
 		// const angles = new Float32Array(count);
@@ -89,7 +103,9 @@ export default class Grass implements LifeTimeObject {
 	}
 
 	setMaterial() {
-		this.uniforms.uGrassMapTexture.value = this.experience.resources.items["grassColorTexture"] as THREE.Texture;
+		const colorTexture = this.experience.resources.items["grassColorTexture"] as THREE.Texture;
+		colorTexture.colorSpace = THREE.SRGBColorSpace;
+		this.uniforms.uGrassMapTexture.value = colorTexture;
 		this.uniforms.uGrassAlphaMap.value = this.experience.resources.items["grassAlphaTexture"] as THREE.Texture;
 		//
 		this.depthMaterial = new THREE.MeshDepthMaterial({
@@ -106,6 +122,8 @@ export default class Grass implements LifeTimeObject {
 			// depthTest: false,
 			// depthWrite: false
 		});
+		this.material.roughness = 1;
+		this.material.metalness = 0;
 
 		this.material.onBeforeCompile = (shader) => {
 			shader.uniforms.uTime = this.uniforms.uTime;
