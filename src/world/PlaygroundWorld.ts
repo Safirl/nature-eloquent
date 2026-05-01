@@ -21,30 +21,24 @@ export default class Playground extends World {
 	init() {
 		super.init();
 		this.floor = new Floor();
-		this.environment = new GameEnvironment(
-			this.resources.items.environmentMapTexture1 as THREE.CubeTexture,
-			true
-		);
+		this.environment = new GameEnvironment(this.resources.items.environmentMapTexture1 as THREE.CubeTexture, true);
 
 		this.layout = new Actor(
-			"layout",
-			this.resources.items.pineModel as GLTF,
+			"layoutModel",
+			this.resources.items.layoutModel as GLTF,
 			true,
 			false,
-			this.resources.items.pineModel as GLTF
+			this.resources.items.layoutModel as GLTF
 		);
-		// this.layout.setScale(1, 1, 1);
+		this.layout.setScale(1, 1, 1);
 
 		this.interactionManager = new InteractionManager();
 
 		// Add colisions
 		const collisionManager = Experience.instance?.collisionManager;
-		if (!collisionManager)
-			throw new Error(
-				"Playground initialization failed: CollisionManager is not available."
-			);
+		if (!collisionManager) throw new Error("Playground initialization failed: CollisionManager is not available.");
 		collisionManager?.addCollisionObjects([this.floor]);
-		// collisionManager?.addCollisionObjects([this.fox]);
+		// collisionManager?.addCollisionObjects([this.layout]);
 	}
 
 	update() {

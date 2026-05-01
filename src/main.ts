@@ -4,16 +4,11 @@ import { Experience, type InputProfile } from "@plugins/baseExperience";
 import sources from "./resources/sources";
 import Playground from "./world/PlaygroundWorld";
 import SubtitleManager from "./subtitle/SubtitleManager";
-import {
-	FirstPersonCameraOctree,
-	keyboardProfile,
-} from "@plugins/firstPersonCamera";
+import { FirstPersonCameraOctree, keyboardProfile } from "@plugins/firstPersonCamera";
 import OrbitPlayer from "./camera/OrbitPlayer";
 
 const init = () => {
-	const canvas: HTMLCanvasElement = document.getElementById(
-		"three"
-	) as HTMLCanvasElement;
+	const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement;
 	if (!canvas) {
 		console.error("no canvas found with three identifier");
 		return;
