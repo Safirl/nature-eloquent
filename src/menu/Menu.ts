@@ -2,7 +2,7 @@ import { EventEmitter, Experience, type LifeTimeObject } from "@plugins/baseExpe
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
 import MenuState from "./MenuState";
-import MenuView from "./MenuView";
+import MenuGL from "./MenuGL";
 import MenuInput from "./MenuInput";
 import Placement from "../interactions/Placement";
 import SubtitleManager from "../resources/subtitle/SubtitleManager";
@@ -24,7 +24,7 @@ import { type MenuItemType } from "../resources/items";
  *
  * Collaborators:
  *   - MenuState  — item-state source of truth (selected id + list)
- *   - MenuView   — DOM observer of MenuState (renders buttons + active state)
+ *   - MenuGL   — DOM observer of MenuState (renders buttons + active state)
  *   - MenuInput  — mouse/keyboard listeners; drives MenuState and emits placeRequested
  *   - Placement  — generic Three.js placement primitive (registered per item)
  */
@@ -33,7 +33,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 	private experience: Experience;
 
 	private state: MenuState;
-	private view: MenuView;
+	private view: MenuGL;
 	private input: MenuInput;
 	private placement: Placement;
 
@@ -56,7 +56,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		this.dialogsAudio = dialogSubtitleAudio;
 
 		this.state = new MenuState();
-		this.view = new MenuView(this.state, this.buttonContainerId);
+		this.view = new MenuGL(this.state, this.buttonContainerId);
 		this.input = new MenuInput(this.state, this.experience.canvas);
 		this.placement = new Placement();
 		this.sceneManager = new SceneManager(this);
@@ -121,6 +121,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 	init = () => {};
 	update = () => {
 		this.placement.update();
+		this.view.update()
 	};
 	destroy = () => {
 		this.state.off(".menu");
