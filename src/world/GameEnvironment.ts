@@ -32,16 +32,12 @@ export default class GameEnvironment extends Environment {
 		useAsBackground?: boolean,
 		backgroundEnvironmentMap?: THREE.CubeTexture
 	) {
-		super(
-			lightingEnvironmentMap,
-			useAsBackground,
-			backgroundEnvironmentMap
-		);
+		super(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap);
 		this.sky = new Sky(0, this.debugFolder);
 		this.setFog();
 		this.setBloom();
-		this.setForest();
-		// this.grass = new Grass();
+		// this.setForest();
+		this.grass = new Grass();
 		// this.cloud = new Cloud()
 		// const bg = this.createBackground();
 		// const sky = new THREE.Mesh(
@@ -59,19 +55,9 @@ export default class GameEnvironment extends Environment {
 		 */
 		if (this.debugFolder) {
 			this.fogDebugFolder = this.debugFolder.addFolder("🌫️ fog");
-			this.fogDebugFolder
-				.add(this.fog, "near")
-				.name("fog near")
-				.min(0)
-				.max(100)
-				.step(0.1);
+			this.fogDebugFolder.add(this.fog, "near").name("fog near").min(0).max(100).step(0.1);
 
-			this.fogDebugFolder
-				.add(this.fog, "far")
-				.name("fog far")
-				.min(0)
-				.max(1000)
-				.step(0.1);
+			this.fogDebugFolder.add(this.fog, "far").name("fog far").min(0).max(1000).step(0.1);
 		}
 	}
 
@@ -96,11 +82,7 @@ export default class GameEnvironment extends Environment {
 		this.sunLight.shadow.radius = 2.5;
 		this.sunLight.shadow.normalBias = 0.05;
 		this.sunlightOffset = new THREE.Vector3(-45, 8.2, 22.95);
-		this.sunLight.position.set(
-			this.sunlightOffset.x,
-			this.sunlightOffset.y,
-			this.sunlightOffset.z
-		);
+		this.sunLight.position.set(this.sunlightOffset.x, this.sunlightOffset.y, this.sunlightOffset.z);
 		this.scene.add(this.sunLight);
 
 		this.sunLight.shadow.camera.near = 1;
@@ -120,11 +102,7 @@ export default class GameEnvironment extends Environment {
 
 	setForest() {
 		const resource = this.experience.resources.items["pineModel"] as GLTF;
-		this.pineTreesManager = new InstancedMeshManager(
-			resource.scene.children[0] as THREE.Group,
-			800,
-			false
-		);
+		this.pineTreesManager = new InstancedMeshManager(resource.scene.children[0] as THREE.Group, 800, false);
 		const count = 10;
 		for (let i = 0; i < count; i++) {
 			const randX = (Math.random() - 0.5) * i * 10;
@@ -199,15 +177,8 @@ export default class GameEnvironment extends Environment {
 	// }
 
 	setSunPlane() {
-		this.sunMesh = new THREE.Mesh(
-			new THREE.CircleGeometry(),
-			new THREE.MeshBasicMaterial()
-		);
-		this.sunMesh.position.set(
-			this.sunLight.position.x,
-			this.sunLight.position.y,
-			this.sunLight.position.z
-		);
+		this.sunMesh = new THREE.Mesh(new THREE.CircleGeometry(), new THREE.MeshBasicMaterial());
+		this.sunMesh.position.set(this.sunLight.position.x, this.sunLight.position.y, this.sunLight.position.z);
 		this.sunMesh.lookAt(new THREE.Vector3());
 		this.sunLight.attach(this.sunMesh);
 		this.sunMesh.layers.enable(RenderingLayers.bloom);
@@ -217,20 +188,11 @@ export default class GameEnvironment extends Environment {
 		Experience.instance?.renderer.initializeComposer();
 		//@ts-ignore
 		this.renderScene = Experience.instance?.renderer.renderPass;
-		this.selectiveBloom = new SelectiveBloom(
-			this.renderScene,
-			RenderingLayers.bloom
-		);
+		this.selectiveBloom = new SelectiveBloom(this.renderScene, RenderingLayers.bloom);
 
 		Experience.instance?.renderer.addComposerPass(this.renderScene, true);
-		Experience.instance?.renderer.addComposerPass(
-			this.selectiveBloom.getMixPass,
-			true
-		);
-		Experience.instance?.renderer.addComposerPass(
-			this.selectiveBloom.getOutputPass,
-			true
-		);
+		Experience.instance?.renderer.addComposerPass(this.selectiveBloom.getMixPass, true);
+		Experience.instance?.renderer.addComposerPass(this.selectiveBloom.getOutputPass, true);
 	}
 
 	update() {
