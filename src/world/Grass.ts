@@ -23,7 +23,7 @@ export default class Grass implements LifeTimeObject {
 
 	declare private grassMap: THREE.Texture;
 	declare private grassAlphaMap: THREE.Texture;
-	private grassFieldSizes = { x: 50, y: 50 };
+	private grassFieldSizes = { x: 10, y: 10 };
 	// public windStrength = 0.54;
 	// public windFrequency = 0.0006;
 	//  public windScale = 0.18;
@@ -36,6 +36,8 @@ export default class Grass implements LifeTimeObject {
 		uGrassMapTexture: { value: new THREE.Texture() },
 		uGrassAlphaMap: { value: new THREE.Texture() },
 		uDarkFactor: { value: new THREE.Color(0xffffff) },
+		uHeight: { value: 1.0 },
+		uHeightRandomness: { value: 1 },
 	};
 
 	constructor() {
@@ -54,7 +56,7 @@ export default class Grass implements LifeTimeObject {
 	}
 
 	setGeometry() {
-		const count = 30000;
+		const count = 300;
 		//prettier-ignore
 		const positions = new Float32Array([
       0.5, -0.5, 0,
@@ -134,6 +136,8 @@ export default class Grass implements LifeTimeObject {
 			shader.uniforms.uGrassMapTexture = this.uniforms.uGrassMapTexture;
 			shader.uniforms.uGrassAlphaMap = this.uniforms.uGrassAlphaMap;
 			shader.uniforms.uDarkFactor = this.uniforms.uDarkFactor;
+			shader.uniforms.uHeight = this.uniforms.uHeight;
+			shader.uniforms.uHeightRandomness = this.uniforms.uHeightRandomness;
 
 			shader.vertexShader = shader.vertexShader.replace(
 				"#include <common>",
@@ -186,6 +190,7 @@ export default class Grass implements LifeTimeObject {
 			shader.uniforms.uGrassMapTexture = this.uniforms.uGrassMapTexture;
 			shader.uniforms.uGrassAlphaMap = this.uniforms.uGrassAlphaMap;
 			shader.uniforms.uDarkFactor = this.uniforms.uDarkFactor;
+			shader.uniforms.uHeight = this.uniforms.uHeight;
 
 			shader.vertexShader = shader.vertexShader.replace(
 				"#include <common>",
@@ -247,32 +252,20 @@ export default class Grass implements LifeTimeObject {
 		this.gridDebugger.layers.set(2);
 		this.experience.scene.add(this.gridDebugger);
 
-		this.debugFolder
-			.add(this.uniforms.uWindStrength, "value")
-			.min(0.01)
-			.max(1)
-			.step(0.001)
-			.name("wind strength")
-			.onChange(() => {
-				this.uniforms.uWindStrength.value = this.uniforms.uWindStrength.value;
-			});
+		this.debugFolder.add(this.uniforms.uWindStrength, "value").min(0.01).max(1).step(0.001).name("wind strength");
 		this.debugFolder
 			.add(this.uniforms.uWindFrequency, "value")
 			.min(0.0001)
 			.max(0.01)
 			.step(0.0001)
-			.name("wind frequency")
-			.onChange(() => {
-				this.uniforms.uWindFrequency.value = this.uniforms.uWindFrequency.value;
-			});
+			.name("wind frequency");
+		this.debugFolder.add(this.uniforms.uWindScale, "value").min(0.01).max(2).step(0.01).name("wind scale");
+		this.debugFolder.add(this.uniforms.uHeight, "value").min(0.01).max(2).step(0.01).name("grass height");
 		this.debugFolder
-			.add(this.uniforms.uWindScale, "value")
-			.min(0.01)
+			.add(this.uniforms.uHeightRandomness, "value")
+			.min(0)
 			.max(2)
 			.step(0.01)
-			.name("wind scale")
-			.onChange(() => {
-				this.uniforms.uWindScale.value = this.uniforms.uWindScale.value;
-			});
+			.name("grass height randomness");
 	};
 }

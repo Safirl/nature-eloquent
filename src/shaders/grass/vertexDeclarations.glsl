@@ -5,6 +5,8 @@ uniform float uTime;
 uniform float uWindStrength;
 uniform float uWindFrequency;
 uniform float uWindScale;
+uniform float uHeight;
+uniform float uHeightRandomness;
 
 attribute vec3 aGlobalPosition;
 

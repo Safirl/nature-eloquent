@@ -1,6 +1,7 @@
 vec3 localPos = transformed;
 localPos . x *= .5 ;
-localPos . y += .5 ;
+localPos . y *= uHeight * uHeightRandomness;
+localPos . y += .5 * uHeight * uHeightRandomness;
 
 vec3 finalPosition = grassRotY * localPos;
 finalPosition += aGlobalPosition;
