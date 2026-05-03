@@ -46,7 +46,7 @@
 		}
 	},
 
-	"toybox_01": {
+	"classroom_01": {
 		"dialog_1": {
 			"audio": "/audio/welcome.mp3",
 			"dialog": "Mardi 16 septembre 2001. Samedi et dimanche on est allés au parc des dinosaures à côté de mes grands parents. Elle marque une pause en riant. Tu écrivais dinosaures avec un y et deux o haha !",
@@ -86,15 +86,88 @@
 		}
 	},
 
-	"gardenroom_01": {
+	"gardenbedroom_01": {
 		"dialog_1": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "Wow, c'est la pièce la plus impressionnante de ta maison ! C'est quoi tous ces objets ?",
-			"speaker": "Aria: "
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Et bien... Un jour je me suis perdu en forêt",
+			"speaker": "Petit Pois: "
+		}
+	},
+
+	"enterClairvoyantForest_01": {
+		"dialog_1": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "C'était un week-end, au milieu de l'été, pendant les grandes vacances. J'étais parti me promener tout seul avec mon carnet. On nous avait donné comme devoir d'école d'en créer un et je voulais vraiment être fier du mien !",
+			"speaker": "Petit Pois: "
+		}
+	},
+
+	"forestLittleFlower_01": {
+		"dialog_1": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "A cette période de l'année, on pouvait encore trouver des fleurs ! J'en ai récupéré quelques unes pour mon herbier d'ailleurs.",
+			"speaker": "Petit Pois: "
+		}
+	},
+
+	"forestLittleFlower_02": {
+		"dialog_1": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "D'ailleurs il n'y avait pas qu'une fleur, c'était vraiment un champ de fleurs !",
+			"speaker": "Petit Pois: "
 		},
 		"dialog_2": {
 			"audio": "/audio/02_dialog.mp3",
-			"dialog": "C'est un peu ma pièce à moi, j'y mets tous les objets qui me tiennent à cœur et qui ont une histoire particulière pour moi.",
+			"dialog": "Woh, ça devait vraiment être magnifique !",
+			"speaker": "Aria: "
+		},
+		"dialog_3": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Oui, et c'est là que les choses ont commencé à... changer.",
+			"speaker": "Petit Pois: "
+		}
+	},
+
+	"forestButterfly_01": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "La forêt était vraiment luxuriante à cette période de l'année. Elle grouillait de vie.",
+			"speaker": "Petit Pois: "
+		}
+	},
+
+	"forestButterfly_02": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": " Woh, ça devait vraiment être magnifique !",
+			"speaker": "Aria: "
+		},
+		"dialog_2": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Oui, et c'est là que les choses ont commencé à... changer.",
+			"speaker": "Petit Pois: "
+		}
+	},
+
+	"forestFairy_01": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Les papillons n'étaient plus des papillons... Ils étaient devenus des fées !",
+			"speaker": "Petit Pois: "
+		}
+	},
+
+	"forestFairy_02": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Mais pris dans l'émerveillement de la forêt je me suis perdu et c'est alors que...",
+			"speaker": "Petit Pois: "
+		}
+	},
+	"forestStorm_01": {
+		"dialog_1": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "J'ai horreur des orages.",
 			"speaker": "Petit Pois: "
 		}
 	}
