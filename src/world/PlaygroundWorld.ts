@@ -27,6 +27,7 @@ export default class Playground extends World {
 			this.resources.items.environmentMapTexture1 as THREE.CubeTexture,
 			true
 		);
+		this.floor.mesh.scale.copy(new THREE.Vector3(10, 10, 10));
 
 		this.layout = new Actor(
 			"layoutModel",

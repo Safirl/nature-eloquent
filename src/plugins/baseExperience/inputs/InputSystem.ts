@@ -99,40 +99,56 @@ export default class InputSystem extends EventEmitter implements LifeTimeObject 
 
 	update() {
 		this.gamepads.forEach((gamepad) => {
-			console.log(gamepad.axes);
 			const profile = this.profiles.find((p) => p.id === gamepad.id);
 			if (!profile) return;
-
-			const prevButtons = this.previousState.get(gamepad.index);
-			if (!prevButtons) return;
-
-			gamepad.buttons.forEach((button, index) => {
-				const mapping = profile.buttons.find((b) => index === b.index);
-				if (!mapping) return;
-
-				const wasPressed = prevButtons[index];
-				const isPressed = button.pressed;
-
-				if (!wasPressed && isPressed) {
-					this.trigger(mapping.event, [{ type: "pressed", controller: gamepad }]);
-				}
-
-				if (wasPressed && !isPressed) {
-					this.trigger(mapping.event, [{ type: "released", controller: gamepad }]);
-				}
-
-				prevButtons[index] = isPressed ? true : false;
-			});
-
-			gamepad.axes.forEach((axis, index) => {
-				if (!profile.axes) return;
-
-				const mapping = profile.axes.find((a) => index === a.index);
-				if (!mapping) return;
-
-				this.trigger(mapping.event, [axis]);
-			});
+			this.updateButtons(gamepad, profile);
+			this.updateAxes(gamepad, profile);
 		});
 		this.gamepads = navigator.getGamepads().filter(Boolean) as Gamepad[];
+	}
+
+	compareSigns(a: number, b: number) {
+		return (a >= 0 && b >= 0) || (a < 0 && b < 0);
+	}
+
+	updateAxes(gamepad: Gamepad, profile: InputProfile) {
+		console.log(gamepad.axes);
+		gamepad.axes.forEach((axis, index) => {
+			if (!profile.axes) return;
+
+			const mapping = profile.axes.find(
+				(a) => index === a.index && this.compareSigns(a.sign, axis)
+			);
+			if (!mapping) return;
+			if (mapping.deadzone > Math.abs(axis)) axis = 0;
+			this.trigger(mapping.event, [axis]);
+		});
+	}
+
+	updateButtons(gamepad: Gamepad, profile: InputProfile) {
+		const prevButtons = this.previousState.get(gamepad.index);
+		if (!prevButtons) return;
+
+		gamepad.buttons.forEach((button, index) => {
+			const mapping = profile.buttons.find((b) => index === b.index);
+			if (!mapping) return;
+
+			const wasPressed = prevButtons[index];
+			const isPressed = button.pressed;
+
+			if (!wasPressed && isPressed) {
+				this.trigger(mapping.event, [
+					{ type: "pressed", controller: gamepad },
+				]);
+			}
+
+			if (wasPressed && !isPressed) {
+				this.trigger(mapping.event, [
+					{ type: "released", controller: gamepad },
+				]);
+			}
+
+			prevButtons[index] = isPressed ? true : false;
+		});
 	}
 }

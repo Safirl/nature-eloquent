@@ -1,7 +1,7 @@
 import type { InputProfile } from "@plugins/baseExperience";
 
 export const BitControllerProfile: InputProfile = {
-	id: "8BitDo Ultimate 2C Wireless (Vendor: 2dc8 Product: 301b)",
+	id: "2dc8-301b-8BitDo Ultimate 2C Wireless",
 	buttons: [
 		{
 			physicalInput: "A",
@@ -24,58 +24,64 @@ export const BitControllerProfile: InputProfile = {
 			event: "inventory",
 		},
 	],
-	// axes: [
-	//     {
-	//         physicalInput: "leftStickX+",
-	//         index: 0,
-	//         event: "right"
-	//     },
-	//     {
-	//         physicalInput: "leftStickX-",
-	//         index: 0,
-	//         event: "left"
-	//     },
-	//     {
-	//         physicalInput: "leftStickY+",
-	//         index: 1,
-	//         event: "forward"
-	//     },
-	//     {
-	//         physicalInput: "leftStickY-",
-	//         index: 1,
-	//         event: "backward"
-	//     },
-	//     {
-	//         physicalInput: "rightStickX+",
-	//         index: -1,
-	//         event: "lookRight"
-	//     },
-	//     {
-	//         physicalInput: "rightStickX-",
-	//         index: -1,
-	//         event: "lookLeft"
-	//     },
-	//     {
-	//         physicalInput: "rightStickY+",
-	//         index: -1,
-	//         event: "lookUp"
-	//     },
-	//     {
-	//         physicalInput: "rightStickY-",
-	//         index: -1,
-	//         event: "lookDown"
-	//     },
-	//     {
-	//         physicalInput: "rightStickY+",
-	//         index: -1,
-	//         event: "lookUp"
-	//     },
-	//     {
-	//         physicalInput: "rightStickY-",
-	//         index: -1,
-	//         event: "lookDown"
-	//     }
-	// ]
+	axes: [
+		{
+			physicalInput: "leftStickXRight",
+			index: 1,
+			event: "right",
+			sign: 1,
+			deadzone: 0.01,
+		},
+		{
+			physicalInput: "leftStickXLeft",
+			index: 1,
+			event: "left",
+			sign: -1,
+			deadzone: 0.01,
+		},
+		{
+			physicalInput: "leftStickYUp",
+			index: 2,
+			event: "forward",
+			sign: -1,
+			deadzone: 0.01,
+		},
+		{
+			physicalInput: "leftStickYDown",
+			index: 2,
+			event: "backward",
+			sign: 1,
+			deadzone: 0.01,
+		},
+		{
+			physicalInput: "rightStickXRight",
+			index: 3,
+			event: "lookRight",
+			sign: 1,
+			deadzone: 0.01,
+		},
+		{
+			physicalInput: "rightStickXLeft",
+			index: 3,
+			event: "lookLeft",
+			sign: -1,
+			deadzone: 0.01,
+		},
+		{
+			physicalInput: "rightStickYUp",
+			index: 4,
+			event: "lookUp",
+			sign: -1,
+			deadzone: 0.01,
+		},
+		{
+			physicalInput: "rightStickYDown",
+			index: 4,
+			event: "lookDown",
+			sign: 1,
+			deadzone: 0.01,
+		},
+	],
 };
 
 export const keyboardProfile = {

@@ -6,10 +6,10 @@ import { Capsule } from "three/examples/jsm/Addons.js";
 import GameExperience from "../../../GameExperience";
 
 export default class FirstPersonCameraOctree extends Camera {
-	declare moveForward: boolean;
-	declare moveBackward: boolean;
-	declare moveLeft: boolean;
-	declare moveRight: boolean;
+	declare moveForward: number;
+	declare moveBackward: number;
+	declare moveLeft: number;
+	declare moveRight: number;
 	declare canJump: boolean;
 
 	declare playerCollider: Capsule;
@@ -34,10 +34,10 @@ export default class FirstPersonCameraOctree extends Camera {
 		super();
 
 		// Mouvements
-		this.moveBackward = false;
-		this.moveForward = false;
-		this.moveLeft = false;
-		this.moveRight = false;
+		this.moveBackward = 0;
+		this.moveForward = 0;
+		this.moveLeft = 0;
+		this.moveRight = 0;
 		this.canJump = false;
 
 		// Collision
@@ -100,33 +100,62 @@ export default class FirstPersonCameraOctree extends Camera {
 
 	bindInputs() {
 		if (Experience.instance) {
-			this.gameExperience = GameExperience.instance as GameExperience;
-			Experience.instance.inputSystem.on("forward", (args: InputEventArgs) => {
-				if (args.type === "pressed") {
-					this.moveForward = true;
-				} else if (args.type === "released") {
-					this.moveForward = false;
+			/* Movements */
+			Experience.instance.inputSystem.on(
+				"forward",
+				(args: InputEventArgs | number) => {
+					if (typeof args === "number") {
+						console.log(args);
+						this.moveForward = -args;
+						return;
+					}
+					if (args.type === "pressed") {
+						this.moveForward = 1;
+					} else if (args.type === "released") {
+						this.moveForward = 0;
+					}
 				}
-			});
-			Experience.instance.inputSystem.on("backward", (args: InputEventArgs) => {
-				if (args.type === "pressed") {
-					this.moveBackward = true;
-				} else if (args.type === "released") {
-					this.moveBackward = false;
+			);
+			Experience.instance.inputSystem.on(
+				"backward",
+				(args: InputEventArgs | number) => {
+					if (typeof args === "number") {
+						this.moveBackward = -args;
+						return;
+					}
+					if (args.type === "pressed") {
+						this.moveBackward = 1;
+					} else if (args.type === "released") {
+						this.moveBackward = 0;
+					}
 				}
-			});
-			Experience.instance.inputSystem.on("left", (args: InputEventArgs) => {
-				if (args.type === "pressed") {
-					this.moveLeft = true;
-				} else if (args.type === "released") {
-					this.moveLeft = false;
+			);
+			Experience.instance.inputSystem.on(
+				"left",
+				(args: InputEventArgs | number) => {
+					if (typeof args === "number") {
+						this.moveLeft = args;
+						return;
+					}
+					if (args.type === "pressed") {
+						this.moveLeft = 1;
+					} else if (args.type === "released") {
+						this.moveLeft = 0;
+					}
 				}
-			});
-			Experience.instance.inputSystem.on("right", (args: InputEventArgs) => {
-				if (args.type === "pressed") {
-					this.moveRight = true;
-				} else if (args.type === "released") {
-					this.moveRight = false;
+			);
+			Experience.instance.inputSystem.on(
+				"right",
+				(args: InputEventArgs | number) => {
+					if (typeof args === "number") {
+						this.moveRight = args;
+						return;
+					}
+					if (args.type === "pressed") {
+						this.moveRight = 1;
+					} else if (args.type === "released") {
+						this.moveRight = 0;
+					}
 				}
 			});
 			Experience.instance.inputSystem.on("jump", (args: InputEventArgs) => {
@@ -168,11 +197,26 @@ export default class FirstPersonCameraOctree extends Camera {
 	private applyControls(delta: number): void {
 		const speedDelta = delta * (this.canJump ? this.speed : 8);
 
-		if (this.moveForward) this.velocity.add(this.getForwardVector().multiplyScalar(speedDelta));
-		if (this.moveBackward)
-			this.velocity.add(this.getForwardVector().multiplyScalar(-speedDelta));
-		if (this.moveLeft) this.velocity.add(this.getSideVector().multiplyScalar(-speedDelta));
-		if (this.moveRight) this.velocity.add(this.getSideVector().multiplyScalar(speedDelta));
+		this.velocity.add(
+			this.getForwardVector()
+				.multiplyScalar(speedDelta)
+				.multiplyScalar(this.moveForward)
+		);
+		this.velocity.add(
+			this.getForwardVector()
+				.multiplyScalar(-speedDelta)
+				.multiplyScalar(this.moveBackward)
+		);
+		this.velocity.add(
+			this.getSideVector()
+				.multiplyScalar(-speedDelta)
+				.multiplyScalar(this.moveLeft)
+		);
+		this.velocity.add(
+			this.getSideVector()
+				.multiplyScalar(speedDelta)
+				.multiplyScalar(this.moveRight)
+		);
 	}
 
 	private updatePlayerCollisions(): void {
