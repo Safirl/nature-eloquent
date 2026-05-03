@@ -39,7 +39,7 @@ export default class SceneManager extends EventEmitter {
         this.dialogsAudio = dialogSubtitleAudio;
         const world = Experience.instance?.world as Playground
         if (!world)
-            throw new Error("nullos")
+            throw new Error("can't initialize world")
         this.interactionManager = world.interactionManager
         this.playScene(0)
         this.interactionManager.on('onObjectPlaced', this.onObjectPlaced)
@@ -62,9 +62,23 @@ export default class SceneManager extends EventEmitter {
             //     return;
             // }
 
+
+            // Si on souhaite ajouter un delay avant de jouer la scène suivante
+            if (callbackName === "onIntroductionCompleted") {
+                this.delayAfterScene(5000).then(() => {
+                    this.nextStepOrSceneAfterStepDialogFinished(callbackName);
+                });
+                return;
+            }
+
             // Pour faire passer les scène automatiquement après dialogue
             this.nextStepOrSceneAfterStepDialogFinished(callbackName);
         });
+    }
+
+    // Durée après qu'une scène soit jouée
+    delayAfterScene(duration: number) {
+        return new Promise(resolve => setTimeout(resolve, duration));
     }
 
     playScene(sceneId: number) {
@@ -94,7 +108,7 @@ export default class SceneManager extends EventEmitter {
         }
 
         scene.steps.forEach(step => {
-            step.objectsAdded.forEach(obj => {
+            step.objectsAdded?.forEach(obj => {
                 if (this.interactionManager.interactableObjects.find((o: any) => o.name === obj.objectId || o.objectId === null)) return
 
                 if (obj.objectId && obj.resourceName) {
@@ -169,7 +183,7 @@ export default class SceneManager extends EventEmitter {
 
         const scene = this.sceneConfig[this.currentSceneId];
         scene.steps.forEach(step => {
-            step.objectsAdded.forEach(obj => {
+            step.objectsAdded?.forEach(obj => {
                 if (obj.objectId !== objectName) return;
 
                 const count = this.objectCounts[objectName];

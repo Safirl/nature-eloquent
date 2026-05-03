@@ -4,14 +4,14 @@ export type SceneType = {
 }[]
 
 export type DialogStep = {
-    objectsAdded: {
+    objectsAdded?: {
         objectId: string | null,
         resourceName: string | null,
-        triggerCount: number,
+        triggerCount: number | null,
     }[],
     objectsRemoved?: {
         objectId: string,
-        triggerCount: number,
+        triggerCount: number | null,
     }[],
     dialogId: string,
     callbackName: string
@@ -23,11 +23,6 @@ export const sceneConfig: SceneType = [
         name: "introduction",
         steps: [
             {
-                objectsAdded: [{
-                    objectId: null,
-                    resourceName: null,
-                    triggerCount: 0,
-                },],
                 dialogId: "introduction",
                 callbackName: "onIntroductionCompleted"
             }
@@ -37,16 +32,6 @@ export const sceneConfig: SceneType = [
         // scène 1 : dinosaure
         name: "dinosaure",
         steps: [
-            // Test avec un autre truc
-            // {
-            //     objectsAdded: [{
-            //         objectId: "chocolat",
-            //         resourceName: "mushroomModel",
-            //         triggerCount: 4,
-            //     }],
-            //     dialogId: "dinosaure_02",
-            //     callbackName: "onDinosaure03Completed"
-            // },
             {
                 objectsAdded: [{
                     objectId: "dinosaure",
@@ -67,7 +52,6 @@ export const sceneConfig: SceneType = [
             },
         ]
     },
-
     {
         name: "toybox",
         steps: [
@@ -77,10 +61,6 @@ export const sceneConfig: SceneType = [
                     resourceName: "mushroomModel",
                     triggerCount: 1,
                 }],
-                // objectsRemoved: [{
-                //     objectId: "dinosaure",
-                //     triggerCount: 1,
-                // }],
                 dialogId: "toybox_01",
                 callbackName: "onToybox01Completed"
             },
@@ -110,26 +90,26 @@ export const sceneConfig: SceneType = [
                 objectsAdded: [{
                     objectId: "flower",
                     resourceName: "mushroomModel",
-                    triggerCount: 0,
+                    triggerCount: 5,
                 }, {
                     objectId: "vines",
                     resourceName: "mushroomModel",
-                    triggerCount: 0,
+                    triggerCount: 5,
                 },
                 {
                     objectId: "grass",
                     resourceName: "mushroomModel",
-                    triggerCount: 0,
+                    triggerCount: 5,
                 }],
                 objectsRemoved: [{
                     objectId: "herbier",
-                    triggerCount: 0,
+                    triggerCount: null,
                 }, {
                     objectId: "carnet",
-                    triggerCount: 0,
+                    triggerCount: null,
                 }, {
                     objectId: "dinosaure",
-                    triggerCount: 0,
+                    triggerCount: null,
                 }],
                 dialogId: "gardenroom_01",
                 callbackName: "onGardenRoom01Completed"

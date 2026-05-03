@@ -58,7 +58,6 @@
 			"speaker": "Petit Pois: "
 		}
 	},
-
 	"herbarium_01": {
 		"dialog_1": {
 			"audio": "/audio/welcome.mp3",
@@ -84,6 +83,19 @@
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Ah bon ? Qu'est-ce qu'il s'est passé ?",
 			"speaker": "Aria: "
+		}
+	},
+
+	"gardenroom_01": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Wow, c'est la pièce la plus impressionnante de ta maison ! C'est quoi tous ces objets ?",
+			"speaker": "Aria: "
+		},
+		"dialog_2": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "C'est un peu ma pièce à moi, j'y mets tous les objets qui me tiennent à cœur et qui ont une histoire particulière pour moi.",
+			"speaker": "Petit Pois: "
 		}
 	}
 }
