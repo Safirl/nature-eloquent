@@ -1,11 +1,13 @@
 vec3 localPos = transformed;
 localPos . x *= .5 ;
-localPos . y *= uHeight * uHeightRandomness;
-localPos . y += .5 * uHeight * uHeightRandomness;
+float rand = max(.6, random(aGlobalPosition.xz));
+float height = uHeight * uHeightRandomness * rand;
+localPos . y *= height;
+localPos . y += .5 * height;
 
 vec3 finalPosition = grassRotY * localPos;
 finalPosition += aGlobalPosition;
-float heightFactor = uv.y; //Changing later
+float heightFactor = uv.y * 1.3; //Changing later (tipness strength)
 float noise = cnoise(vec3(
             aGlobalPosition.x * uWindScale,
             aGlobalPosition.z * uWindScale,

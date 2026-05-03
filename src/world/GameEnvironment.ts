@@ -3,7 +3,11 @@ import type GUI from "lil-gui";
 import * as THREE from "three";
 import Sky from "./Sky";
 import Cloud from "./Cloud";
-import { RenderPass, type GLTF } from "three/examples/jsm/Addons.js";
+import {
+	RenderPass,
+	UnrealBloomPass,
+	type GLTF,
+} from "three/examples/jsm/Addons.js";
 import Grass from "./Grass";
 import SelectiveBloom from "../plugins/baseExperience/utils/SelectiveBloom";
 import RenderingLayers from "../common/RenderingLayers";
@@ -25,6 +29,7 @@ export default class GameEnvironment extends Environment {
 
 	declare private sunMesh: THREE.Mesh;
 	declare private selectiveBloom: SelectiveBloom;
+	declare private bloomPass: UnrealBloomPass;
 	declare public renderScene: RenderPass;
 
 	constructor(
@@ -55,6 +60,7 @@ export default class GameEnvironment extends Environment {
 		 */
 		if (this.debugFolder) {
 			this.fogDebugFolder = this.debugFolder.addFolder("🌫️ fog");
+			this.fogDebugFolder.open(false);
 			this.fogDebugFolder.add(this.fog, "near").name("fog near").min(0).max(100).step(0.1);
 
 			this.fogDebugFolder.add(this.fog, "far").name("fog far").min(0).max(1000).step(0.1);
@@ -82,7 +88,11 @@ export default class GameEnvironment extends Environment {
 		this.sunLight.shadow.radius = 2.5;
 		this.sunLight.shadow.normalBias = 0.05;
 		this.sunlightOffset = new THREE.Vector3(-45, 8.2, 22.95);
-		this.sunLight.position.set(this.sunlightOffset.x, this.sunlightOffset.y, this.sunlightOffset.z);
+		this.sunLight.position.set(
+			this.sunlightOffset.x,
+			this.sunlightOffset.y,
+			this.sunlightOffset.z
+		);
 		this.scene.add(this.sunLight);
 
 		this.sunLight.shadow.camera.near = 1;
@@ -102,7 +112,11 @@ export default class GameEnvironment extends Environment {
 
 	setForest() {
 		const resource = this.experience.resources.items["pineModel"] as GLTF;
-		this.pineTreesManager = new InstancedMeshManager(resource.scene.children[0] as THREE.Group, 800, false);
+		this.pineTreesManager = new InstancedMeshManager(
+			resource.scene.children[0] as THREE.Group,
+			800,
+			false
+		);
 		const count = 10;
 		for (let i = 0; i < count; i++) {
 			const randX = (Math.random() - 0.5) * i * 10;
@@ -160,39 +174,60 @@ export default class GameEnvironment extends Environment {
 		this.updateShadowMatrix();
 	}
 
-	// setSunPlane() {
-	// 	this.sunMesh = new THREE.Mesh(
-	// 		new THREE.CircleGeometry(),
-	// 		new THREE.MeshBasicMaterial()
-	// 	);
-	// 	this.sunMesh.position.set(
-	// 		this.sunLight.position.x,
-	// 		this.sunLight.position.y,
-	// 		this.sunLight.position.z
-	// 	);
-	// 	this.sunMesh.lookAt(new THREE.Vector3());
-	// 	// const sunLightWorldDirection
-	// 	// this.sunMesh.rotation.set(this.sunLight.getWorldDirection()) this.sunLight.rotation.y, this.sunLight.rotation.z)
-	// 	this.sunLight.attach(this.sunMesh);
-	// }
-
 	setSunPlane() {
-		this.sunMesh = new THREE.Mesh(new THREE.CircleGeometry(), new THREE.MeshBasicMaterial());
-		this.sunMesh.position.set(this.sunLight.position.x, this.sunLight.position.y, this.sunLight.position.z);
+		this.sunMesh = new THREE.Mesh(
+			new THREE.CircleGeometry(),
+			new THREE.MeshStandardMaterial({
+				emissive: new THREE.Color(0xffffff),
+				emissiveIntensity: 2.0,
+			})
+		);
+		this.sunMesh.position.set(
+			this.sunLight.position.x,
+			this.sunLight.position.y,
+			this.sunLight.position.z
+		);
 		this.sunMesh.lookAt(new THREE.Vector3());
 		this.sunLight.attach(this.sunMesh);
-		this.sunMesh.layers.enable(RenderingLayers.bloom);
 	}
 
 	setBloom() {
-		Experience.instance?.renderer.initializeComposer();
-		//@ts-ignore
-		this.renderScene = Experience.instance?.renderer.renderPass;
-		this.selectiveBloom = new SelectiveBloom(this.renderScene, RenderingLayers.bloom);
+		if (!Experience.instance) return;
 
-		Experience.instance?.renderer.addComposerPass(this.renderScene, true);
-		Experience.instance?.renderer.addComposerPass(this.selectiveBloom.getMixPass, true);
-		Experience.instance?.renderer.addComposerPass(this.selectiveBloom.getOutputPass, true);
+		const resolution = Experience.instance.sizes;
+		this.bloomPass = new UnrealBloomPass(
+			new THREE.Vector2(resolution.width, resolution.height),
+			1.5,
+			0.4,
+			1.1
+		);
+		Experience.instance?.renderer.addComposerPass(this.bloomPass, false);
+
+		/**
+		 * Add debugger
+		 */
+		if (this.debugFolder) {
+			this.bloomDebugFolder = this.debugFolder.addFolder("🌄 Bloom");
+			this.bloomDebugFolder.add(this.bloomPass, "enabled").name("Enabled");
+			this.bloomDebugFolder
+				.add(this.bloomPass, "strength")
+				.name("Strength")
+				.min(0.1)
+				.max(5)
+				.step(0.1);
+			this.bloomDebugFolder
+				.add(this.bloomPass, "radius")
+				.name("Radius")
+				.min(0.1)
+				.max(5)
+				.step(0.1);
+			this.bloomDebugFolder
+				.add(this.bloomPass, "threshold")
+				.name("Threshold")
+				.min(0)
+				.max(1)
+				.step(0.01);
+		}
 	}
 
 	update() {
@@ -200,8 +235,5 @@ export default class GameEnvironment extends Environment {
 			this.grass.update();
 		}
 
-		this.disableFog();
-		this.selectiveBloom.update();
-		this.enableFog();
 	}
 }

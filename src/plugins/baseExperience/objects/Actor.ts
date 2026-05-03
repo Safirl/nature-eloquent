@@ -67,7 +67,7 @@ export default class Actor implements LifeTimeObject {
 		return this.id;
 	}
 
-	init = () => { };
+	init = () => {};
 	destroy = () => {
 		this.model.traverse((child) => {
 			if (child instanceof THREE.Mesh) {
@@ -92,10 +92,12 @@ export default class Actor implements LifeTimeObject {
 				child.castShadow = true;
 				child.receiveShadow = true;
 			}
-			if (child.material && child.material.transparent) {
-				child.material.transparent = false;
-				child.material.alphaTest = 0.5;
-				child.material.depthWrite = true;
+			const material = child.material as THREE.Material;
+			if (!material) return;
+			if (material.transparent) {
+				material.transparent = false;
+				material.alphaTest = 0.5;
+				material.depthWrite = true;
 			}
 		});
 	}
@@ -167,9 +169,7 @@ export default class Actor implements LifeTimeObject {
 			debugObject[actionName] = () => {
 				this.animation.play(actionName);
 			};
-			this.debugFolder
-				.add(debugObject, actionName)
-				.name(`Play ${actionName}`);
+			this.debugFolder.add(debugObject, actionName).name(`Play ${actionName}`);
 		});
 	}
 

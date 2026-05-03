@@ -30,6 +30,7 @@ export default class Playground extends World {
 			false,
 			this.resources.items.layoutModel as GLTF
 		);
+		// this.layout.model;
 		this.layout.setScale(1, 1, 1);
 
 		this.interactionManager = new InteractionManager();
@@ -38,7 +39,7 @@ export default class Playground extends World {
 		const collisionManager = Experience.instance?.collisionManager;
 		if (!collisionManager) throw new Error("Playground initialization failed: CollisionManager is not available.");
 		collisionManager?.addCollisionObjects([this.floor]);
-		// collisionManager?.addCollisionObjects([this.layout]);
+		collisionManager?.addCollisionObjects([this.layout]);
 	}
 
 	update() {

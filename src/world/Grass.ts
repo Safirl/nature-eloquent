@@ -24,9 +24,8 @@ export default class Grass implements LifeTimeObject {
 	declare private grassMap: THREE.Texture;
 	declare private grassAlphaMap: THREE.Texture;
 	private grassFieldSizes = { x: 10, y: 10 };
-	// public windStrength = 0.54;
-	// public windFrequency = 0.0006;
-	//  public windScale = 0.18;
+	public heightRandomness = 1;
+
 	private uniforms = {
 		uTime: { value: 0 },
 		uWindStrength: { value: 0.118 },
@@ -36,7 +35,7 @@ export default class Grass implements LifeTimeObject {
 		uGrassMapTexture: { value: new THREE.Texture() },
 		uGrassAlphaMap: { value: new THREE.Texture() },
 		uDarkFactor: { value: new THREE.Color(0xffffff) },
-		uHeight: { value: 1.0 },
+		uHeight: { value: 0.3 },
 		uHeightRandomness: { value: 1 },
 	};
 
@@ -56,34 +55,29 @@ export default class Grass implements LifeTimeObject {
 	}
 
 	setGeometry() {
-		const count = 300;
+		const count = 10000;
+
 		//prettier-ignore
 		const positions = new Float32Array([
-      0.5, -0.5, 0,
-      -0.5, -0.5, 0,
-      -0.5, 0.5, 0,
-      0.5, 0.5, 0
-    ]);
+			0.5, -0.5, 0,
+			-0.5, -0.5, 0,
+			-0.5, 0.5, 0,
+			0.5, 0.5, 0
+		]);
 		//prettier-ignore
 		const indexs = [0, 1, 2, 2, 3, 0];
 		//prettier-ignore
-		const normals = [
-      0, 0, 1,
-      0, 0, 1,
-      0, 0, 1,
-      0, 0, 1
-    ];
-		//prettier-ignore
 		const uvs = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0];
+		// //prettier-ignore
+		const normals = [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1];
+
 		const globalPositions = new Float32Array(3 * count);
-		// const angles = new Float32Array(count);
 
 		const fieldWidth = this.grassFieldSizes.x;
 		const fieldDepth = this.grassFieldSizes.y;
 		const fieldHeight = 0;
 
 		for (let i = 0; i < count; i++) {
-			// const element = array[i];
 			const i3 = i * 3;
 
 			const posX = Math.random() * fieldWidth - fieldWidth * 0.5;
@@ -100,15 +94,19 @@ export default class Grass implements LifeTimeObject {
 		this.geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
 		this.geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
 		this.geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indexs), 1));
-		this.geometry.setAttribute("aGlobalPosition", new THREE.InstancedBufferAttribute(globalPositions, 3));
-		// this.geometry.setAttribute("aAngle", new THREE.InstancedBufferAttribute(angles, 1))
+		this.geometry.setAttribute(
+			"aGlobalPosition",
+			new THREE.InstancedBufferAttribute(globalPositions, 3)
+		);
 	}
 
 	setMaterial() {
 		const colorTexture = this.experience.resources.items["grassColorTexture"] as THREE.Texture;
 		colorTexture.colorSpace = THREE.SRGBColorSpace;
 		this.uniforms.uGrassMapTexture.value = colorTexture;
-		this.uniforms.uGrassAlphaMap.value = this.experience.resources.items["grassAlphaTexture"] as THREE.Texture;
+		this.uniforms.uGrassAlphaMap.value = this.experience.resources.items[
+			"grassAlphaTexture"
+		] as THREE.Texture;
 		//
 		this.depthMaterial = new THREE.MeshDepthMaterial({
 			depthPacking: THREE.RGBADepthPacking,
@@ -116,16 +114,8 @@ export default class Grass implements LifeTimeObject {
 		});
 
 		this.material = new THREE.MeshStandardMaterial({
-			// fragmentShader: grassFragment,
-			// vertexShader: grassVertex,
 			side: THREE.BackSide,
-			// uniforms: this.uniforms,
-			// transparent: true, // Not sure wether it's usefull or not. Let's see in the future.
-			// depthTest: false,
-			// depthWrite: false
 		});
-		this.material.roughness = 1;
-		this.material.metalness = 0;
 
 		this.material.onBeforeCompile = (shader) => {
 			shader.uniforms.uTime = this.uniforms.uTime;
@@ -178,7 +168,6 @@ export default class Grass implements LifeTimeObject {
 	        ${grassFragment}
 	     `
 			);
-			console.log(shader.vertexShader);
 		};
 
 		this.depthMaterial.onBeforeCompile = (shader) => {
@@ -231,7 +220,6 @@ export default class Grass implements LifeTimeObject {
 		// const planeGeo = new THREE.PlaneGeometry(1, 1)
 		this.mesh = new THREE.Mesh(this.geometry, this.material);
 		this.mesh.customDepthMaterial = this.depthMaterial;
-		this.mesh.castShadow = true;
 		this.mesh.receiveShadow = true;
 		this.mesh.frustumCulled = false;
 		this.experience.scene.add(this.mesh);
@@ -252,15 +240,30 @@ export default class Grass implements LifeTimeObject {
 		this.gridDebugger.layers.set(2);
 		this.experience.scene.add(this.gridDebugger);
 
-		this.debugFolder.add(this.uniforms.uWindStrength, "value").min(0.01).max(1).step(0.001).name("wind strength");
+		this.debugFolder
+			.add(this.uniforms.uWindStrength, "value")
+			.min(0.01)
+			.max(1)
+			.step(0.001)
+			.name("wind strength");
 		this.debugFolder
 			.add(this.uniforms.uWindFrequency, "value")
 			.min(0.0001)
 			.max(0.01)
 			.step(0.0001)
 			.name("wind frequency");
-		this.debugFolder.add(this.uniforms.uWindScale, "value").min(0.01).max(2).step(0.01).name("wind scale");
-		this.debugFolder.add(this.uniforms.uHeight, "value").min(0.01).max(2).step(0.01).name("grass height");
+		this.debugFolder
+			.add(this.uniforms.uWindScale, "value")
+			.min(0.01)
+			.max(2)
+			.step(0.01)
+			.name("wind scale");
+		this.debugFolder
+			.add(this.uniforms.uHeight, "value")
+			.min(0.01)
+			.max(2)
+			.step(0.01)
+			.name("grass height");
 		this.debugFolder
 			.add(this.uniforms.uHeightRandomness, "value")
 			.min(0)
