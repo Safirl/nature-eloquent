@@ -217,9 +217,17 @@ export const sceneConfig: SceneType = [
                     objectId: "exoticFlower03",
                     resourceName: "mushroomModel",
                 }
-                ],
+                    ,],
                 dialogId: "forestLittleFlower_02",
                 callbackName: "onForestLittleFlower02Completed"
+            },
+            {
+                completionCondition: {
+                    objectId: ["exoticFlower01", "exoticFlower02", "exoticFlower03"],
+                    count: 10,
+                },
+                dialogId: "forestExoticFlower_01",
+                callbackName: "onForestExoticFlower01Completed"
             }
         ]
     },

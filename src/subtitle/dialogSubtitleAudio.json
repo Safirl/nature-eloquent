@@ -128,6 +128,19 @@
 		}
 	},
 
+	"forestExoticFlower_01": {
+		"dialog_1": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Tu étais entouré de fleurs géantes ?!",
+			"speaker": "Aria: "
+		},
+		"dialog_2": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Oui, c'était vraiment surréaliste. Je n'avais jamais vu de fleurs aussi grandes de ma vie !",
+			"speaker": "Petit Pois: "
+		}
+	},
+
 	"forestButterfly_01": {
 		"dialog_1": {
 			"audio": "/audio/welcome.mp3",
