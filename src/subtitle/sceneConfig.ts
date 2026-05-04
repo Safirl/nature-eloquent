@@ -232,10 +232,56 @@ export const sceneConfig: SceneType = [
         ]
     },
     {
+        name: "afterBigFlower",
+        steps: [
+            {
+                objectsAdded: [{
+                    objectId: "pineCone",
+                    resourceName: "mushroomModel",
+                    triggerCount: 1,
+                    isActive: true,
+                },
+                {
+                    objectId: "oiseau",
+                    resourceName: "mushroomModel",
+                    triggerCount: 1,
+                    isActive: true,
+                }],
+                objectsRemoved: ["exoticFlower01", "exoticFlower02", "exoticFlower03", "fairy", "flower", "vines", "grass", "butterfly"],
+                dialogId: "afterBigFlower_01",
+                callbackName: "onAfterBigFlower01Completed"
+            },
+            {
+                objectsAdded: [{
+                    objectId: "fox",
+                    resourceName: "mushroomModel",
+                    triggerCount: 1,
+                    isActive: true,
+                }],
+                replaceObjects: [{
+                    objectId: "elf",
+                    resourceName: "mushroomModel",
+                }],
+                dialogId: "forestFox_01",
+                callbackName: "onForestFox01Completed"
+            },
+            {
+                objectsAdded: [{
+                    objectId: "elf",
+                    resourceName: "mushroomModel",
+                    triggerCount: 1,
+                    isActive: false,
+                }],
+                dialogId: "forestElf_02",
+                callbackName: "onForestElf02Completed"
+            }
+        ]
+    },
+    {
         name: "storm",
         steps: [
             {
-                objectsRemoved: ["fairy", "flower", "vines", "grass", "exoticFlower01", "exoticFlower02", "exoticFlower03  "],
+                objectsRemoved: ["fairy", "flower", "vines", "grass", "exoticFlower01", "exoticFlower02", "exoticFlower03  ", "butterfly", "pineCone", "oiseau", "fox", "elf"],
                 dialogId: "forestStorm_01",
                 callbackName: "onStorm01Completed"
             }
@@ -264,6 +310,7 @@ export const sceneConfig: SceneType = [
                     isActive: true
                 }
                 ],
+                objectsRemoved: ["pineCone", "elf", "fox", "oiseau"],
                 dialogId: "forestStorm_01",
                 callbackName: "onDuringStorm01Completed"
             }

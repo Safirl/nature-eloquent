@@ -5,11 +5,11 @@ import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json"
 import type Playground from "../world/PlaygroundWorld";
 import type GameExperience from "../GameExperience";
 import { sceneConfig, type DialogStep, type SceneType } from "../subtitle/sceneConfig";
+import { call } from "three/tsl";
 
 export default class SceneManager extends EventEmitter {
     declare subtitle: SubtitleManager;
     declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, speaker: string } } }
-    // declare stepDescriptions: { count: number, relatedStep: DialogStep }[]
     private declare interactionManager: InteractionManager
     declare sceneConfig: SceneType
 
@@ -18,52 +18,28 @@ export default class SceneManager extends EventEmitter {
 
     private objectCounts: { [key: string]: number } = {}
 
-    // private waitingForInteraction: boolean = false;
-    // declare nextDialogButton: HTMLElement
-
-    init() {
-        // Bouton pour passer à la scène suivante
-        // this.nextDialogButton = document.getElementById("next-dialog") as HTMLElement;
-        // this.nextDialogButton.addEventListener("click", () => {
-        //     if (this.waitingForInteraction) {
-        //         this.waitingForInteraction = false;
-        //         this.nextStepOrSceneAfterStepDialogFinished("onIntroductionCompleted");
-        //     }
-        // })
-        this.sceneConfig = sceneConfig
+    initDependencies() {
         const exp = Experience.instance as GameExperience
         if (!exp)
             throw new Error("Can't initialize SceneManager: Experience is not valid")
 
-        this.subtitle = exp.subtitleManager
-        this.dialogsAudio = dialogSubtitleAudio;
         const world = Experience.instance?.world as Playground
         if (!world)
             throw new Error("can't initialize world")
         this.interactionManager = world.interactionManager
-        this.playScene(0)
+
+        this.subtitle = exp.subtitleManager
+        this.dialogsAudio = dialogSubtitleAudio;
+
+    }
+
+    initEventProgressGame() {
         this.interactionManager.on('onObjectPlaced', this.onObjectPlaced)
 
+        // Passer à la step/scène suivante à la fin d'un dialogue
         this.subtitle.on("dialogFinished", (callbackName: string) => {
-            // Si on souhaite que l'utilisateur interagisse pour passer à la step suivante.
 
-            // if (callbackName === "onIntroductionCompleted") {
-            //     this.waitingForInteraction = true;
-            //     return;
-            // }
-
-            // if (callbackName === "onDinosaure02Completed") {
-            //     this.waitingForInteraction = true;
-            //     return;
-            // }
-
-            // if (callbackName === "onClassroom01Completed") {
-            //     this.waitingForInteraction = true;
-            //     return;
-            // }
-
-
-            // Si on souhaite ajouter un delay avant de jouer la scène suivante
+            // Condition spécifique pour chaque scène
             if (callbackName === "onIntroductionCompleted") {
                 this.delayAfterScene(1000).then(() => {
                     this.nextStepOrSceneAfterStepDialogFinished();
@@ -75,25 +51,40 @@ export default class SceneManager extends EventEmitter {
                 this.clearObjectCounts();
             }
 
-            if (callbackName === "onForestFairy02Completed") {
+            if (callbackName === "onForestFairy02Completed" || callbackName === "onForestExoticFlower01Completed") {
                 this.delayAfterScene(1000).then(() => {
                     this.clearObjectCounts();
-                    this.currentStepIndex = 0;
-                    this.currentSceneId++;
-                    this.playScene(this.currentSceneId);
-                    return;
+                    this.goToNextScene()
                 })
-
+                return;
             }
 
-            // Pour faire passer les scène automatiquement après dialogue
+            if (callbackName === "onForestElf02Completed") {
+                this.goToNextScene()
+                // this.playScene(9) // On joue la scène de l'orage directement
+            }
+
             this.nextStepOrSceneAfterStepDialogFinished();
         });
+    }
+
+    init() {
+        this.initDependencies()
+        this.initEventProgressGame()
+        this.sceneConfig = sceneConfig
+        this.playScene(0)
     }
 
     // Durée après qu'une scène soit jouée
     delayAfterScene(duration: number) {
         return new Promise(resolve => setTimeout(resolve, duration));
+    }
+
+    // Forcer à passer à la scène suivante
+    goToNextScene() {
+        this.currentStepIndex = 0;
+        this.currentSceneId++;
+        this.playScene(this.currentSceneId);
     }
 
     playScene(sceneId: number) {
@@ -102,28 +93,24 @@ export default class SceneManager extends EventEmitter {
             console.log("All scenes finished")
             return;
         }
+
         this.currentSceneId = sceneId
         const scene = this.sceneConfig[sceneId]
         if (!scene) {
             throw new Error("sceneConfig not found")
         }
 
-        if (scene.name === "introduction") {
-            this.triggerDialog(scene.steps[0].dialogId, scene.steps[0])
-        }
+        // Lancer automatiquement le dialogue (sans interaction de l'utilsiateur)
+        const autoPlayDialogWithoutInteraction = ["introduction", "enterClairvoyantForest", "storm"]
 
-        if (scene.name === "enterClairvoyantForest") {
-            this.triggerDialog(scene.steps[0].dialogId, scene.steps[0])
-        }
-
-        if (scene.name === "storm") {
-            this.triggerDialog(scene.steps[0].dialogId, scene.steps[0])
+        if (autoPlayDialogWithoutInteraction.includes(scene.name)) {
+            this.triggerDialog(scene.steps[0].dialogId, scene.steps[0]);
         }
 
         this.getInteractableObjects(sceneId);
-        // this.playStep(this.currentStepIndex);
     }
 
+    // Récupérer la barre d'outils
     getInteractableObjects(sceneId: number) {
         const scene = this.sceneConfig[sceneId]
         if (!scene) {
@@ -133,11 +120,15 @@ export default class SceneManager extends EventEmitter {
         scene.steps.forEach(step => {
 
             step.objectsAdded?.forEach(obj => {
-                if (obj.isActive === false) return;
-                if (this.interactionManager.interactableObjects.find((o: any) => o.name === obj.objectId || o.objectId === null)) return
-
                 if (obj.objectId && obj.resourceName) {
+                    if (obj.isActive === false) return;
+
+                    // Évite le doublon d'objets
+                    if (this.interactionManager.interactableObjects.find((o: any) => o.name === obj.objectId)) return
+
+                    // Ajoute les objectsAdded de la scène
                     this.interactionManager.addInteractableObject(obj.objectId, obj.resourceName)
+
                 }
             })
 
@@ -149,55 +140,21 @@ export default class SceneManager extends EventEmitter {
     }
 
 
-    // playStep(stepId: number) {
-    //     const scene = this.sceneConfig[this.currentSceneId]
-    //     // console.log("playStep", stepId, scene)
-    //     const step = scene.steps[stepId]
-    //     if (!step) {
-    //         throw new Error("step not found")
-    //     }
-    //     this.stepDescriptions.push({ count: 0, relatedStep: step })
-    // }
-
     nextStepOrSceneAfterStepDialogFinished = () => {
         const scene = this.sceneConfig[this.currentSceneId];
 
-        // si il reste des steps à jouer dans la scène actuelle, on joue la step suivante
+        // Passe à la step suivante si existe
         if (this.currentStepIndex + 1 < scene.steps.length) {
             this.currentStepIndex++;
             console.log("----------- step finished -----------");
         }
 
-        // sinon on passe à la scène suivante
+        // sinon passe à la scène suivante
         else {
             console.log("----------- scene finished -----------");
-            this.currentStepIndex = 0;
-            this.currentSceneId++;
-
-            if (this.currentSceneId < this.sceneConfig.length) {
-                this.playScene(this.currentSceneId);
-            }
+            this.goToNextScene();
         }
     }
-
-    // // On vérifie si l'obj correspond à la sceneConfig
-    // onObjectPlaced = (callbacks: string) => {
-    //     // Le count est incrémenté en fonction du nombre de jouet
-    //     console.log("description", this.stepDescriptions)
-
-    //     this.stepDescriptions.forEach(stepDescription => {
-    //         const object = stepDescription.relatedStep.objectsAdded.find(obj => obj.objectId === callbacks)
-    //         console.log("object found", object)
-    //         if (!object) return;
-    //         stepDescription.count++
-    //         console.log("stepDescription count", stepDescription.count)
-    //         console.log("stepDescription relatedStep", stepDescription.relatedStep)
-    //         if (stepDescription.count === object.triggerCount) {
-    //             this.triggerDialog(stepDescription.relatedStep.dialogId, stepDescription.relatedStep)
-    //         }
-
-    //     })
-    // }
 
     onObjectPlaced = (objectName: string) => {
         if (!this.objectCounts[objectName]) {

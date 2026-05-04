@@ -141,6 +141,32 @@
 		}
 	},
 
+	"forestFox_01": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Je me suis fait un nouvel ami, un renard qui ne voulait pas me quitter !",
+			"speaker": "Petit Pois: "
+		},
+		"dialog_2": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Je te crois pas.",
+			"speaker": "Aria: "
+		},
+		"dialog_3": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "J'avais vraiment l'impression d'être entré dans un conte.",
+			"speaker": "Petit Pois: "
+		}
+	},
+
+	"forestElf_02": {
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Je me suis de plus en plus enfoncé dans les bois. À un moment, j'ai bien vu que j'avais perdu de vue le chemin vers ma maison...et puis il s'est passé quelque chose. ",
+			"speaker": "Petit Pois: "
+		}
+	},
+
 	"forestButterfly_01": {
 		"dialog_1": {
 			"audio": "/audio/welcome.mp3",
