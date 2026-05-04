@@ -1,12 +1,15 @@
-type DialogStep = {
+import { EventEmitter } from "@plugins/baseExperience";
+import type { DialogStep } from "./sceneConfig";
+
+type DialogSubtitleStep = {
 	audio: string;
 	dialog: string;
 	speaker: string;
 };
 
-type DialogInteraction = Record<string, DialogStep>;
+type DialogInteraction = Record<string, DialogSubtitleStep>;
 
-export default class SubtitleManager {
+export default class SubtitleManager extends EventEmitter {
 	declare subtitleElement: HTMLElement;
 	declare dialogElement: HTMLElement;
 	declare characterElement: HTMLElement;
@@ -14,18 +17,10 @@ export default class SubtitleManager {
 	declare audioPlayer: HTMLAudioElement;
 	declare typingInterval: number | null;
 
-	constructor() {
-		this.init();
-	}
-
 	init() {
-		this.subtitleElement = document.getElementById(
-			"subtitle"
-		) as HTMLElement;
+		this.subtitleElement = document.getElementById("subtitle") as HTMLElement;
 		this.dialogElement = document.getElementById("dialog") as HTMLElement;
-		this.characterElement = document.getElementById(
-			"character"
-		) as HTMLElement;
+		this.characterElement = document.getElementById("character") as HTMLElement;
 		this.subtitleElement.style.opacity = "0";
 
 		this.audioPlayer = new Audio();
@@ -43,6 +38,7 @@ export default class SubtitleManager {
 
 	showSubtitle(text: string, characterName: string, audioSrc: string) {
 		if (!this.subtitleElement) return;
+		this.subtitleElement.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
 		this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
 		this.subtitleElement.style.opacity = "1";
 		this.typeText(text);
@@ -74,22 +70,20 @@ export default class SubtitleManager {
 	}
 
 	// Changement de dialogue automatique
-	async displayDialog(dialogData: DialogInteraction) {
+	async displayDialog(dialogData: DialogInteraction, relatedStep: DialogStep) {
 		const entries = Object.entries(dialogData);
 		if (entries.length === 0) return;
 
 		for (const [_key, item] of entries) {
 			this.showSubtitle(item.dialog, item.speaker, item.audio);
 			await new Promise<void>((resolve) => {
-				this.audioPlayer.addEventListener("ended", () => resolve(), {
-					once: true,
-				});
-				this.audioPlayer.addEventListener("error", () => resolve(), {
-					once: true,
-				});
+				this.audioPlayer.addEventListener("ended", () => resolve(), { once: true });
+				this.audioPlayer.addEventListener("error", () => resolve(), { once: true });
 			});
 		}
+		console.log("relatedStep", relatedStep)
 		this.hideSubtitle();
+		this.trigger("dialogFinished", [relatedStep.callbackName]);
 	}
 
 	// Changement dialogue au clic

@@ -84,8 +84,8 @@ export default class InstancedMeshManager implements LifeTimeObject {
 		this.count++;
 	}
 
-	init = () => {};
-	update = () => {};
+	init = () => { };
+	update = () => { };
 	destroy = () => {
 		this.meshes.forEach((m) => {
 			m.dispose();
