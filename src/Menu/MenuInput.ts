@@ -1,4 +1,4 @@
-import { EventEmitter, Experience } from "@plugins/baseExperience";
+import { EventEmitter, Experience, type InputEventArgs } from "@plugins/baseExperience";
 import { Vector2 } from "three";
 import type MenuState from "./MenuState";
 
@@ -28,9 +28,21 @@ export default class MenuInput extends EventEmitter {
 
 		this.canvas.addEventListener("mousemove", this.onMouseMove);
 		this.canvas.addEventListener("mouseup", this.onMouseUp);
-		document.addEventListener("keyup", this.onKeyUp);
+		// document.addEventListener("keyup", (event) => console.log("event", event));
 
 		this.state.on("currentItemChanged.input", this.onCurrentItemChanged);
+		this.bindInputs();
+	}
+
+	bindInputs() {
+		const exp = Experience.instance;
+		if (!exp) return;
+		for (let i = 1; i < 10; i++) {
+			exp.inputSystem.on(`selectItem${i}`, (args: InputEventArgs) =>
+				this.onItemKeyPressed(i, args)
+			);
+		}
+		// exp.inputSystem.on(`selectItem1`, () => console.log("coucou"));
 	}
 
 	private onCurrentItemChanged = () => {
@@ -41,24 +53,19 @@ export default class MenuInput extends EventEmitter {
 		}
 	};
 
-	private onKeyUp = (event: KeyboardEvent) => {
-		const keyIndex = parseInt(event.key) - 1;
-		if (Number.isNaN(keyIndex)) return;
-
-		const item = this.state.getItemList()[keyIndex];
+	private onItemKeyPressed = (i: number, args: InputEventArgs) => {
+		if (args.type !== "released") return;
+		const index = i - 1;
+		const item = this.state.getItemList()[index];
 		if (!item) return;
 
-		if (this.lastPressedKeyIndex === keyIndex) {
+		if (this.lastPressedKeyIndex === index) {
 			this.state.clearCurrentItem();
 			this.lastPressedKeyIndex = null;
 		} else {
 			this.state.setCurrentItem(item.id);
-			this.lastPressedKeyIndex = keyIndex;
+			this.lastPressedKeyIndex = index;
 		}
-
-		event.preventDefault();
-		event.stopPropagation();
-		event.stopImmediatePropagation();
 	};
 
 	private onMouseMove = (event: MouseEvent) => {
@@ -82,7 +89,7 @@ export default class MenuInput extends EventEmitter {
 	destroy() {
 		this.canvas.removeEventListener("mousemove", this.onMouseMove);
 		this.canvas.removeEventListener("mouseup", this.onMouseUp);
-		document.removeEventListener("keyup", this.onKeyUp);
+		document.removeEventListener("keyup", this.onItemKeyPressed);
 		this.state.off(".input");
 	}
 }
