@@ -1,12 +1,16 @@
-import { Experience, type LifeTimeObject } from "@plugins/baseExperience";
+import { EventEmitter, Experience, type LifeTimeObject } from "@plugins/baseExperience";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
 import MenuState from "./MenuState";
 import MenuView from "./MenuView";
 import MenuInput from "./MenuInput";
 import Placement from "../interactions/Placement";
-import SubtitleManager from "../subtitle/SubtitleManager";
-import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json";
+import SubtitleManager from "../resources/subtitle/SubtitleManager";
+import dialogSubtitleAudio from "../resources/subtitle/dialogSubtitleAudio.json";
+import SceneManager from "../scene/SceneManager2";
+import type { DialogStep } from "../scene/sceneDescriptions2";
+import { type MenuItemType } from "./Items";
+// import mushroomIcon from "../books/mushroom.png";
 
 /**
  * Menu — orchestrator of the menu-driven interaction system.
@@ -24,7 +28,7 @@ import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json";
  *   - MenuInput  — mouse/keyboard listeners; drives MenuState and emits placeRequested
  *   - Placement  — generic Three.js placement primitive (registered per item)
  */
-export default class Menu implements LifeTimeObject {
+export default class Menu extends EventEmitter implements LifeTimeObject {
 	public enabled: boolean = true;
 	private experience: Experience;
 
@@ -33,15 +37,16 @@ export default class Menu implements LifeTimeObject {
 	private input: MenuInput;
 	private placement: Placement;
 
-	private subtitle: SubtitleManager;
+	public subtitle: SubtitleManager;
 	private dialogsAudio: typeof dialogSubtitleAudio;
+	private sceneManager: SceneManager;
 
 	private buttonContainerId = "tool-selector";
-	private initialItemIds = ["mushroom", "mushroom2", "mushroomCouc"];
+	// private initialItemIds = ["mushroom", "mushroom2", "mushroomCouc"];
 
 	constructor() {
-		if (!Experience.instance)
-			throw new Error("Menu: Experience is not initialized");
+		super();
+		if (!Experience.instance) throw new Error("Menu: Experience is not initialized");
 		this.experience = Experience.instance;
 
 		this.subtitle = new SubtitleManager();
@@ -51,19 +56,34 @@ export default class Menu implements LifeTimeObject {
 		this.view = new MenuView(this.state, this.buttonContainerId);
 		this.input = new MenuInput(this.state, this.experience.canvas);
 		this.placement = new Placement();
-
+		this.sceneManager = new SceneManager(this);
 		this.state.on("itemListChanged.menu", this.onItemListChanged);
 		this.input.on("placeRequested.menu", this.onPlaceRequested);
 
-		this.state.setItemList(this.initialItemIds);
+		this.sceneManager.on("onActiveStepAdded", this.onActiveStepAdded);
+		this.sceneManager.init();
+		// this.state.setItemList(this.initialItemIds);
 	}
+
+	private onActiveStepAdded = (dialogueStep: DialogStep) => {
+		// let currentList = this.state.getItemList();
+		const oldItems = dialogueStep.objectsRemoved;
+		if (oldItems) {
+			this.state.removeItems(oldItems);
+		}
+		const newItems = dialogueStep.objectsAdded?.map((i) => {
+			return i.objectId;
+		});
+		if (!newItems) return;
+		// console.log("new items", newItems);
+		this.state.pushItems(newItems);
+		this.playDialog(dialogueStep.dialogId);
+	};
 
 	private onItemListChanged = () => {
 		this.placement.unregisterAll();
 		for (const item of this.state.getItemList()) {
-			const resource = this.experience.resources.items[
-				item.model
-			] as GLTF;
+			const resource = this.experience.resources.items[item.model] as GLTF;
 			if (!resource) {
 				console.warn("found invalid resource for: ", item.model);
 				continue;
@@ -78,24 +98,22 @@ export default class Menu implements LifeTimeObject {
 		if (!currentId) return;
 		const count = this.placement.place(currentId);
 		if (count === null) return;
-		this.maybePlayDialog(currentId, count);
+		// this.maybePlayDialog(currentId, count);
+		this.trigger("onObjectPlaced", [currentId]);
+		// console.log(currentId);
 	};
 
-	private maybePlayDialog(itemId: string, count: number) {
+	private playDialog(itemId: string) {
 		// Ex d'enchaînement du dialogue en fonction du nombre d'objets placés.
 		if (itemId !== "mushroom") return;
 		if (count === 1) {
-			this.subtitle.displayDialog(
-				this.dialogsAudio.dinosaur_interaction_1
-			);
+			this.subtitle.displayDialog(this.dialogsAudio.dinosaur_interaction_1);
 		} else if (count === 5) {
-			this.subtitle.displayDialog(
-				this.dialogsAudio.dinosaur_interaction_2
-			);
+			this.subtitle.displayDialog(this.dialogsAudio.dinosaur_interaction_2);
 		}
 	}
 
-	init = () => { };
+	init = () => {};
 	update = () => {
 		this.placement.update();
 	};

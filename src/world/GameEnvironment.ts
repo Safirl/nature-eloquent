@@ -3,11 +3,7 @@ import type GUI from "lil-gui";
 import * as THREE from "three";
 import Sky from "./Sky";
 import Cloud from "./Cloud";
-import {
-	RenderPass,
-	UnrealBloomPass,
-	type GLTF,
-} from "three/examples/jsm/Addons.js";
+import { RenderPass, UnrealBloomPass, type GLTF } from "three/examples/jsm/Addons.js";
 import Grass from "./Grass";
 import SelectiveBloom from "../plugins/baseExperience/utils/SelectiveBloom";
 import RenderingLayers from "../common/RenderingLayers";
@@ -41,7 +37,7 @@ export default class GameEnvironment extends Environment {
 		this.sky = new Sky(0, this.debugFolder);
 		this.setFog();
 		this.setBloom();
-		// this.setForest();
+		this.setForest();
 		this.grass = new Grass();
 		// this.cloud = new Cloud();
 		// const bg = this.createBackground();
@@ -234,6 +230,5 @@ export default class GameEnvironment extends Environment {
 		if (this.grass) {
 			this.grass.update();
 		}
-
 	}
 }

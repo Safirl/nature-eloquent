@@ -20,8 +20,7 @@ export default class Placement {
 	private debugSphere: THREE.Mesh | undefined;
 
 	constructor() {
-		if (!Experience.instance)
-			throw new Error("Placement: Experience is not initialized");
+		if (!Experience.instance) throw new Error("Placement: Experience is not initialized");
 		this.experience = Experience.instance;
 		this.setupDebug();
 	}
@@ -35,7 +34,7 @@ export default class Placement {
 	unregister(id: string) {
 		const manager = this.managers.get(id);
 		if (!manager) return;
-		manager.destroy();
+		// manager.destroy();
 		this.managers.delete(id);
 	}
 
@@ -46,6 +45,7 @@ export default class Placement {
 
 	place(id: string): number | null {
 		if (!id) return null;
+
 		if (!this.markerPosition) return null;
 		const manager = this.managers.get(id);
 		if (!manager) return null;
@@ -70,23 +70,13 @@ export default class Placement {
 	}
 
 	private computeMarkerPosition(): Vector3 | undefined {
-		const raycaster = new Raycaster(
-			new THREE.Vector3(),
-			new THREE.Vector3(),
-			0,
-			20
-		);
+		const raycaster = new Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 20);
 		raycaster.layers.enable(1);
 
 		raycaster.ray.origin.copy(this.experience.camera.instance.position);
-		this.experience.camera.instance.getWorldDirection(
-			raycaster.ray.direction
-		);
+		this.experience.camera.instance.getWorldDirection(raycaster.ray.direction);
 
-		const intersections = raycaster.intersectObjects(
-			this.experience.scene.children,
-			true
-		);
+		const intersections = raycaster.intersectObjects(this.experience.scene.children, true);
 		if (intersections.length < 1) return undefined;
 		if (
 			intersections[0].object instanceof InteractableInstancedMesh &&

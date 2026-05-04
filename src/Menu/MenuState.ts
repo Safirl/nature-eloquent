@@ -1,5 +1,6 @@
 import { EventEmitter } from "@plugins/baseExperience";
 import itemsList, { type MenuItemType } from "./Items";
+import { it } from "vitest";
 
 /**
  * MenuState — source of truth for the menu item state.
@@ -14,83 +15,110 @@ import itemsList, { type MenuItemType } from "./Items";
  *   - "currentItemChanged"  — the selected id changed (may be "" for none)
  */
 export default class MenuState extends EventEmitter {
+	private itemList: MenuItemType[] = [];
+	private currentItem: string = "";
 
-    private itemList: MenuItemType[] = []
-    private currentItem: string = ""
+	constructor() {
+		super();
+	}
 
-    constructor() {
-        super()
-    }
+	setCurrentItem(item: string | MenuItemType) {
+		const id = typeof item === "string" ? item : item.id;
+		const found = itemsList.find((it) => it.id === id);
 
-    setCurrentItem(item: string | MenuItemType) {
-        const id = typeof item === "string" ? item : item.id
-        const found = itemsList.find(it => it.id === id)
+		if (!found) {
+			throw "ERROR: The item you're trying to set doesn't exists. [MenuState.ts]";
+		}
 
-        if (!found) {
-            throw "ERROR: The item you're trying to set doesn't exists. [MenuState.ts]"
-        }
+		if (this.currentItem === found.id) return;
 
-        if (this.currentItem === found.id) return
+		this.currentItem = found.id;
+		this.trigger("currentItemChanged");
+	}
 
-        this.currentItem = found.id
-        this.trigger("currentItemChanged")
-    }
+	clearCurrentItem() {
+		if (this.currentItem === "") return;
+		this.currentItem = "";
+		this.trigger("currentItemChanged");
+	}
 
-    clearCurrentItem() {
-        if (this.currentItem === "") return
-        this.currentItem = ""
-        this.trigger("currentItemChanged")
-    }
+	setItemList(list: string[] | MenuItemType[]) {
+		const safeList = this.getSafeList(list);
+		this.itemList = safeList;
+		this.trigger("itemListChanged");
+	}
 
-    setItemList(list: string[] | MenuItemType[]) {
-        const safeList = list.map(item => {
+	pushItems(list: string[] | MenuItemType[]) {
+		const safeList = this.getSafeList(list);
+		this.itemList = this.itemList.concat(safeList);
+		this.trigger("itemListChanged");
+	}
 
-            if (typeof item === "string") {
-                const found = itemsList.find(it => it.id === item)
+	removeItems(list: string[] | MenuItemType[]) {
+		list.forEach((e) => {
+			let matchingElement: MenuItemType | undefined;
+			if (typeof e === "string") {
+				matchingElement = this.itemList.find((item) => item.id === e);
+			} else {
+				matchingElement = this.itemList.find((item) => item.id === e.id);
+			}
+			if (!matchingElement) return;
+			const index = this.itemList.indexOf(matchingElement);
+			if (index > -1) {
+				this.itemList.splice(index, 1);
+			}
+		});
+		this.trigger("itemListChanged");
+	}
 
-                if (!found) {
-                    console.error(`Item not found: ${item}`)
-                }
+	getSafeList(list: string[] | MenuItemType[]): MenuItemType[] {
+		const safeList = list
+			.map((item) => {
+				if (typeof item === "string") {
+					const found = itemsList.find((it) => it.id === item);
 
-                return found
-            }
+					if (!found) {
+						console.error(`Item not found: ${item}`);
+					}
 
-            return item
-        }).filter(item => item != null) as MenuItemType[]
+					return found;
+				}
 
-        this.itemList = safeList
-        this.trigger("itemListChanged")
-    }
+				return item;
+			})
+			.filter((item) => item != null) as MenuItemType[];
+		return safeList;
+	}
 
-    nextItem() {
-        if (this.itemList.length === 0) return
-        const currentIndex = this.itemList.findIndex(item => item.id === this.currentItem)
-        const nextIndex = (currentIndex + 1) % this.itemList.length
-        const nextId = this.itemList[nextIndex].id
-        if (nextId === this.currentItem) return
-        this.currentItem = nextId
-        this.trigger("currentItemChanged")
-    }
+	nextItem() {
+		if (this.itemList.length === 0) return;
+		const currentIndex = this.itemList.findIndex((item) => item.id === this.currentItem);
+		const nextIndex = (currentIndex + 1) % this.itemList.length;
+		const nextId = this.itemList[nextIndex].id;
+		if (nextId === this.currentItem) return;
+		this.currentItem = nextId;
+		this.trigger("currentItemChanged");
+	}
 
-    prevItem() {
-        if (this.itemList.length === 0) return
-        const currentIndex = this.itemList.findIndex(item => item.id === this.currentItem)
-        const prevIndex = (currentIndex - 1 + this.itemList.length) % this.itemList.length
-        const prevId = this.itemList[prevIndex].id
-        if (prevId === this.currentItem) return
-        this.currentItem = prevId
-        this.trigger("currentItemChanged")
-    }
+	prevItem() {
+		if (this.itemList.length === 0) return;
+		const currentIndex = this.itemList.findIndex((item) => item.id === this.currentItem);
+		const prevIndex = (currentIndex - 1 + this.itemList.length) % this.itemList.length;
+		const prevId = this.itemList[prevIndex].id;
+		if (prevId === this.currentItem) return;
+		this.currentItem = prevId;
+		this.trigger("currentItemChanged");
+	}
 
-    getCurrentItem(): MenuItemType | undefined {
-        return this.itemList.find(it => it.id === this.currentItem)
-    }
+	getCurrentItem(): MenuItemType | undefined {
+		return this.itemList.find((it) => it.id === this.currentItem);
+	}
 
-    getCurrentItemId(): string {
-        return this.currentItem
-    }
+	getCurrentItemId(): string {
+		return this.currentItem;
+	}
 
-    getItemList(): MenuItemType[] {
-        return this.itemList
-    }
+	getItemList(): MenuItemType[] {
+		return this.itemList;
+	}
 }

@@ -28,7 +28,6 @@ export default class MenuInput extends EventEmitter {
 
 		this.canvas.addEventListener("mousemove", this.onMouseMove);
 		this.canvas.addEventListener("mouseup", this.onMouseUp);
-		// document.addEventListener("keyup", (event) => console.log("event", event));
 
 		this.state.on("currentItemChanged.input", this.onCurrentItemChanged);
 		this.bindInputs();
@@ -89,7 +88,6 @@ export default class MenuInput extends EventEmitter {
 	destroy() {
 		this.canvas.removeEventListener("mousemove", this.onMouseMove);
 		this.canvas.removeEventListener("mouseup", this.onMouseUp);
-		document.removeEventListener("keyup", this.onItemKeyPressed);
 		this.state.off(".input");
 	}
 }

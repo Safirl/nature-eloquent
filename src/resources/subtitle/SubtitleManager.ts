@@ -1,5 +1,5 @@
 import { EventEmitter } from "@plugins/baseExperience";
-import type { DialogStep } from "./sceneConfig";
+import type { DialogStep } from "../../scene/sceneDescriptions";
 
 type DialogSubtitleStep = {
 	audio: string;
@@ -81,7 +81,7 @@ export default class SubtitleManager extends EventEmitter {
 				this.audioPlayer.addEventListener("error", () => resolve(), { once: true });
 			});
 		}
-		console.log("relatedStep", relatedStep)
+		console.log("relatedStep", relatedStep);
 		this.hideSubtitle();
 		this.trigger("dialogFinished", [relatedStep.callbackName]);
 	}

@@ -1,0 +1,91 @@
+import { EventEmitter, Experience, type LifeTimeObject } from "@plugins/baseExperience";
+import type Menu from "../menu";
+import { instanceOfObjectCountCondition, stepDescription } from "./sceneDescriptions2";
+import type { CompleteCondition, DialogStep, ObjectCountCondition } from "./sceneDescriptions2";
+import Playground from "../world/PlaygroundWorld";
+
+export default class SceneManager extends EventEmitter implements LifeTimeObject {
+	// private currentSceneId: number = 0;
+	//On manipule les completionConditions des active step. Si elles sont vides on remove la step
+	private activeSteps: DialogStep[];
+	private objectCounts: { [key: string]: number } = {};
+
+	declare private menu: Menu;
+
+	constructor(menu: Menu) {
+		super();
+		this.activeSteps = [];
+		this.menu = menu;
+		this.menu.on("onObjectPlaced", this.onObjectPlaced);
+	}
+	init = () => {
+		this.addActiveStep(1);
+	};
+	update = () => {};
+	destroy = () => {};
+
+	onObjectPlaced = (objectName: string) => {
+		if (!this.objectCounts[objectName]) {
+			this.objectCounts[objectName] = 0;
+		}
+		this.objectCounts[objectName]++;
+		let relatedActiveStep = {} as DialogStep;
+		let relatedCompletionCondition = {} as ObjectCountCondition;
+
+		//1. Trouver la completionCondtionCorrespondante + step correspondante
+		this.activeSteps.forEach((s) => {
+			if (Array.isArray(s.completionConditions)) {
+				s.completionConditions.forEach((cc) => {
+					if (cc.objectId === objectName) {
+						relatedActiveStep = s;
+						relatedCompletionCondition = cc;
+					}
+				});
+			}
+		});
+
+		if (!relatedActiveStep || !relatedCompletionCondition) return;
+
+		let isCompletionConditionArrayEmpty = false;
+		//2. Retirer la completionCondtion si elle est atteinte;
+		if (relatedCompletionCondition.count === this.objectCounts[objectName]) {
+			if (Array.isArray(relatedActiveStep.completionConditions)) {
+				const index = relatedActiveStep.completionConditions.indexOf(
+					relatedCompletionCondition
+				);
+				if (index > -1) {
+					relatedActiveStep.completionConditions.splice(index, 1);
+				}
+				isCompletionConditionArrayEmpty = relatedActiveStep.completionConditions.length < 1;
+			}
+		}
+
+		if (!isCompletionConditionArrayEmpty) return;
+		//3. si toutes les completionCondition sont atteintes supprimer la active step
+
+		const index = this.activeSteps.indexOf(relatedActiveStep);
+		if (index > -1) {
+			this.activeSteps.splice(index, 1);
+		}
+
+		if (relatedCompletionCondition.callbackName) {
+			this.trigger(relatedCompletionCondition.callbackName);
+		}
+
+		//4. Trigger next step s'il y en a une
+		if (!relatedCompletionCondition.nextStepId) return;
+		this.addActiveStep(relatedCompletionCondition.nextStepId);
+	};
+
+	addActiveStep(stepId: number) {
+		const staticStep = stepDescription.find((s) => s.id === stepId);
+		if (!staticStep) {
+			console.warn("Step not found with id:", stepId);
+			return;
+		}
+		let newActiveStep = {} as DialogStep;
+		newActiveStep = Object.assign(newActiveStep, staticStep);
+		this.activeSteps.push(newActiveStep);
+		this.trigger("onActiveStepAdded", [newActiveStep]);
+	}
+}

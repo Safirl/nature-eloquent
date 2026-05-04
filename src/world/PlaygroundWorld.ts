@@ -6,7 +6,7 @@ import { Actor } from "@plugins/baseExperience";
 import { World } from "@plugins/baseExperience";
 import * as THREE from "three";
 import GameEnvironment from "./GameEnvironment";
-import Menu from "../Menu";
+import Menu from "../menu";
 
 export default class Playground extends World {
 	declare experience: Experience;
@@ -15,13 +15,16 @@ export default class Playground extends World {
 	declare resources: Experience["resources"];
 	declare floor: Floor;
 	declare fox: Actor;
-	declare private menu: Menu;
+	declare public menu: Menu;
 	declare layout: Actor;
 
 	init() {
 		super.init();
 		this.floor = new Floor();
-		this.environment = new GameEnvironment(this.resources.items.environmentMapTexture1 as THREE.CubeTexture, true);
+		this.environment = new GameEnvironment(
+			this.resources.items.environmentMapTexture1 as THREE.CubeTexture,
+			true
+		);
 
 		this.layout = new Actor(
 			"layoutModel",
@@ -37,9 +40,14 @@ export default class Playground extends World {
 
 		// Add colisions
 		const collisionManager = Experience.instance?.collisionManager;
-		if (!collisionManager) throw new Error("Playground initialization failed: CollisionManager is not available.");
+		if (!collisionManager)
+			throw new Error("Playground initialization failed: CollisionManager is not available.");
 		collisionManager?.addCollisionObjects([this.floor]);
 		collisionManager?.addCollisionObjects([this.layout]);
+	}
+
+	getMenu(): Menu {
+		return this.menu;
 	}
 
 	update() {
