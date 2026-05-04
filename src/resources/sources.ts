@@ -58,7 +58,7 @@ const sources: Source[] = [
 	{
 		name: "layoutModel",
 		type: "gltfModel",
-		path: "models/layout/Layout3.glb",
+		path: "models/layout/Layout4.glb",
 	},
 	{
 		name: "mushroomModel",
