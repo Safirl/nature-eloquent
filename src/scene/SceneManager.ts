@@ -5,7 +5,6 @@ import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json"
 import type Playground from "../world/PlaygroundWorld";
 import type GameExperience from "../GameExperience";
 import { sceneConfig, type DialogStep, type SceneType } from "../subtitle/sceneConfig";
-import { call } from "three/tsl";
 
 export default class SceneManager extends EventEmitter {
     declare subtitle: SubtitleManager;
@@ -54,14 +53,13 @@ export default class SceneManager extends EventEmitter {
             if (callbackName === "onForestFairy02Completed" || callbackName === "onForestExoticFlower01Completed") {
                 this.delayAfterScene(1000).then(() => {
                     this.clearObjectCounts();
-                    this.goToNextScene()
+                    this.playScene(9); // Passe directement à la scène de l'orage
                 })
                 return;
             }
 
             if (callbackName === "onForestElf02Completed") {
-                this.goToNextScene()
-                // this.playScene(9) // On joue la scène de l'orage directement
+                this.playScene(9);
             }
 
             this.nextStepOrSceneAfterStepDialogFinished();
@@ -193,6 +191,7 @@ export default class SceneManager extends EventEmitter {
                 const count = this.objectCounts[objectName];
                 if (count === obj.triggerCount) {
 
+                    // Si il y a un remplacement d'objet à faire
                     if (step.replaceObjects) {
                         this.replaceObject(obj.objectId, step.replaceObjects[0]);
                         this.setObjectActive(step.replaceObjects[0].objectId, true);
@@ -207,8 +206,6 @@ export default class SceneManager extends EventEmitter {
 
                     this.triggerDialog(step.dialogId, step);
                 }
-
-
 
             });
         });

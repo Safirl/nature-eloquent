@@ -310,7 +310,7 @@ export const sceneConfig: SceneType = [
                     isActive: true
                 }
                 ],
-                objectsRemoved: ["pineCone", "elf", "fox", "oiseau"],
+                objectsRemoved: ["pineCone", "elf", "fox", "oiseau", "flower", "vines", "grass", "exoticFlower01", "exoticFlower02", "exoticFlower03", "fairy", "butterfly"],
                 dialogId: "forestStorm_01",
                 callbackName: "onDuringStorm01Completed"
             }
