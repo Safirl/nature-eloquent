@@ -11,9 +11,7 @@ import {
 import GameExperience from "./GameExperience";
 
 const init = () => {
-	const canvas: HTMLCanvasElement = document.getElementById(
-		"three"
-	) as HTMLCanvasElement;
+	const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement;
 	if (!canvas) {
 		console.error("no canvas found with three identifier");
 		return;

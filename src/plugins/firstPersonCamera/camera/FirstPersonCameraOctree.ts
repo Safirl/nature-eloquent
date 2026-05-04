@@ -23,7 +23,7 @@ export default class FirstPersonCameraOctree extends Camera {
 	declare delta: number;
 	declare maxPitch: number;
 
-	constructor(height = 1.7, speed = 40, mass = 50, friction = 10) {
+	constructor(height = 1.2, speed = 40, mass = 50, friction = 10) {
 		super();
 
 		// Mouvements

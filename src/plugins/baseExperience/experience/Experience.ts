@@ -9,6 +9,7 @@ import World from "../world/World";
 import Debug from "../utils/Debug";
 import InputSystem from "../inputs/InputSystem";
 import CollisionManager from "../world/CollisionManager";
+import Stats from "three/addons/libs/stats.module.js";
 
 export default class Experience implements LifeTimeObject {
 	declare canvas: HTMLCanvasElement;
@@ -22,15 +23,11 @@ export default class Experience implements LifeTimeObject {
 	declare debug: Debug;
 	declare inputSystem: InputSystem;
 	declare collisionManager: CollisionManager;
+	declare private stats: Stats;
 
 	static instance: Experience | null = null;
 
-	constructor(
-		canvas: HTMLCanvasElement,
-		sources: Source[],
-		camera: Camera,
-		world: World
-	) {
+	constructor(canvas: HTMLCanvasElement, sources: Source[], camera: Camera, world: World) {
 		//Singleton. That means you can't instantiate multiple experiences.
 		if (Experience.instance) {
 			return;
@@ -65,16 +62,18 @@ export default class Experience implements LifeTimeObject {
 		this.sizes.on("resize", () => {
 			this.resize();
 		});
+		if (this.debug.active) {
+			this.displayPerformances();
+		}
 
 		this.resources.on("ready", () => this.onResourcesLoaded());
 
-		this.displayPerformances();
 		console.log("Experience class instantiated");
 	}
 
 	displayPerformances() {
-		// if (this.debug.active)
-		return;
+		this.stats = new Stats();
+		document.body.appendChild(this.stats.dom);
 	}
 
 	/**
@@ -97,6 +96,7 @@ export default class Experience implements LifeTimeObject {
 	}
 
 	update() {
+		this.stats?.update();
 		this.camera.update();
 		this.world.update();
 		this.renderer.update();
