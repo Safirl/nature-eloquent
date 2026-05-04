@@ -112,13 +112,10 @@ export default class InputSystem extends EventEmitter implements LifeTimeObject 
 	}
 
 	updateAxes(gamepad: Gamepad, profile: InputProfile) {
-		console.log(gamepad.axes);
 		gamepad.axes.forEach((axis, index) => {
 			if (!profile.axes) return;
 
-			const mapping = profile.axes.find(
-				(a) => index === a.index && this.compareSigns(a.sign, axis)
-			);
+			const mapping = profile.axes.find((a) => index === a.index);
 			if (!mapping) return;
 			if (mapping.deadzone > Math.abs(axis)) axis = 0;
 			this.trigger(mapping.event, [axis]);

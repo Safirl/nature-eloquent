@@ -27,7 +27,6 @@ export interface InputAction {
  * @param sign Possible values: -1 or 1. The sign of the axis. If it doesn't matches the sign of the value of the axis, the event won't be called.
  */
 export interface InputAxis extends InputAction {
-	sign: number;
 	deadzone: number;
 }
 export interface InputEventArgs {

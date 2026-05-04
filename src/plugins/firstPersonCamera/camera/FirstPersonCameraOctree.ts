@@ -29,8 +29,9 @@ export default class FirstPersonCameraOctree extends Camera {
 	declare gameExperience: GameExperience;
 	declare isPlayingFootstep: boolean;
 	public jumpForce: number = 8;
+	private lastInputSource: "keyboard" | "gamepad" = "keyboard";
 
-	constructor(height = 1.2, speed = 40, mass = 50, friction = 10) {
+	constructor(height = 1.7, speed = 40, mass = 50, friction = 10) {
 		super();
 
 		// Mouvements
@@ -100,62 +101,75 @@ export default class FirstPersonCameraOctree extends Camera {
 
 	bindInputs() {
 		if (Experience.instance) {
+			Experience.instance.inputSystem.on(
+				"horizontalMovement",
+				(args: number) => {
+					if (args === 0 && this.lastInputSource === "keyboard") {
+						return;
+					}
+					// args positif = droite, négatif = gauche
+					this.moveRight = Math.max(0, args);
+					this.moveLeft = Math.max(0, -args);
+				}
+			);
+			Experience.instance.inputSystem.on(
+				"verticalMovement",
+				(args: number) => {
+					if (args === 0 && this.lastInputSource === "keyboard") {
+						return;
+					}
+					// args négatif = forward (joystick vers le haut = axe négatif)
+					this.moveForward = Math.max(0, -args);
+					this.moveBackward = Math.max(0, args);
+					if (args !== 0) {
+						this.lastInputSource = "gamepad";
+					}
+				}
+			);
+
 			/* Movements */
 			Experience.instance.inputSystem.on(
 				"forward",
-				(args: InputEventArgs | number) => {
-					if (typeof args === "number") {
-						console.log(args);
-						this.moveForward = -args;
-						return;
-					}
+				(args: InputEventArgs) => {
 					if (args.type === "pressed") {
 						this.moveForward = 1;
 					} else if (args.type === "released") {
 						this.moveForward = 0;
 					}
+					this.lastInputSource = "keyboard";
 				}
 			);
 			Experience.instance.inputSystem.on(
 				"backward",
-				(args: InputEventArgs | number) => {
-					if (typeof args === "number") {
-						this.moveBackward = -args;
-						return;
-					}
+				(args: InputEventArgs) => {
 					if (args.type === "pressed") {
 						this.moveBackward = 1;
 					} else if (args.type === "released") {
 						this.moveBackward = 0;
 					}
+					this.lastInputSource = "keyboard";
 				}
 			);
 			Experience.instance.inputSystem.on(
 				"left",
-				(args: InputEventArgs | number) => {
-					if (typeof args === "number") {
-						this.moveLeft = args;
-						return;
-					}
+				(args: InputEventArgs) => {
 					if (args.type === "pressed") {
 						this.moveLeft = 1;
 					} else if (args.type === "released") {
 						this.moveLeft = 0;
 					}
+					this.lastInputSource = "keyboard";
 				}
 			);
 			Experience.instance.inputSystem.on(
 				"right",
-				(args: InputEventArgs | number) => {
-					if (typeof args === "number") {
-						this.moveRight = args;
-						return;
-					}
+				(args: InputEventArgs) => {
 					if (args.type === "pressed") {
 						this.moveRight = 1;
 					} else if (args.type === "released") {
 						this.moveRight = 0;
 					}
+					this.lastInputSource = "keyboard";
 				}
 			});
 			Experience.instance.inputSystem.on("jump", (args: InputEventArgs) => {
