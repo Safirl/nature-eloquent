@@ -59,6 +59,7 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		if (!relatedActiveStep || !relatedCompletionCondition) return;
 
 		let isCompletionConditionArrayEmpty = false;
+		let isCompletionConditionRemoved = false;
 		//2. Retirer la completionCondtion si elle est atteinte;
 		if (relatedCompletionCondition.count === this.objectCounts[objectName]) {
 			if (Array.isArray(relatedActiveStep.completionConditions)) {
@@ -67,17 +68,21 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 				);
 				if (index > -1) {
 					relatedActiveStep.completionConditions.splice(index, 1);
+					isCompletionConditionRemoved = true;
 				}
 				isCompletionConditionArrayEmpty = relatedActiveStep.completionConditions.length < 1;
 			}
 		}
 
-		if (!isCompletionConditionArrayEmpty) return;
-		//3. si toutes les completionCondition sont atteintes supprimer la active step
+		//Si aucun completionCondition a été atteinte on return
+		if (!isCompletionConditionRemoved) return;
 
-		const index = this.activeSteps.indexOf(relatedActiveStep);
-		if (index > -1) {
-			this.activeSteps.splice(index, 1);
+		//3. si toutes les completionCondition sont atteintes supprimer la active step
+		if (isCompletionConditionArrayEmpty) {
+			const index = this.activeSteps.indexOf(relatedActiveStep);
+			if (index > -1) {
+				this.activeSteps.splice(index, 1);
+			}
 		}
 
 		if (relatedCompletionCondition.callbackName) {
@@ -104,6 +109,7 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 					this.menu.subtitle.off(".condition");
 				}, newActiveStep.completionConditions.delay);
 			});
+			console.log(this.menu.subtitle.callbacks);
 		}
 		this.activeSteps.push(newActiveStep);
 		this.trigger("onActiveStepAdded", [newActiveStep]);
