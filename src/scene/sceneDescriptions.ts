@@ -8,15 +8,15 @@ export type DialogStep = {
 	objectsRemoved?: string[];
 	//Wait for a delay if there are no completionCondition
 	completionConditions: ObjectCountCondition[] | { delay: number; nextStepId?: number };
-	dialogId: string;
+	dialogId?: string;
 	cleanSteps?: boolean;
+	completionCallback?: string;
 };
 
 export type ObjectCountCondition = {
 	objectId: string;
 	count: number;
 	nextStepId?: number;
-	callbackName?: string;
 };
 
 export function instanceOfObjectCountCondition(object: any): object is ObjectCountCondition {
@@ -24,476 +24,318 @@ export function instanceOfObjectCountCondition(object: any): object is ObjectCou
 }
 
 export const stepDescription: DialogStep[] = [
+	//intro
 	{
 		name: "introduction",
 		id: 0,
-		completionConditions: { delay: 2500, nextStepId: 1 },
+		completionConditions: { delay: 1500, nextStepId: 1 },
 		dialogId: "introduction",
 	},
+	//reçoit le dinosaure : pas de dialogues
 	{
-		name: "dinosaureBox",
+		name: "dinosaure_0",
 		id: 1,
 		objectsAdded: [
 			{
-				objectId: "mushroom",
+				objectId: "dinosaur",
 				// resourceName: "mushroomPaintedModel",
 			},
 		],
-		completionConditions: [{ objectId: "mushroom", count: 5, nextStepId: 2 }],
-		dialogId: "dinosaure_01",
+		completionConditions: [{ objectId: "dinosaur", count: 1, nextStepId: 2 }],
+		// dialogId: "dinosaure_0",
 	},
+	//a posé un premier dinosaure --> dialogue
 	{
-		name: "dinosaureBox1",
+		name: "dinosaure_1",
 		id: 2,
-		objectsRemoved: ["mushroom"],
-		objectsAdded: [
-			{
-				objectId: "mushroom",
-				// resourceName: "mushroomPaintedModel",
-			},
-		],
-		completionConditions: [{ objectId: "mushroom", count: 6, nextStepId: 3 }],
-		dialogId: "dinosaure_01",
+		// objectsRemoved: ["mushroom"],
+		// objectsAdded: [
+		// 	{
+		// 		objectId: "mushroom",
+		// 		// resourceName: "mushroomPaintedModel",
+		// 	},
+		// ],
+		completionConditions: [{ objectId: "dinosaur", count: 5, nextStepId: 3 }],
+		dialogId: "dinosaure_0",
 	},
+	//a posé plusieurs dinosaures --> Dialogue
 	{
-		name: "classroomBox",
+		name: "dinosaure_2",
 		id: 3,
-		objectsRemoved: ["mushroom"],
-		objectsAdded: [
-			{
-				objectId: "mushroom2",
-				// resourceName: "mushroomPaintedModel",
-			},
-			{
-				objectId: "mushroomCouc",
-				// resourceName: "mushroomModel",
-			},
-			{
-				objectId: "mushroom",
-				// resourceName: "mushroomModel",
-			},
-		],
-		completionConditions: [
-			{ objectId: "mushroom2", count: 5, nextStepId: 4 },
-			{ objectId: "mushroom", count: 5, nextStepId: 5 },
-		],
-		dialogId: "dinosaure_01",
+		// objectsRemoved: ["mushroom"],
+		// objectsAdded: [
+		// 	{
+		// 		objectId: "mushroom",
+		// 		// resourceName: "mushroomPaintedModel",
+		// 	},
+		// ],
+		completionConditions: { delay: 2500, nextStepId: 4 },
+		dialogId: "dinosaure_1",
 	},
+	//Dialogue fini --> reçoit la post card, pas de dialogue
 	{
-		name: "classroomBox",
+		name: "classroom_0",
 		id: 4,
-		objectsRemoved: ["mushroom2"],
+		objectsRemoved: ["dinosaur"],
 		objectsAdded: [
 			{
-				objectId: "mushroomCouc",
-				// resourceName: "mushroomPaintedModel",
+				objectId: "postcard",
 			},
 		],
-		completionConditions: [{ objectId: "mushroomCouc", count: 5, nextStepId: 6 }],
-		dialogId: "dinosaure_01",
+		completionConditions: [{ objectId: "postcard", count: 3, nextStepId: 5 }],
+		// dialogId: "classroom",
 	},
+	//a posé une postcard --> dialogue, pas d'interaction
 	{
-		name: "classroomBox",
+		name: "classroom_1",
 		id: 5,
-		objectsRemoved: ["mushroom"],
-		objectsAdded: [
-			{
-				objectId: "mushroom2",
-				// resourceName: "mushroomPaintedModel",
-			},
-			{
-				objectId: "mushroom",
-				// resourceName: "mushroomModel",
-			},
-		],
-		completionConditions: [
-			{ objectId: "mushroom2", count: 5, nextStepId: 3 },
-			{ objectId: "mushroom", count: 5, nextStepId: 4 },
-		],
-		dialogId: "dinosaure_01",
+		objectsRemoved: ["postcard"],
+		// objectsAdded: [
+		// 	{
+		// 		objectId: "postcard",
+		// 	},
+		// ],
+		completionConditions: { delay: 1500, nextStepId: 6 },
+		dialogId: "classroom",
 	},
+	// Reçoit l'herbarium --> Dialogue d'objet reçu
 	{
-		name: "classroomBox",
+		name: "herbarium_0",
 		id: 6,
-		objectsRemoved: ["mushroomCouc"],
+		// objectsRemoved: ["postcard"],
 		objectsAdded: [
 			{
-				objectId: "mushroom2",
-				// resourceName: "mushroomPaintedModel",
+				objectId: "vine",
 			},
+		],
+		completionConditions: [{ objectId: "vine", count: 5, nextStepId: 7 }],
+		dialogId: "herbarium_0",
+	},
+	// a posé 5 objets --> dialogue suivant
+	{
+		name: "herbarium_1",
+		id: 7,
+		// objectsRemoved: ["postcard"],
+		objectsAdded: [
 			{
-				objectId: "mushroom",
-				// resourceName: "mushroomModel",
+				objectId: "grassClump",
+			},
+		],
+		completionConditions: [{ objectId: "grassClump", count: 5, nextStepId: 8 }],
+		dialogId: "herbarium_1",
+	},
+	// a posé 5 objets de plus --> ajout d'une autre option
+	{
+		name: "herbarium_2",
+		id: 8,
+		// objectsRemoved: ["grassClump", "vine"],
+		objectsAdded: [
+			{
+				objectId: "rose",
+			},
+		],
+		completionConditions: [{ objectId: "rose", count: 5, nextStepId: 9 }],
+		dialogId: "herbarium_2",
+	},
+	// a posé les dernier objets --> Dialogue puis suite automatique
+	{
+		name: "herbarium_3",
+		id: 9,
+		// objectsAdded: [
+		// 	{
+		// 		objectId: "rose",
+		// 	},
+		// ],
+		// pas de next step, la suivante est trigger par une triggerbox
+		completionConditions: { delay: 1500, nextStepId: undefined },
+		dialogId: "herbarium_3",
+		completionCallback: "onIntroCompleted",
+	},
+	//Déclenché par la triggerbox
+	{
+		name: "forestIntro",
+		id: 10,
+		// objectsRemoved: ["mushroom"],
+		// objectsAdded: [
+		// 	{
+		// 		objectId: "flower",
+		// 		// resourceName: "mushroomPaintedModel",
+		// 	},
+		// ],
+		completionConditions: { delay: 2500, nextStepId: 6 },
+		dialogId: "forestIntro",
+	},
+
+	//Autre triggerbox --> L'utilisateur reçoit les fleurs quand il rentre dans la clairière.
+
+	{
+		name: "flower",
+		id: 11,
+		objectsRemoved: ["grassClump", "vine", "rose"],
+		objectsAdded: [
+			{
+				objectId: "ppFlower",
+			},
+		],
+		completionConditions: [{ objectId: "ppFlower", count: 5, nextStepId: 12 }],
+		// dialogId: "dinosaure_01",
+	},
+
+	//Le joueur pose plusieurs fleurs, déclenchement du dialogue plus ajout de fleurs
+	{
+		name: "flower1",
+		id: 12,
+		// objectsRemoved: ["mushroomCouc"],
+		objectsAdded: [
+			{
+				objectId: "ppFlower1",
 			},
 		],
 		completionConditions: [
-			{ objectId: "mushroom2", count: 5, nextStepId: 3 },
-			{ objectId: "mushroom", count: 5, nextStepId: 4 },
+			{ objectId: "ppFlower", count: 10, nextStepId: 13 },
+			{ objectId: "ppFlower1", count: 5, nextStepId: 13 },
 		],
-		dialogId: "dinosaure_01",
+		dialogId: "forestLittleFlower_0",
+	},
+
+	//Clémentine réagit et ajoute ses fleurs
+	{
+		name: "flower2",
+		id: 13,
+		// objectsRemoved: ["mushroomCouc"],
+		objectsAdded: [
+			{
+				objectId: "clemFlower",
+			},
+			{
+				objectId: "clemFlower1",
+			},
+		],
+		completionConditions: [
+			{ objectId: "ppFlower", count: 15, nextStepId: 14 },
+			{ objectId: "ppFlower1", count: 10, nextStepId: 14 },
+			{ objectId: "clemFlower", count: 5, nextStepId: 15 },
+			{ objectId: "clemFlower1", count: 5, nextStepId: 15 },
+		],
+		dialogId: "forestLittleFlower_1",
+	},
+
+	//Le joueur place les fleurs de petit pois
+	{
+		name: "ppFlower",
+		id: 14,
+		objectsRemoved: ["clemFlower", "clemFlower1", "ppFlower", "ppFlower1"],
+		objectsAdded: [
+			{
+				objectId: "giantPPFlower",
+			},
+		],
+		completionConditions: [{ objectId: "giantPPFlower", count: 5, nextStepId: undefined }],
+		dialogId: "ppFlowers",
+		completionCallback: "onGiantFlowersAdded",
+	},
+
+	//Le joueur place les fleurs de clem. Seulement un callback à la fin
+	{
+		name: "clemFlower",
+		id: 15,
+		objectsRemoved: ["clemFlower", "clemFlower1", "ppFlower", "ppFlower1"],
+		objectsAdded: [
+			{
+				objectId: "giantClemFlower",
+			},
+		],
+		completionConditions: [{ objectId: "giantClemFlower", count: 5, nextStepId: undefined }],
+		dialogId: "clemFlowers",
+		completionCallback: "onGiantFlowersAdded",
+	},
+
+	//L'animation des fleurs a été déclenchée. Le joueur déclenche cette step en rentrant dans la chemin ouvert.
+	{
+		name: "clearingExit",
+		id: 16,
+		objectsRemoved: ["giantClemFlower", "giantPPFlower"],
+		completionConditions: { delay: 1500, nextStepId: 17 },
+		dialogId: "clearingExit",
+	},
+
+	//Il peut placer des papillons
+	{
+		name: "butterfly",
+		id: 17,
+		objectsAdded: [
+			{
+				objectId: "butterfly",
+			},
+		],
+		completionConditions: [{ objectId: "butterfly", count: 5, nextStepId: undefined }],
+		completionCallback: "onButterflyPlaced",
+	},
+
+	//triggerbox dans les chemins dans la forêt
+	{
+		name: "storm",
+		id: 18,
+		objectsRemoved: ["butterfly"],
+		completionConditions: { delay: 1500, nextStepId: undefined },
+		completionCallback: "onStormStarted",
+		dialogId: "storm",
+	},
+
+	//triggerbox entrée seconde clairière
+	{
+		name: "clearing2Entrance",
+		id: 19,
+		objectsAdded: [
+			{
+				objectId: "bramble",
+			},
+			{
+				objectId: "toxicMushroom",
+			},
+		],
+		completionConditions: [
+			{ objectId: "bramble", count: 5, nextStepId: 20 },
+			{ objectId: "toxicMushroom", count: 5, nextStepId: 21 },
+		],
+		// dialogId: "storm",
+	},
+
+	//Quand les ronces ont été posées
+	{
+		name: "bramble",
+		id: 20,
+		completionConditions: [{ objectId: "bramble", count: 10, nextStepId: 22 }],
+		dialogId: "bramble_0",
+	},
+
+	{
+		name: "poisonousMushroom",
+		id: 21,
+		objectsRemoved: ["toxicMushroom"],
+		completionConditions: [{ objectId: "toxicMushroom", count: 10, nextStepId: 23 }],
+		dialogId: "poisonousMushroom",
+	},
+
+	{
+		name: "bramble1",
+		id: 22,
+		objectsRemoved: ["bramble"],
+		completionConditions: [{ objectId: "bramble", count: 10, nextStepId: 23 }],
+		dialogId: "bramble_1",
+	},
+
+	//Dead wood
+	{
+		name: "deadwood",
+		id: 23,
+		objectsRemoved: ["bramble", "toxicMushroom"],
+		objectsAdded: [
+			{
+				objectId: "deadwood",
+			},
+		],
+		completionConditions: [{ objectId: "deadwood", count: 5, nextStepId: undefined }],
+		completionCallback: "onDeadwoodPlaced",
 	},
 ];
-
-// export const sceneDescription = [
-// 	{
-// 		// scène 0 d'introduction
-// 		name: "introduction",
-// 		steps: [
-// 			{
-// 				dialogId: "introduction",
-// 				callbackName: "onIntroductionCompleted",
-// 				completionCondition: 1500,
-// 			},
-// 		],
-// 	},
-// 	{
-// 		// scène 1 : dinosaure
-// 		name: "dinosaureBox",
-// 		steps: [
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "dinosaure",
-// 						resourceName: "mushroomPaintedModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 				],
-// 				dialogId: "dinosaure_01",
-// 				callbackName: "onDinosaure01Completed",
-// 			},
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "dinosaure",
-// 						resourceName: "mushroomPaintedModel",
-// 						triggerCount: 5,
-// 						isActive: true,
-// 					},
-// 				],
-// 				dialogId: "dinosaure_01",
-// 				callbackName: "onDinosaure02Completed",
-// 			},
-// 		],
-// 	},
-// 	{
-// 		// scène 2 : carnet
-// 		name: "classroomBox",
-// 		steps: [
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "carnet",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 				],
-// 				dialogId: "classroom_01",
-// 				callbackName: "onClassroom01Completed",
-// 			},
-// 		],
-// 	},
-
-// 	{
-// 		// Scène 3 : herbier
-// 		name: "herbariumBox",
-// 		steps: [
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "herbier",
-// 						resourceName: "mushroomPaintedModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 				],
-// 				dialogId: "herbarium_01",
-// 				callbackName: "onHerbarium01Completed",
-// 			},
-// 		],
-// 	},
-
-// 	{
-// 		name: "gardenBedroom",
-// 		steps: [
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "flower",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: null,
-// 						isActive: true,
-// 					},
-// 					{
-// 						objectId: "vines",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: null,
-// 						isActive: true,
-// 					},
-// 					{
-// 						objectId: "grass",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: null,
-// 						isActive: true,
-// 					},
-// 				],
-// 				objectsRemoved: ["herbier", "carnet", "dinosaure"],
-// 				completionCondition: {
-// 					objectId: ["flower", "vines", "grass"],
-// 					count: 10,
-// 				},
-// 				dialogId: "gardenbedroom_01",
-// 				callbackName: "onGardenBedroom01Completed",
-// 			},
-// 		],
-// 	},
-
-// 	{
-// 		name: "enterClairvoyantForest",
-// 		steps: [
-// 			{
-// 				dialogId: "enterClairvoyantForest_01",
-// 				callbackName: "onEnterClairvoyantForestCompleted",
-// 			},
-// 		],
-// 	},
-
-// 	{
-// 		name: "clairvoyantForest",
-// 		steps: [
-// 			// TRANSFORMATION BUTTERFLY -> FAIRY
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "butterfly",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 				],
-// 				dialogId: "forestButterfly_01",
-// 				callbackName: "onForestButterfly01Completed",
-// 			},
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "butterfly",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 5,
-// 						isActive: true,
-// 					},
-// 				],
-// 				replaceObjects: [
-// 					{
-// 						objectId: "fairy",
-// 						resourceName: "mushroomModel",
-// 					},
-// 				],
-// 				dialogId: "forestButterfly_02",
-// 				callbackName: "onForestButterfly02Completed",
-// 			},
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "fairy",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: false,
-// 					},
-// 				],
-// 				dialogId: "forestFairy_01",
-// 				callbackName: "onForestFairy01Completed",
-// 			},
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "fairy",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 5,
-// 						isActive: false,
-// 					},
-// 				],
-// 				dialogId: "forestFairy_02",
-// 				callbackName: "onForestFairy02Completed",
-// 			},
-
-// 			// TRANSFORMATION FLOWER -> BIG BIG FLOWERS
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "flower",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 				],
-// 				dialogId: "forestLittleFlower_01",
-// 				callbackName: "onForestLittleFlower01Completed",
-// 			},
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "flower",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 5,
-// 						isActive: true,
-// 					},
-// 				],
-// 				replaceObjects: [
-// 					{
-// 						objectId: "exoticFlower01",
-// 						resourceName: "mushroomModel",
-// 					},
-// 					{
-// 						objectId: "exoticFlower02",
-// 						resourceName: "mushroomModel",
-// 					},
-// 					{
-// 						objectId: "exoticFlower03",
-// 						resourceName: "mushroomModel",
-// 					},
-// 				],
-// 				dialogId: "forestLittleFlower_02",
-// 				callbackName: "onForestLittleFlower02Completed",
-// 			},
-// 			{
-// 				completionCondition: {
-// 					objectId: ["exoticFlower01", "exoticFlower02", "exoticFlower03"],
-// 					count: 10,
-// 				},
-// 				dialogId: "forestExoticFlower_01",
-// 				callbackName: "onForestExoticFlower01Completed",
-// 			},
-// 		],
-// 	},
-// 	{
-// 		name: "afterBigFlower",
-// 		steps: [
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "pineCone",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 					{
-// 						objectId: "oiseau",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 				],
-// 				objectsRemoved: [
-// 					"exoticFlower01",
-// 					"exoticFlower02",
-// 					"exoticFlower03",
-// 					"fairy",
-// 					"flower",
-// 					"vines",
-// 					"grass",
-// 					"butterfly",
-// 				],
-// 				dialogId: "afterBigFlower_01",
-// 				callbackName: "onAfterBigFlower01Completed",
-// 			},
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "fox",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 				],
-// 				replaceObjects: [
-// 					{
-// 						objectId: "elf",
-// 						resourceName: "mushroomModel",
-// 					},
-// 				],
-// 				dialogId: "forestFox_01",
-// 				callbackName: "onForestFox01Completed",
-// 			},
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "elf",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: false,
-// 					},
-// 				],
-// 				dialogId: "forestElf_02",
-// 				callbackName: "onForestElf02Completed",
-// 			},
-// 		],
-// 	},
-// 	{
-// 		name: "storm",
-// 		steps: [
-// 			{
-// 				objectsRemoved: [
-// 					"fairy",
-// 					"flower",
-// 					"vines",
-// 					"grass",
-// 					"exoticFlower01",
-// 					"exoticFlower02",
-// 					"exoticFlower03  ",
-// 					"butterfly",
-// 					"pineCone",
-// 					"oiseau",
-// 					"fox",
-// 					"elf",
-// 				],
-// 				dialogId: "forestStorm_01",
-// 				callbackName: "onStorm01Completed",
-// 			},
-// 		],
-// 	},
-// 	{
-// 		name: "duringStorm",
-// 		steps: [
-// 			{
-// 				objectsAdded: [
-// 					{
-// 						objectId: "bramble",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 					{
-// 						objectId: "toxicMushroom",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 					{
-// 						objectId: "ant",
-// 						resourceName: "mushroomModel",
-// 						triggerCount: 1,
-// 						isActive: true,
-// 					},
-// 				],
-// 				objectsRemoved: [
-// 					"pineCone",
-// 					"elf",
-// 					"fox",
-// 					"oiseau",
-// 					"flower",
-// 					"vines",
-// 					"grass",
-// 					"exoticFlower01",
-// 					"exoticFlower02",
-// 					"exoticFlower03",
-// 					"fairy",
-// 					"butterfly",
-// 				],
-// 				dialogId: "forestStorm_01",
-// 				callbackName: "onDuringStorm01Completed",
-// 			},
-// 		],
-// 	},
-// ];

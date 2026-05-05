@@ -79,8 +79,10 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		if (newItems) {
 			this.state.pushItems(newItems);
 		}
-		console.log(newItems)
-		this.playDialog(dialogueStep.dialogId);
+		// console.log("new items", newItems);
+		if (dialogueStep.dialogId) {
+			this.playDialog(dialogueStep.dialogId);
+		}
 	};
 
 	private onItemListChanged = () => {

@@ -84,8 +84,8 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 			}
 		}
 
-		if (relatedCompletionCondition.callbackName) {
-			this.trigger(relatedCompletionCondition.callbackName);
+		if (relatedActiveStep.completionCallback) {
+			this.trigger(relatedActiveStep.completionCallback);
 		}
 
 		//4. Trigger next step s'il y en a une
@@ -93,10 +93,12 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		this.addActiveStep(relatedCompletionCondition.nextStepId);
 	};
 
+	completeStep() {}
+
 	addActiveStep = (stepId: number) => {
 		const staticStep = stepDescription.find((s) => s.id === stepId);
 		if (!staticStep) {
-			console.warn("Step not found with id:", stepId);
+			// console.warn("Step not found with id:", stepId);
 			return;
 		}
 		let newActiveStep = {} as DialogStep;
@@ -104,11 +106,17 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		if (!Array.isArray(newActiveStep.completionConditions)) {
 			this.menu.subtitle.on("dialogFinished.condition", () => {
 				setTimeout(() => {
+					if (newActiveStep.completionCallback) {
+						this.trigger(newActiveStep.completionCallback);
+						console.log("triggered", newActiveStep.completionCallback);
+					}
 					this.addActiveStep(newActiveStep.completionConditions.nextStepId);
 					this.menu.subtitle.off(".condition");
 				}, newActiveStep.completionConditions.delay);
 			});
 		}
+		console.log("step:", newActiveStep);
+
 		this.activeSteps.push(newActiveStep);
 		this.trigger("onActiveStepAdded", [newActiveStep]);
 	};

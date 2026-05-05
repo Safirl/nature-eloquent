@@ -83,35 +83,39 @@
 			"speaker": "Petit Pois: "
 		}
 	},
-	"herbarium": {
+	"herbarium_0": {
 		"dialog_0": {
 			"audio": "/audio/welcome.mp3",
 			"dialog": "Oh un herbier ! C'est donc de là que te vient ta passion pour la biologie ?",
 			"speaker": "Clémentine: "
-		},
-		"dialog_1": {
+		}
+	},
+	"herbarium_1": {
+		"dialog_0": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "J'avais totalement oublié cet herbier ! Oui, comme mes parents vivent près d'une forêt j'adorais m'y balader quand j'avais 7 ou 8 ans je pense...",
 			"speaker": "Petit Pois: "
-		},
-		"dialog_2": {
+		}
+	},
+	"herbarium_2": {
+		"dialog_0": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Tiens, le carnet s'arrête d'un coup. T'en avais marre ?",
 			"speaker": "Clémentine: "
 		},
-		"dialog_3": {
+		"dialog_1": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Non pas vraiment... On va dire que j'ai eu une mauvaise expérience et j'ai arrêté après ça.",
 			"speaker": "Petit Pois: "
 		},
-		"dialog_4": {
+		"dialog_2": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Ah bon ? Qu'est-ce qu'il s'est passé ?",
 			"speaker": "Clémentine: "
 		}
 	},
 
-	"gardenbedroom": {
+	"herbarium_3": {
 		"dialog_0": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Et bien... Un jour je me suis perdu en forêt",
