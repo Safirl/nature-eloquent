@@ -56,9 +56,8 @@ export default class Placement {
 		if (!manager) return null;
 		manager.add(this.markerPosition);
 		console.log(`Placed instance of ${id} at`, this.markerPosition);
-		this.sound = this.audioListenerManager.playSfx("/audio/welcome.mp3", true);
+		this.sound = this.audioListenerManager.playSfx("/audio/welcome.mp3", false);
 		this.sound.position.copy(this.markerPosition);
-		console.log("Playing sound at position:", this.markerPosition);
 		return manager.count;
 	}
 

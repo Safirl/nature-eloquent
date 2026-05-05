@@ -21,8 +21,6 @@ export default class GameExperience extends Experience {
 		})
 	}
 
-
-
 	onResourcesLoaded(): void {
 		super.onResourcesLoaded();
 		this.audioListenerManager = new AudioListenerManager();

@@ -4,7 +4,7 @@ import * as THREE from "three";
 export default class AudioListenerManager {
     private declare experience: Experience;
     declare listener: THREE.AudioListener;
-    declare allAudio: { audioSrc: string; audio: THREE.Audio }[];
+    declare allAudio: { audioSrc: string; audio: THREE.Audio | THREE.PositionalAudio }[];
 
     constructor() {
         if (!Experience.instance)
@@ -62,7 +62,7 @@ export default class AudioListenerManager {
     }
 
     // Pour un son qu'on dépose dans l'espace
-    playSfx(audioSrc: string, loop: boolean = true) {
+    playSfx(audioSrc: string, loop: boolean = false) {
         const sound = new THREE.PositionalAudio(this.listener);
         const loader = new THREE.AudioLoader();
         loader.load(audioSrc, (buffer) => {
@@ -73,6 +73,7 @@ export default class AudioListenerManager {
             sound.play();
         });
         this.experience.scene.add(sound);
+        this.allAudio.push({ audioSrc, audio: sound });
         return sound;
     }
 }
