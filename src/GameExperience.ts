@@ -16,9 +16,9 @@ export default class GameExperience extends Experience {
 		//this.subtitleManager = new SubtitleManager();
 		//this.sceneManager = new SceneManager();
 
-		// this.replaceAmbiantSoundBtn.addEventListener("click", () => {
-		// 	this.audioListenerManager.replaceAmbiantSound(this.audioListenerManager.allAudio[0].audioSrc, "/audio/ambiantSounds/Impro_modal_PP_non_functionnal_and_colors.mp3");
-		// })
+		this.replaceAmbiantSoundBtn.addEventListener("click", () => {
+			this.audioListenerManager.replaceAmbiantSound(this.audioListenerManager.allAudio[0].audioSrc, "/audio/ambiantSounds/Impro_modal_PP_non_functionnal_and_colors.mp3");
+		})
 	}
 
 	onResourcesLoaded(): void {

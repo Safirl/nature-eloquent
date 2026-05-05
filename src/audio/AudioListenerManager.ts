@@ -46,18 +46,19 @@ export default class AudioListenerManager {
             for (let currentStep = 1; currentStep <= fadeOutSteps; currentStep++) {
                 const newVolume = initialVolume * (1 - currentStep / fadeOutSteps);
                 found.audio.setVolume(newVolume);
-                await this.delayAfterNextAmbiantSound();
+                await this.delayAfterNextAmbiantSound(5);
             }
 
             found.audio.stop();
             this.experience.scene.remove(found.audio);
             this.allAudio = this.allAudio.filter((a) => a.audioSrc !== oldAudioSrc);
+
         }
 
         this.playAmbiantSound(newAudioSrc);
     }
 
-    delayAfterNextAmbiantSound(duration: number = 5) {
+    delayAfterNextAmbiantSound(duration: number = 100) {
         return new Promise((resolve) => setTimeout(resolve, duration));
     }
 
