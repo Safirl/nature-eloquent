@@ -3,7 +3,6 @@ import "./assets/style.css";
 import { OrbitCamera, type InputProfile } from "@plugins/baseExperience";
 import sources from "./resources/sources";
 import Playground from "./world/PlaygroundWorld";
-import SubtitleManager from "./resources/subtitle/SubtitleManager";
 import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import GameExperience from "./GameExperience";
 import { keyboardProfile } from "./resources/inputProfiles";

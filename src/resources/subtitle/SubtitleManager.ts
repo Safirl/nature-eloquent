@@ -1,6 +1,6 @@
 import { EventEmitter } from "@plugins/baseExperience";
 import type { DialogStep } from "../../scene/sceneDescriptions";
-import AudioManager from "../../audio/AudioManager";
+import AudioManager from "../../audio/Audio2DManager";
 
 type DialogSubtitleStep = {
 	audio: string;
@@ -15,7 +15,6 @@ export default class SubtitleManager extends EventEmitter {
 	declare dialogElement: HTMLElement;
 	declare characterElement: HTMLElement;
 	declare currentIndex: number;
-	// declare audioPlayer: HTMLAudioElement;
 	declare typingInterval: number | null;
 	declare audioManager: AudioManager;
 
@@ -26,8 +25,6 @@ export default class SubtitleManager extends EventEmitter {
 		this.characterElement = document.getElementById("character") as HTMLElement;
 		this.subtitleElement.style.opacity = "0";
 
-		// this.audioPlayer = new Audio();
-		// this.audioPlayer.preload = "auto";
 		this.audioManager = new AudioManager();
 		this.typingInterval = null;
 	}

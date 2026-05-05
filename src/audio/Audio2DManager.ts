@@ -51,7 +51,4 @@ export default class AudioManager extends EventEmitter {
     stopLoopAudio(audioSrc: string) {
         this.stopAudio(audioSrc);
     }
-
-
-
 }

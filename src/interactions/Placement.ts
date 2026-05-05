@@ -3,6 +3,7 @@ import { Raycaster, Vector3 } from "three";
 import * as THREE from "three";
 import InstancedMeshManager from "./InstancedMeshManager";
 import InteractableInstancedMesh from "./InteractableInstancedMesh";
+import Audio3DManager from "../audio/Audio3DManager";
 
 /**
  * Placement — generic Three.js placement primitive.
@@ -18,11 +19,13 @@ export default class Placement {
 	private managers: Map<string, InstancedMeshManager> = new Map();
 	private markerPosition: Vector3 | undefined;
 	private debugSphere: THREE.Mesh | undefined;
+	declare audio3DManager: Audio3DManager;
 
 	constructor() {
 		if (!Experience.instance) throw new Error("Placement: Experience is not initialized");
 		this.experience = Experience.instance;
 		this.setupDebug();
+		this.audio3DManager = new Audio3DManager();
 	}
 
 	register(id: string, baseMesh: THREE.Mesh) {
@@ -50,6 +53,8 @@ export default class Placement {
 		const manager = this.managers.get(id);
 		if (!manager) return null;
 		manager.add(this.markerPosition);
+		console.log(`Placed instance of ${id} at`, this.markerPosition);
+		this.audio3DManager.playSpatialAudio("/audio/welcome.mp3", this.markerPosition, true);
 		return manager.count;
 	}
 
