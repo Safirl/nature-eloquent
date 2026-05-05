@@ -3,6 +3,7 @@ import { Experience, type LifeTimeObject } from "@plugins/baseExperience";
 import * as THREE from "three"
 import { plane, type GLTF } from "three/examples/jsm/Addons.js";
 import gsap from "gsap";
+import type FirstPersonCameraOctree from "@plugins/firstPersonCamera/camera/FirstPersonCameraOctree";
 
 /**
  * MenuView — DOM rendering for the menu.
@@ -28,6 +29,10 @@ export default class MenuView {
 	private stickers = [] as THREE.Mesh[]
 	private stickersProgress = [] as number[]
 	private activeIndex: number = -1
+	private walkIntensity: number = 0
+	private readonly _shakeVec = new THREE.Vector3()
+	private readonly _shakeTilt = new THREE.Quaternion()
+	private readonly _shakeTiltAxis = new THREE.Vector3(0, 0, 1)
 
 
 	params = {
@@ -81,11 +86,49 @@ export default class MenuView {
 	}
 
 	update() {
+		// Update position
 		const camera = this.experience.camera.instance;
 		const worldOffset = this.localOffset.clone().applyQuaternion(camera.quaternion);
 		this.holder.position.copy(camera.position).add(worldOffset);
 		this.holder.quaternion.copy(camera.quaternion).multiply(this.baseRotation);
+
+
+
+		
+		const controller = this.experience.camera as unknown as FirstPersonCameraOctree;
+		const vel = controller.velocity;
+		const horizontalSpeed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
+		const targetIntensity = Math.min(horizontalSpeed / 8, 1);
+		this.walkIntensity += (targetIntensity - this.walkIntensity) * 0.08;
+
+		const t = this.experience.time.elapsed / 1000;
+
+		// Idle
+		const idleStrength = 1 - this.walkIntensity;
+		this._shakeVec.set(0, Math.sin(t * 1.2) * 0.003 * idleStrength, 0)
+			.applyQuaternion(camera.quaternion);
+		this.holder.position.add(this._shakeVec);
+
+
+		// Struggle
+		if (this.walkIntensity > 0.001) {
+			const amp = 0.005 * this.walkIntensity;
+
+			this._shakeVec.set(
+				Math.sin(t * 11) * amp,
+				Math.abs(Math.sin(t * 5.5)) * amp * 0.6,
+				0
+			).applyQuaternion(camera.quaternion);
+			this.holder.position.add(this._shakeVec);
+
+			this._shakeTilt.setFromAxisAngle(
+				this._shakeTiltAxis,
+				Math.sin(t * 11) * 0.025 * this.walkIntensity
+			);
+			this.holder.quaternion.multiply(this._shakeTilt);
+		}
 	}
+
 
 
 
