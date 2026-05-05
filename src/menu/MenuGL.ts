@@ -69,9 +69,30 @@ export default class MenuView {
 		this.createTweak()
 	}
 
-	private onItemListChanged = () => this.render();
+	private onItemListChanged = () => { this.removeStickers(); this.render(); }
 	private onCurrentItemChanged = () => this.updateActive();
 
+
+
+	removeStickers() {
+
+		for (const sticker of this.stickers) {
+			this.holder.remove(sticker)
+			sticker.geometry?.dispose()
+			if (Array.isArray(sticker.material)) {
+				sticker.material.forEach(mat => {
+					mat.dispose()
+				})
+			} else {
+				sticker.material?.dispose()
+			}
+
+		}
+
+		this.stickers = []
+		this.stickersProgress = []
+		this.activeIndex = -1
+	}
 
 	init() {
 		this.holder = new THREE.Object3D()
@@ -216,7 +237,6 @@ export default class MenuView {
 
 
 	private render() {
-
 		const listToDisplay = this.state.getItemList()
 		const herbariumPosition = new THREE.Vector3()
 		herbariumPosition.copy(this.herbium.position)
@@ -337,8 +357,7 @@ export default class MenuView {
 	}
 
 	destroy() {
-		this.state.off(".menuView");
-		this.container.innerHTML = "";
-		this.buttons = [];
+
+
 	}
 }
