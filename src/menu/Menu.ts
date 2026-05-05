@@ -59,10 +59,11 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		this.input = new MenuInput(this.state, this.experience.canvas);
 		this.placement = new Placement();
 		this.sceneManager = new SceneManager(this);
+
 		this.state.on("itemListChanged.menu", this.onItemListChanged);
 		this.input.on("placeRequested.menu", this.onPlaceRequested);
-
 		this.sceneManager.on("onActiveStepAdded", this.onActiveStepAdded);
+
 		this.sceneManager.init();
 	}
 
@@ -78,6 +79,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		if (newItems) {
 			this.state.pushItems(newItems);
 		}
+		console.log(newItems)
 		this.playDialog(dialogueStep.dialogId);
 	};
 
@@ -115,7 +117,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		// }
 	}
 
-	init = () => {};
+	init = () => { };
 	update = () => {
 		this.placement.update();
 		this.view.update()

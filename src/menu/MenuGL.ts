@@ -217,11 +217,7 @@ export default class MenuView {
 
 	private render() {
 
-		const listToDisplay = [
-			...this.state.getItemList(),
-			...this.state.getItemList(),
-		]
-
+		const listToDisplay = this.state.getItemList()
 		const herbariumPosition = new THREE.Vector3()
 		herbariumPosition.copy(this.herbium.position)
 
@@ -236,9 +232,6 @@ export default class MenuView {
 		let pageIndex = 0
 
 		for (const el of listToDisplay) {
-
-			console.log(el.model)
-			console.log(this.experience.resources.items[el.vignet])
 
 			const stickerMaterial = this.createStickerMaterial(this.experience.resources.items[el.vignet] as THREE.Texture)
 
