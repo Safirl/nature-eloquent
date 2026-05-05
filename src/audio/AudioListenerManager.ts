@@ -35,8 +35,8 @@ export default class AudioListenerManager {
         return sound;
     }
 
+    // Pour passer de la musique du début à une autre avec un fondu d'audio
     async replaceAmbiantSound(oldAudioSrc: string, newAudioSrc: string) {
-        console.log("allAudio", this.allAudio)
         const found = this.allAudio.find((a) => a.audioSrc === oldAudioSrc);
 
         if (found) {
