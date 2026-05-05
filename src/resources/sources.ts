@@ -96,9 +96,9 @@ const sources: Source[] = [
 		path: "textures/stickers/mushroom.png",
 	},
 	{
-		name: "levelDesignModel",
+		name: "mushroom2",
 		type: "texture",
-		path: "textures/stickers/mushroom.png",
+		path: "textures/stickers/mushroom2.png",
 	}
 ];
 

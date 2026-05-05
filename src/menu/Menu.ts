@@ -44,7 +44,6 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 	private sceneManager: SceneManager;
 
 	private buttonContainerId = "tool-selector";
-	// private initialItemIds = ["mushroom", "mushroom2", "mushroomCouc"];
 
 	constructor() {
 		super();
@@ -65,7 +64,6 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 
 		this.sceneManager.on("onActiveStepAdded", this.onActiveStepAdded);
 		this.sceneManager.init();
-		// this.state.setItemList(this.initialItemIds);
 	}
 
 	private onActiveStepAdded = (dialogueStep: DialogStep) => {
@@ -80,7 +78,6 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		if (newItems) {
 			this.state.pushItems(newItems);
 		}
-		// console.log("new items", newItems);
 		this.playDialog(dialogueStep.dialogId);
 	};
 
