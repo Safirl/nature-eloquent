@@ -13,6 +13,9 @@ import type FirstPersonCameraOctree from "@plugins/firstPersonCamera/camera/Firs
  * the `active` class on selection change). Holds no game state and does
  * not listen to user input — it is a pure observer of MenuState.
  */
+
+const TRANSITION_DURATION_S = 0.3
+
 export default class MenuView {
 	private state: MenuState;
 	private container: HTMLElement;
@@ -69,7 +72,10 @@ export default class MenuView {
 		this.createTweak()
 	}
 
-	private onItemListChanged = () => { this.removeStickers(); this.render(); }
+	private onItemListChanged = () => {
+		this.removeStickers();
+		this.render();
+	}
 	private onCurrentItemChanged = () => this.updateActive();
 
 
@@ -92,6 +98,8 @@ export default class MenuView {
 		this.stickers = []
 		this.stickersProgress = []
 		this.activeIndex = -1
+		this.uniforms = []
+
 	}
 
 	init() {
@@ -328,7 +336,7 @@ export default class MenuView {
 				if (i !== this.activeIndex)
 					gsap.to(this.uniforms[i].uProgress, {
 						value: 0,
-						duration: 0.3,
+						duration: TRANSITION_DURATION_S,
 						ease: "sine.inOut",
 					})
 
@@ -351,7 +359,7 @@ export default class MenuView {
 
 		gsap.to(this.uniforms[this.activeIndex].uProgress, {
 			value: 1,
-			duration: 0.3,
+			duration: TRANSITION_DURATION_S,
 			ease: "sine.inOut",
 		})
 	}
