@@ -187,7 +187,7 @@ export default class MenuView {
 				float waveEnvelope = sin(uProgress * 3.14159);
 
 				float wave = sin(vUv.y * uFrequency) * uAmplitude * uAnchor1 * waveEnvelope;
-				float lateralWave = sin(vUv.x * uFrequency * 0.7 + vUv.y * 3.14159)
+				float lateralWave = sin(vUv.y * uFrequency * 0.7 + vUv.y * 3.14159)
 					* uAmplitude * uAnchor2 * waveEnvelope;
 
 				transformed.z += lift + wave;
