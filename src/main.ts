@@ -1,14 +1,12 @@
 import "./assets/reset.css";
 import "./assets/style.css";
-import { type InputProfile } from "@plugins/baseExperience";
+import { OrbitCamera, type InputProfile } from "@plugins/baseExperience";
 import sources from "./resources/sources";
 import Playground from "./world/PlaygroundWorld";
-import SubtitleManager from "./subtitle/SubtitleManager";
-import {
-	FirstPersonCameraOctree,
-	keyboardProfile,
-} from "@plugins/firstPersonCamera";
+import SubtitleManager from "./resources/subtitle/SubtitleManager";
+import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import GameExperience from "./GameExperience";
+import { keyboardProfile } from "./resources/inputProfiles";
 
 const init = () => {
 	const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement;
@@ -22,7 +20,7 @@ const init = () => {
 	const camera = new FirstPersonCameraOctree();
 	const world = new Playground();
 	const experience = new GameExperience(canvas, sources, camera, world);
-	new SubtitleManager();
+	//new SubtitleManager();
 	const profiles: InputProfile[] = [keyboardProfile];
 
 	experience.inputSystem.addInputProfiles(profiles);
@@ -34,5 +32,5 @@ const startBtn = document.querySelector(".start-btn") as HTMLDivElement;
 startBtn.addEventListener("click", () => {
 	startBtn.style.display = "none";
 	init();
-})
+});
 // init();

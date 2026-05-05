@@ -1,252 +1,116 @@
-import { EventEmitter, Experience } from "@plugins/baseExperience";
-import InteractionManager, { type ObjectPlacedArgs } from "../interactions/InteractionManager";
-import SubtitleManager from "../subtitle/SubtitleManager";
-import dialogSubtitleAudio from "../subtitle/dialogSubtitleAudio.json"
-import type Playground from "../world/PlaygroundWorld";
-import type GameExperience from "../GameExperience";
-import { sceneConfig, type DialogStep, type SceneType } from "../subtitle/sceneConfig";
+import { EventEmitter, type LifeTimeObject } from "@plugins/baseExperience";
+import type Menu from "../menu";
+import { stepDescription } from "./sceneDescriptions";
+import type { DialogStep, ObjectCountCondition } from "./sceneDescriptions";
 
-export default class SceneManager extends EventEmitter {
-    declare subtitle: SubtitleManager;
-    declare dialogsAudio: { [key: string]: { [value: string]: { audio: string, dialog: string, speaker: string } } }
-    private declare interactionManager: InteractionManager
-    declare sceneConfig: SceneType
+export default class SceneManager extends EventEmitter implements LifeTimeObject {
+	// private currentSceneId: number = 0;
+	//On manipule les completionConditions des active step. Si elles sont vides on remove la step
+	private activeSteps: DialogStep[];
+	private objectCounts: { [key: string]: number } = {};
+	private isDialogPlaying: boolean = false;
 
-    private currentSceneId: number = 0;
-    private currentStepIndex: number = 0;
+	declare private menu: Menu;
 
-    private objectCounts: { [key: string]: number } = {}
+	constructor(menu: Menu) {
+		super();
+		this.activeSteps = [];
+		this.menu = menu;
+		this.menu.on("onObjectPlaced", this.onObjectPlaced);
+	}
+	init = () => {
+		this.bindToDialogEvents();
+		this.addActiveStep(0);
+	};
+	update = () => {};
+	destroy = () => {};
 
-    initDependencies() {
-        const exp = Experience.instance as GameExperience
-        if (!exp)
-            throw new Error("Can't initialize SceneManager: Experience is not valid")
+	bindToDialogEvents() {
+		this.menu.subtitle.on("dialogFinished.sceneManager", () => {
+			this.isDialogPlaying = false;
+		});
+		this.menu.subtitle.on("dialogStarted.sceneManager", () => {
+			this.isDialogPlaying = true;
+		});
+	}
 
-        const world = Experience.instance?.world as Playground
-        if (!world)
-            throw new Error("can't initialize world")
-        this.interactionManager = world.interactionManager
+	onObjectPlaced = (objectName: string) => {
+		if (this.isDialogPlaying) return;
+		if (!this.objectCounts[objectName]) {
+			this.objectCounts[objectName] = 0;
+		}
+		this.objectCounts[objectName]++;
+		let relatedActiveStep = {} as DialogStep;
+		let relatedCompletionCondition = {} as ObjectCountCondition;
 
-        this.subtitle = exp.subtitleManager
-        this.dialogsAudio = dialogSubtitleAudio;
+		//1. Trouver la completionCondtionCorrespondante + step correspondante
+		this.activeSteps.forEach((s) => {
+			if (Array.isArray(s.completionConditions)) {
+				s.completionConditions.forEach((cc) => {
+					if (cc.objectId === objectName) {
+						relatedActiveStep = s;
+						relatedCompletionCondition = cc;
+					}
+				});
+			}
+		});
 
-    }
+		if (!relatedActiveStep || !relatedCompletionCondition) return;
 
-    initEventProgressGame() {
-        this.interactionManager.on('onObjectPlaced', this.onObjectPlaced)
+		let isCompletionConditionArrayEmpty = false;
+		let isCompletionConditionRemoved = false;
+		//2. Retirer la completionCondtion si elle est atteinte;
+		if (relatedCompletionCondition.count === this.objectCounts[objectName]) {
+			if (Array.isArray(relatedActiveStep.completionConditions)) {
+				const index = relatedActiveStep.completionConditions.indexOf(
+					relatedCompletionCondition
+				);
+				if (index > -1) {
+					relatedActiveStep.completionConditions.splice(index, 1);
+					isCompletionConditionRemoved = true;
+				}
+				isCompletionConditionArrayEmpty = relatedActiveStep.completionConditions.length < 1;
+			}
+		}
 
-        // Passer à la step/scène suivante à la fin d'un dialogue
-        this.subtitle.on("dialogFinished", (callbackName: string) => {
+		//Si aucun completionCondition a été atteinte on return
+		if (!isCompletionConditionRemoved) return;
 
-            // Condition spécifique pour chaque scène
-            if (callbackName === "onIntroductionCompleted") {
-                this.delayAfterScene(1000).then(() => {
-                    this.nextStepOrSceneAfterStepDialogFinished();
-                });
-                return;
-            }
+		//3. si toutes les completionCondition sont atteintes supprimer la active step
+		if (isCompletionConditionArrayEmpty) {
+			const index = this.activeSteps.indexOf(relatedActiveStep);
+			if (index > -1) {
+				this.activeSteps.splice(index, 1);
+			}
+		}
 
-            if (callbackName === "onGardenBedroom01Completed") {
-                this.clearObjectCounts();
-            }
+		if (relatedCompletionCondition.callbackName) {
+			this.trigger(relatedCompletionCondition.callbackName);
+		}
 
-            if (callbackName === "onForestFairy02Completed" || callbackName === "onForestExoticFlower01Completed") {
-                this.delayAfterScene(1000).then(() => {
-                    this.clearObjectCounts();
-                    this.playScene(9); // Passe directement à la scène de l'orage
-                })
-                return;
-            }
+		//4. Trigger next step s'il y en a une
+		if (!relatedCompletionCondition.nextStepId) return;
+		this.addActiveStep(relatedCompletionCondition.nextStepId);
+	};
 
-            if (callbackName === "onForestElf02Completed") {
-                this.playScene(9);
-            }
-
-            this.nextStepOrSceneAfterStepDialogFinished();
-        });
-    }
-
-    init() {
-        this.initDependencies()
-        this.initEventProgressGame()
-        this.sceneConfig = sceneConfig
-        this.playScene(0)
-    }
-
-    // Durée après qu'une scène soit jouée
-    delayAfterScene(duration: number) {
-        return new Promise(resolve => setTimeout(resolve, duration));
-    }
-
-    // Forcer à passer à la scène suivante
-    goToNextScene() {
-        this.currentStepIndex = 0;
-        this.currentSceneId++;
-        this.playScene(this.currentSceneId);
-    }
-
-    playScene(sceneId: number) {
-
-        if (sceneId >= this.sceneConfig.length) {
-            console.log("All scenes finished")
-            return;
-        }
-
-        this.currentSceneId = sceneId
-        const scene = this.sceneConfig[sceneId]
-        if (!scene) {
-            throw new Error("sceneConfig not found")
-        }
-
-        // Lancer automatiquement le dialogue (sans interaction de l'utilsiateur)
-        const autoPlayDialogWithoutInteraction = ["introduction", "enterClairvoyantForest", "storm"]
-
-        if (autoPlayDialogWithoutInteraction.includes(scene.name)) {
-            this.triggerDialog(scene.steps[0].dialogId, scene.steps[0]);
-        }
-
-        this.getInteractableObjects(sceneId);
-    }
-
-    // Récupérer la barre d'outils
-    getInteractableObjects(sceneId: number) {
-        const scene = this.sceneConfig[sceneId]
-        if (!scene) {
-            return
-        }
-
-        scene.steps.forEach(step => {
-
-            step.objectsAdded?.forEach(obj => {
-                if (obj.objectId && obj.resourceName) {
-                    if (obj.isActive === false) return;
-
-                    // Évite le doublon d'objets
-                    if (this.interactionManager.interactableObjects.find((o: any) => o.name === obj.objectId)) return
-
-                    // Ajoute les objectsAdded de la scène
-                    this.interactionManager.addInteractableObject(obj.objectId, obj.resourceName)
-
-                }
-            })
-
-            step.objectsRemoved?.forEach(objectId => {
-                this.interactionManager.deleteInteractableObject(objectId)
-            })
-
-        })
-    }
-
-
-    nextStepOrSceneAfterStepDialogFinished = () => {
-        const scene = this.sceneConfig[this.currentSceneId];
-
-        // Passe à la step suivante si existe
-        if (this.currentStepIndex + 1 < scene.steps.length) {
-            this.currentStepIndex++;
-            console.log("----------- step finished -----------");
-        }
-
-        // sinon passe à la scène suivante
-        else {
-            console.log("----------- scene finished -----------");
-            this.goToNextScene();
-        }
-    }
-
-    onObjectPlaced = (objectName: string) => {
-        if (!this.objectCounts[objectName]) {
-            this.objectCounts[objectName] = 0;
-        }
-
-        // Incrémenter le count pour l'objet placé
-        this.objectCounts[objectName]++;
-        console.log("counts", this.objectCounts);
-
-        const scene = this.sceneConfig[this.currentSceneId];
-        if (!scene) {
-            console.warn("Scene is undefined", this.currentSceneId);
-            return;
-        }
-
-        // Pour chaque step on vérifie les conditions & l'incrémentation de l'objet placé
-        scene.steps.forEach(step => {
-
-            // Gameplay 2 : Si la condition est la somme de tous les élément placé >= count -> trigger dialog
-            if (step.completionCondition) {
-                let total = 0;
-                for (const id of step.completionCondition.objectId) {
-                    total += this.objectCounts[id] || 0;
-                }
-                if (total >= step.completionCondition.count) {
-                    this.triggerDialog(step.dialogId, step);
-                }
-                return;
-            }
-
-            // Gameplay 1 : Si le triggerCount === count d'obj placé -> trigger dialog
-            step.objectsAdded?.forEach(obj => {
-                if (obj.objectId !== objectName) return;
-
-                const count = this.objectCounts[objectName];
-                if (count === obj.triggerCount) {
-
-                    // Si il y a un remplacement d'objet à faire
-                    if (step.replaceObjects) {
-                        this.replaceObject(obj.objectId, step.replaceObjects[0]);
-                        this.setObjectActive(step.replaceObjects[0].objectId, true);
-                        if (step.replaceObjects.length > 1) {
-                            for (let i = 1; i < step.replaceObjects.length; i++) {
-                                const newObj = step.replaceObjects[i];
-                                this.setObjectActive(newObj.objectId, true);
-                                this.interactionManager.addInteractableObject(newObj.objectId, newObj.resourceName);
-                            }
-                        }
-                    }
-
-                    this.triggerDialog(step.dialogId, step);
-                }
-
-            });
-        });
-    }
-
-    replaceObject(
-        oldObjectId: string,
-        newObject: { objectId: string; resourceName: string }
-    ) {
-        this.setObjectActive(oldObjectId, false);
-        this.interactionManager.deleteInteractableObject(oldObjectId);
-
-        this.setObjectActive(newObject.objectId, true);
-        this.interactionManager.addInteractableObject(
-            newObject.objectId,
-            newObject.resourceName
-        );
-    }
-
-    setObjectActive(objectId: string, value: boolean) {
-        const scene = this.sceneConfig[this.currentSceneId];
-        if (!scene) return;
-
-        scene.steps.forEach(step => {
-            step.objectsAdded?.forEach(obj => {
-                if (obj.objectId === objectId) {
-                    obj.isActive = value;
-                }
-            });
-        });
-    }
-
-    clearObjectCounts() {
-        this.objectCounts = {}
-    }
-
-
-    triggerDialog(dialogId: string, relatedStep: DialogStep) {
-        if (!dialogId) return
-        console.log("dialogID", dialogId)
-        console.log("relatedStep", relatedStep)
-        return this.subtitle.displayDialog(this.dialogsAudio[dialogId], relatedStep)
-    }
+	addActiveStep = (stepId: number) => {
+		const staticStep = stepDescription.find((s) => s.id === stepId);
+		if (!staticStep) {
+			console.warn("Step not found with id:", stepId);
+			return;
+		}
+		let newActiveStep = {} as DialogStep;
+		newActiveStep = Object.assign(newActiveStep, staticStep);
+		if (!Array.isArray(newActiveStep.completionConditions)) {
+			this.menu.subtitle.on("dialogFinished.condition", () => {
+				setTimeout(() => {
+					this.addActiveStep(newActiveStep.completionConditions.nextStepId);
+					this.menu.subtitle.off(".condition");
+				}, newActiveStep.completionConditions.delay);
+			});
+			console.log(this.menu.subtitle.callbacks);
+		}
+		this.activeSteps.push(newActiveStep);
+		this.trigger("onActiveStepAdded", [newActiveStep]);
+	};
 }

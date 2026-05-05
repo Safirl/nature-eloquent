@@ -3,10 +3,7 @@ import type { LifeTimeObject } from "../types/types";
 import { EventEmitter } from "../utils/EventEmitter";
 import type { InputProfile } from "./inputInterfaces";
 
-export default class InputSystem
-	extends EventEmitter
-	implements LifeTimeObject
-{
+export default class InputSystem extends EventEmitter implements LifeTimeObject {
 	private profiles: InputProfile[];
 	declare gamepads: Gamepad[];
 	private previousState = new Map<number, boolean[]>();
@@ -27,10 +24,7 @@ export default class InputSystem
 		this.debug = this.experience.debug;
 
 		window.addEventListener("gamepadconnected", this.onGamepadConnected);
-		window.addEventListener(
-			"gamepaddisconnected",
-			this.onGamepadDisconnected
-		);
+		window.addEventListener("gamepaddisconnected", this.onGamepadDisconnected);
 
 		document.addEventListener("keydown", this.onKeyDown);
 		document.addEventListener("keyup", this.onKeyUp);
@@ -39,10 +33,7 @@ export default class InputSystem
 	init = () => {};
 	destroy = () => {
 		window.removeEventListener("gamepadconnected", this.onGamepadConnected);
-		window.removeEventListener(
-			"gamepaddisconnected",
-			this.onGamepadDisconnected
-		);
+		window.removeEventListener("gamepaddisconnected", this.onGamepadDisconnected);
 
 		document.removeEventListener("keydown", this.onKeyDown);
 		document.removeEventListener("keyup", this.onKeyUp);
@@ -76,16 +67,10 @@ export default class InputSystem
 
 	onGamepadDisconnected = (e: GamepadEvent) => {
 		if (this.debug?.active) {
-			console.log(
-				"Gamepad disconnected at index %d: %s.",
-				e.gamepad.index,
-				e.gamepad.id
-			);
+			console.log("Gamepad disconnected at index %d: %s.", e.gamepad.index, e.gamepad.id);
 		}
 
-		const index = this.gamepads.findIndex(
-			(gamepad) => gamepad.id === e.gamepad.id
-		);
+		const index = this.gamepads.findIndex((gamepad) => gamepad.id === e.gamepad.id);
 		if (index > -1) {
 			this.gamepads.splice(index, 1);
 		}
@@ -99,9 +84,7 @@ export default class InputSystem
 		const mapping = profile.buttons.find((b) => event.code === b.index);
 		if (!mapping) return;
 
-		this.trigger(mapping.event, [
-			{ type: "released", controller: "keyboard" },
-		]);
+		this.trigger(mapping.event, [{ type: "released", controller: "keyboard" }]);
 	};
 
 	onKeyDown = (event: KeyboardEvent) => {
@@ -111,9 +94,7 @@ export default class InputSystem
 		const mapping = profile.buttons.find((b) => event.code === b.index);
 		if (!mapping) return;
 
-		this.trigger(mapping.event, [
-			{ type: "pressed", controller: "keyboard" },
-		]);
+		this.trigger(mapping.event, [{ type: "pressed", controller: "keyboard" }]);
 	};
 
 	update() {
@@ -133,15 +114,11 @@ export default class InputSystem
 				const isPressed = button.pressed;
 
 				if (!wasPressed && isPressed) {
-					this.trigger(mapping.event, [
-						{ type: "pressed", controller: gamepad },
-					]);
+					this.trigger(mapping.event, [{ type: "pressed", controller: gamepad }]);
 				}
 
 				if (wasPressed && !isPressed) {
-					this.trigger(mapping.event, [
-						{ type: "released", controller: gamepad },
-					]);
+					this.trigger(mapping.event, [{ type: "released", controller: gamepad }]);
 				}
 
 				prevButtons[index] = isPressed ? true : false;
