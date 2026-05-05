@@ -27,7 +27,7 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "introduction",
 		id: 0,
-		completionConditions: { delay: 1500, nextStepId: 1 },
+		completionConditions: { delay: 2500, nextStepId: 1 },
 		dialogId: "introduction",
 	},
 	{
@@ -52,13 +52,70 @@ export const stepDescription: DialogStep[] = [
 				// resourceName: "mushroomPaintedModel",
 			},
 		],
-		completionConditions: [{ objectId: "mushroom", count: 5, nextStepId: 3 }],
+		completionConditions: [{ objectId: "mushroom", count: 6, nextStepId: 3 }],
 		dialogId: "dinosaure_01",
 	},
 	{
 		name: "classroomBox",
 		id: 3,
 		objectsRemoved: ["mushroom"],
+		objectsAdded: [
+			{
+				objectId: "mushroom2",
+				// resourceName: "mushroomPaintedModel",
+			},
+			{
+				objectId: "mushroomCouc",
+				// resourceName: "mushroomModel",
+			},
+			{
+				objectId: "mushroom",
+				// resourceName: "mushroomModel",
+			},
+		],
+		completionConditions: [
+			{ objectId: "mushroom2", count: 5, nextStepId: 4 },
+			{ objectId: "mushroom", count: 5, nextStepId: 5 },
+		],
+		dialogId: "dinosaure_01",
+	},
+	{
+		name: "classroomBox",
+		id: 4,
+		objectsRemoved: ["mushroom2"],
+		objectsAdded: [
+			{
+				objectId: "mushroomCouc",
+				// resourceName: "mushroomPaintedModel",
+			},
+		],
+		completionConditions: [{ objectId: "mushroomCouc", count: 5, nextStepId: 6 }],
+		dialogId: "dinosaure_01",
+	},
+	{
+		name: "classroomBox",
+		id: 5,
+		objectsRemoved: ["mushroom"],
+		objectsAdded: [
+			{
+				objectId: "mushroom2",
+				// resourceName: "mushroomPaintedModel",
+			},
+			{
+				objectId: "mushroom",
+				// resourceName: "mushroomModel",
+			},
+		],
+		completionConditions: [
+			{ objectId: "mushroom2", count: 5, nextStepId: 3 },
+			{ objectId: "mushroom", count: 5, nextStepId: 4 },
+		],
+		dialogId: "dinosaure_01",
+	},
+	{
+		name: "classroomBox",
+		id: 6,
+		objectsRemoved: ["mushroomCouc"],
 		objectsAdded: [
 			{
 				objectId: "mushroom2",

@@ -86,7 +86,7 @@ export default class SubtitleManager extends EventEmitter {
 		}
 		// console.log("relatedStep", relatedStep);
 		this.hideSubtitle();
-		// this.trigger("dialogFinished", [relatedStep.callbackName]);
+		this.trigger("dialogFinished", []);
 	}
 
 	// Changement dialogue au clic

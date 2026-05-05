@@ -1,5 +1,4 @@
 import { EventEmitter, Experience } from "@plugins/baseExperience";
-import InteractionManager from "../interactions/InteractionManager";
 import SubtitleManager from "../resources/subtitle/SubtitleManager";
 import dialogSubtitleAudio from "../resources/subtitle/dialogSubtitleAudio.json";
 import type Playground from "../world/PlaygroundWorld";
