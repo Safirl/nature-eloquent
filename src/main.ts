@@ -6,13 +6,15 @@ import Playground from "./world/PlaygroundWorld";
 import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import GameExperience from "./GameExperience";
 import { keyboardProfile } from "./resources/inputProfiles";
-
 const init = () => {
 	const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement;
 	if (!canvas) {
 		console.error("no canvas found with three identifier");
 		return;
 	}
+
+
+
 
 	canvas.style.width = "100%";
 	canvas.style.height = "100%";

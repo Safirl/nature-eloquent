@@ -20,7 +20,6 @@ export default class Placement {
 	private managers: Map<string, InstancedMeshManager> = new Map();
 	private markerPosition: Vector3 | undefined;
 	private debugSphere: THREE.Mesh | undefined;
-	declare audio3DManager: Audio3DManager;
 	declare audioListenerManager: AudioListenerManager;
 	declare sound: THREE.PositionalAudio;
 
@@ -28,7 +27,6 @@ export default class Placement {
 		if (!Experience.instance) throw new Error("Placement: Experience is not initialized");
 		this.experience = Experience.instance;
 		this.setupDebug();
-		this.audio3DManager = new Audio3DManager();
 		this.audioListenerManager = new AudioListenerManager();
 	}
 
@@ -58,9 +56,7 @@ export default class Placement {
 		if (!manager) return null;
 		manager.add(this.markerPosition);
 		console.log(`Placed instance of ${id} at`, this.markerPosition);
-		// this.audio3DManager.playSpatialAudio("/audio/welcome.mp3", this.markerPosition, true);
 		this.sound = this.audioListenerManager.playSfx("/audio/welcome.mp3", true);
-		this.experience.scene.add(this.sound);
 		this.sound.position.copy(this.markerPosition);
 		console.log("Playing sound at position:", this.markerPosition);
 		return manager.count;
