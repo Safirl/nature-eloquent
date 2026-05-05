@@ -175,7 +175,7 @@ export default class GameEnvironment extends Environment {
 			new THREE.CircleGeometry(),
 			new THREE.MeshStandardMaterial({
 				emissive: new THREE.Color(0xffffff),
-				emissiveIntensity: 2.0,
+				emissiveIntensity: 6,
 			})
 		);
 		this.sunMesh.position.set(
@@ -195,7 +195,7 @@ export default class GameEnvironment extends Environment {
 			new THREE.Vector2(resolution.width, resolution.height),
 			1.5,
 			0.4,
-			1.1
+			5,
 		);
 		Experience.instance?.renderer.addComposerPass(this.bloomPass, false);
 
