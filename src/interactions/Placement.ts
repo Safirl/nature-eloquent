@@ -70,7 +70,7 @@ export default class Placement {
 	}
 
 	private computeMarkerPosition(): Vector3 | undefined {
-		const raycaster = new Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 20);
+		const raycaster = new Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 5);
 		raycaster.layers.enable(1);
 
 		raycaster.ray.origin.copy(this.experience.camera.instance.position);

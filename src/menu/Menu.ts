@@ -7,8 +7,8 @@ import MenuInput from "./MenuInput";
 import Placement from "../interactions/Placement";
 import SubtitleManager from "../resources/subtitle/SubtitleManager";
 import dialogSubtitleAudio from "../resources/subtitle/dialogSubtitleAudio.json";
-import SceneManager from "../scene/SceneManager2";
-import type { DialogStep } from "../scene/sceneDescriptions2";
+import SceneManager from "../scene/SceneManager";
+import type { DialogStep } from "../scene/sceneDescriptions";
 import { type MenuItemType } from "../resources/items";
 // import mushroomIcon from "../books/mushroom.png";
 
