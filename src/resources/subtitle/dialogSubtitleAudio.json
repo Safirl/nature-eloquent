@@ -1,212 +1,213 @@
 {
 	"introduction": {
-		"dialog_1": {
+		"dialog_0": {
 			"audio": "/audio/welcome.mp3",
 			"dialog": "Coucou, bien dormi ?",
 			"speaker": "Petit Pois: "
 		},
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Ouais... La chambre d'ami de tes parents est super confortable.",
+			"speaker": "Clémentine: "
+		},
 		"dialog_2": {
 			"audio": "/audio/welcome.mp3",
-			"dialog": "Ouaiiis... La chambre d'ami de tes parents est ''super'' confortable.",
-			"speaker": "Aria: "
+			"dialog": "Alors on va vraiment prendre tous ces cartons ?",
+			"speaker": "Clémentine: "
 		},
 		"dialog_3": {
 			"audio": "/audio/welcome.mp3",
-			"dialog": "Haha, je suis contente que tu te sentes à l'aise ici !",
+			"dialog": "Et oui, tout est là je crois... J'ai demandé à ma mère de m'aider à les trier hier",
 			"speaker": "Petit Pois: "
+		},
+		"dialog_4": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "On a vraiment besoin de tout ?",
+			"speaker": "Clémentine: "
+		},
+		"dialog_5": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "C'était important pour moi. Et puis... on va bientôt pouvoir réutiliser certains de mes vieux vêtements !",
+			"speaker": "Petit Pois: "
+		},
+		"dialog_6": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Je suis pas sûr qu'il rentre dans du 14 ans par contre !",
+			"speaker": "Clémentine: "
+		},
+		"dialog_7": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Alors, qu'est-ce qu'on a là ? ",
+			"speaker": "Clémentine: "
 		}
 	},
-	"dinosaure_01": {
-		"dialog_1": {
+	"dinosaure_0": {
+		"dialog_0": {
 			"audio": "/audio/welcome.mp3",
 			"dialog": "Tu m'avais jamais dit que t'étais un fan des Tyrannosaures !",
-			"speaker": "Aria: "
+			"speaker": "Clémentine: "
 		},
-		"dialog_02": {
+		"dialog_1": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Oui j'adorais ça quand j'étais enfant ! J'avais même une encyclopédie.",
 			"speaker": "Petit Pois: "
 		}
 	},
-	"dinosaure_02": {
-		"dialog_1": {
+	"dinosaure_1": {
+		"dialog_0": {
 			"audio": "/audio/welcome.mp3",
 			"dialog": "Wohoho, attends mais c'est bien plus qu'une passion là, t'as carrément une collection ! J'avais jamais vu autant de dinausores en plastique dans une même pièce de ma vie.",
-			"speaker": "Aria: "
+			"speaker": "Clémentine: "
 		},
-		"dialog_2": {
+		"dialog_1": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Et t'as pas tout vu ! Ma mère m'a obligé d'en laisser sinon j'aurais pris trois cartons de plus de la même taille !",
 			"speaker": "Petit Pois: "
 		},
-		"dialog_3": {
+		"dialog_2": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Merci Madame FOURCADE ! je vous revaudrai ça.",
-			"speaker": "Aria: "
+			"speaker": "Clémentine: "
 		}
 	},
 
-	"classroom_01": {
-		"dialog_1": {
+	"classroom": {
+		"dialog_0": {
 			"audio": "/audio/welcome.mp3",
-			"dialog": "Mardi 16 septembre 2001. Samedi et dimanche on est allés au parc des dinosaures à côté de mes grands parents. Elle marque une pause en riant. Tu écrivais dinosaures avec un y et deux o haha !",
-			"speaker": "Aria: "
+			"dialog": "Mardi 16 septembre 2001. Samedi et dimanche on est allés au parc des dinosaures à côté de mes grands parents. Tu écrivais dinosaures avec un y et deux o !",
+			"speaker": "Clémentine: "
 		},
-		"dialog_2": {
+		"dialog_1": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Ah oui je me souviens de ce parc ! Il y avait un brachiosaure en taille réelle ! Il faisait 10m de haut pour 20m de long. J'étais vraiment impressionné.",
 			"speaker": "Petit Pois: "
 		}
 	},
-	"herbarium_01": {
-		"dialog_1": {
+	"herbarium": {
+		"dialog_0": {
 			"audio": "/audio/welcome.mp3",
 			"dialog": "Oh un herbier ! C'est donc de là que te vient ta passion pour la biologie ?",
-			"speaker": "Aria: "
+			"speaker": "Clémentine: "
 		},
-		"dialog_2": {
+		"dialog_1": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "J'avais totalement oublié cet herbier ! Oui, comme mes parents vivent près d'une forêt j'adorais m'y balader quand j'avais 7 ou 8 ans je pense...",
 			"speaker": "Petit Pois: "
 		},
-		"dialog_3": {
+		"dialog_2": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Tiens, le carnet s'arrête d'un coup. T'en avais marre ?",
-			"speaker": "Aria: "
+			"speaker": "Clémentine: "
 		},
-		"dialog_4": {
+		"dialog_3": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Non pas vraiment... On va dire que j'ai eu une mauvaise expérience et j'ai arrêté après ça.",
 			"speaker": "Petit Pois: "
 		},
-		"dialog_5": {
+		"dialog_4": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Ah bon ? Qu'est-ce qu'il s'est passé ?",
-			"speaker": "Aria: "
+			"speaker": "Clémentine: "
 		}
 	},
 
-	"gardenbedroom_01": {
-		"dialog_1": {
+	"gardenbedroom": {
+		"dialog_0": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "Et bien... Un jour je me suis perdu en forêt",
 			"speaker": "Petit Pois: "
 		}
 	},
 
-	"enterClairvoyantForest_01": {
-		"dialog_1": {
+	"forestIntro": {
+		"dialog_0": {
 			"audio": "/audio/02_dialog.mp3",
 			"dialog": "C'était un week-end, au milieu de l'été, pendant les grandes vacances. J'étais parti me promener tout seul avec mon carnet. On nous avait donné comme devoir d'école d'en créer un et je voulais vraiment être fier du mien !",
 			"speaker": "Petit Pois: "
 		}
 	},
 
-	"forestLittleFlower_01": {
-		"dialog_1": {
+	"forestLittleFlower_0": {
+		"dialog_0": {
 			"audio": "/audio/02_dialog.mp3",
-			"dialog": "A cette période de l'année, on pouvait encore trouver des fleurs ! J'en ai récupéré quelques unes pour mon herbier d'ailleurs.",
+			"dialog": "Je m’étais mis en quête de trouver les plus belles fleurs... Je voulais récolter les plus rares pour avoir le plus beau des carnets. Les edelweiss, les adonis des pyrénées…",
 			"speaker": "Petit Pois: "
 		}
 	},
 
-	"forestLittleFlower_02": {
-		"dialog_1": {
+	"forestLittleFlower_1": {
+		"dialog_0": {
 			"audio": "/audio/02_dialog.mp3",
-			"dialog": "D'ailleurs il n'y avait pas qu'une fleur, c'était vraiment un champ de fleurs !",
+			"dialog": "Des boutons d’or ? pas très original…quand j’allais me balader, ce que je préférais trouver c’était plutôt les iris les lys… ",
+			"speaker": "Clémentine: "
+		}
+	},
+
+	"ppFlowers": {
+		"dialog_0": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Donc je disais…alors que je récoltais mes fleurs, je suis tombé sur un champ de fleurs immenses !",
 			"speaker": "Petit Pois: "
+		}
+	},
+
+	"clemFlowers": {
+		"dialog_0": {
+			"audio": "/audio/02_dialog.mp3",
+			"dialog": "Maintenant que tu le dis, c’est vrai que je préfère ces fleurs là aussi…bon…alors je récoltais des iris et des lys, pour que mon herbier soit PARFAIT. Et là je suis tombé sur un champ de fleurs IMMENSES !",
+			"speaker": "Petit Pois: "
+		}
+	},
+
+	"clearingExit": {
+		"dialog_0": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "J’ai continué à m’enfoncer dans la forêt, je voulais voir jusqu’où allait ce champ de fleurs… et j’ai fini par me perdre.",
+			"speaker": "Petit Pois: "
+		}
+	},
+
+	"storm": {
+		"dialog_0": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "T’étais pris sous l’orage ?",
+			"speaker": "Clémentine: "
 		},
-		"dialog_2": {
-			"audio": "/audio/02_dialog.mp3",
-			"dialog": "Woh, ça devait vraiment être magnifique !",
-			"speaker": "Aria: "
-		},
-		"dialog_3": {
-			"audio": "/audio/02_dialog.mp3",
-			"dialog": "Oui, et c'est là que les choses ont commencé à... changer.",
+		"dialog_1": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "J’étais terrorisé par les éclairs. Et les fleurs si merveilleuses une seconde avant sont devenues vraiment menaçantes.",
 			"speaker": "Petit Pois: "
 		}
 	},
 
-	"forestExoticFlower_01": {
-		"dialog_1": {
-			"audio": "/audio/02_dialog.mp3",
-			"dialog": "Tu étais entouré de fleurs géantes ?!",
-			"speaker": "Aria: "
-		},
-		"dialog_2": {
-			"audio": "/audio/02_dialog.mp3",
-			"dialog": "Oui, c'était vraiment surréaliste. Je n'avais jamais vu de fleurs aussi grandes de ma vie !",
+	"bramble_0": {
+		"dialog_0": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": "Ah oui, donc aucune issue…peu importe où tu essayais d’aller, t’étais entouré de ronces…",
+			"speaker": "Clémentine: "
+		}
+	},
+
+	"bramble_1": {
+		"dialog_0": {
+			"audio": "/audio/welcome.mp3",
+			"dialog": " Plus je sentais l’angoisse monter, et plus les ronces se refermaient sur moi comme un piège.",
 			"speaker": "Petit Pois: "
 		}
 	},
 
-	"forestFox_01": {
-		"dialog_1": {
+	"poisonousMushroom": {
+		"dialog_0": {
 			"audio": "/audio/welcome.mp3",
-			"dialog": "Je me suis fait un nouvel ami, un renard qui ne voulait pas me quitter !",
-			"speaker": "Petit Pois: "
-		},
-		"dialog_2": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "Je te crois pas.",
-			"speaker": "Aria: "
-		},
-		"dialog_3": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "J'avais vraiment l'impression d'être entré dans un conte.",
+			"dialog": " Il n’y avait plus rien de bon pour moi dans cette forêt.",
 			"speaker": "Petit Pois: "
 		}
 	},
 
-	"forestElf_02": {
+	"fire": {
 		"dialog_1": {
 			"audio": "/audio/welcome.mp3",
-			"dialog": "Je me suis de plus en plus enfoncé dans les bois. À un moment, j'ai bien vu que j'avais perdu de vue le chemin vers ma maison...et puis il s'est passé quelque chose. ",
-			"speaker": "Petit Pois: "
-		}
-	},
-
-	"forestButterfly_01": {
-		"dialog_1": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "La forêt était vraiment luxuriante à cette période de l'année. Elle grouillait de vie.",
-			"speaker": "Petit Pois: "
-		}
-	},
-
-	"forestButterfly_02": {
-		"dialog_1": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": " Woh, ça devait vraiment être magnifique !",
-			"speaker": "Aria: "
-		},
-		"dialog_2": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "Oui, et c'est là que les choses ont commencé à... changer.",
-			"speaker": "Petit Pois: "
-		}
-	},
-
-	"forestFairy_01": {
-		"dialog_1": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "Les papillons n'étaient plus des papillons... Ils étaient devenus des fées !",
-			"speaker": "Petit Pois: "
-		}
-	},
-
-	"forestFairy_02": {
-		"dialog_1": {
-			"audio": "/audio/welcome.mp3",
-			"dialog": "Mais pris dans l'émerveillement de la forêt je me suis perdu et c'est alors que...",
-			"speaker": "Petit Pois: "
-		}
-	},
-	"forestStorm_01": {
-		"dialog_1": {
-			"audio": "/audio/02_dialog.mp3",
-			"dialog": "J'ai horreur des orages.",
+			"dialog": "J’ai vraiment senti que j’étais dans la merde à ce moment-là.",
 			"speaker": "Petit Pois: "
 		}
 	}
