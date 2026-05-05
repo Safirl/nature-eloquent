@@ -55,7 +55,7 @@ export default class Grass implements LifeTimeObject {
 	}
 
 	setGeometry() {
-		const count = 10000;
+		const count = 100000;
 
 		//prettier-ignore
 		const positions = new Float32Array([
