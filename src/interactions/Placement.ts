@@ -3,7 +3,6 @@ import { Raycaster, Vector3 } from "three";
 import * as THREE from "three";
 import InstancedMeshManager from "./InstancedMeshManager";
 import InteractableInstancedMesh from "./InteractableInstancedMesh";
-import Audio3DManager from "../audio/Audio3DManager";
 import AudioListenerManager from "../audio/AudioListenerManager";
 
 /**
