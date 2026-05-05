@@ -9,7 +9,7 @@ import SubtitleManager from "../resources/subtitle/SubtitleManager";
 import dialogSubtitleAudio from "../resources/subtitle/dialogSubtitleAudio.json";
 import SceneManager from "../scene/SceneManager2";
 import type { DialogStep } from "../scene/sceneDescriptions2";
-import { type MenuItemType } from "./Items";
+import { type MenuItemType } from "../resources/items";
 // import mushroomIcon from "../books/mushroom.png";
 
 /**
@@ -38,7 +38,9 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 	private placement: Placement;
 
 	public subtitle: SubtitleManager;
-	private dialogsAudio: typeof dialogSubtitleAudio;
+	declare dialogsAudio: {
+		[key: string]: { [value: string]: { audio: string; dialog: string; speaker: string } };
+	};
 	private sceneManager: SceneManager;
 
 	private buttonContainerId = "tool-selector";
@@ -50,6 +52,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		this.experience = Experience.instance;
 
 		this.subtitle = new SubtitleManager();
+		this.subtitle.init();
 		this.dialogsAudio = dialogSubtitleAudio;
 
 		this.state = new MenuState();
@@ -105,12 +108,13 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 
 	private playDialog(itemId: string) {
 		// Ex d'enchaînement du dialogue en fonction du nombre d'objets placés.
-		if (itemId !== "mushroom") return;
-		if (count === 1) {
-			this.subtitle.displayDialog(this.dialogsAudio.dinosaur_interaction_1);
-		} else if (count === 5) {
-			this.subtitle.displayDialog(this.dialogsAudio.dinosaur_interaction_2);
-		}
+		const dialogData = this.dialogsAudio[itemId];
+		this.subtitle.displayDialog(dialogData);
+		// this.subtitle.displayDialog(itemId);
+		// if (itemId !== "mushroom") return;
+		// if (count === 1) {
+		// } else if (count === 5) {
+		// }
 	}
 
 	init = () => {};

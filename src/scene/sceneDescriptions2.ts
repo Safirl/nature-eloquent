@@ -45,14 +45,14 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "dinosaureBox1",
 		id: 2,
-		// objectsRemoved: ["mushroom"],
-		// objectsAdded: [
-		// 	{
-		// 		objectId: "mushroom2",
-		// 		// resourceName: "mushroomPaintedModel",
-		// 	},
-		// ],
-		completionConditions: [{ objectId: "mushroom", count: 10, nextStepId: 3 }],
+		objectsRemoved: ["mushroom"],
+		objectsAdded: [
+			{
+				objectId: "mushroom",
+				// resourceName: "mushroomPaintedModel",
+			},
+		],
+		completionConditions: [{ objectId: "mushroom", count: 5, nextStepId: 3 }],
 		dialogId: "dinosaure_01",
 	},
 	{

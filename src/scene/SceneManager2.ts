@@ -1,7 +1,7 @@
 import { EventEmitter, Experience, type LifeTimeObject } from "@plugins/baseExperience";
 import type Menu from "../menu";
 import { instanceOfObjectCountCondition, stepDescription } from "./sceneDescriptions2";
-import type { CompleteCondition, DialogStep, ObjectCountCondition } from "./sceneDescriptions2";
+import type { DialogStep, ObjectCountCondition } from "./sceneDescriptions2";
 import Playground from "../world/PlaygroundWorld";
 
 export default class SceneManager extends EventEmitter implements LifeTimeObject {
@@ -77,7 +77,7 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		this.addActiveStep(relatedCompletionCondition.nextStepId);
 	};
 
-	addActiveStep(stepId: number) {
+	addActiveStep = (stepId: number) => {
 		const staticStep = stepDescription.find((s) => s.id === stepId);
 		if (!staticStep) {
 			console.warn("Step not found with id:", stepId);
@@ -87,5 +87,11 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		newActiveStep = Object.assign(newActiveStep, staticStep);
 		this.activeSteps.push(newActiveStep);
 		this.trigger("onActiveStepAdded", [newActiveStep]);
-	}
+		if (!Array.isArray(newActiveStep.completionConditions)) {
+			setTimeout(() => {
+				//@TODO add a function more general to update active steps
+				this.addActiveStep(newActiveStep.completionConditions.nextStepId);
+			}, newActiveStep.completionConditions.delay);
+		}
+	};
 }

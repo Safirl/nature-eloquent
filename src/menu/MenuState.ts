@@ -1,5 +1,5 @@
 import { EventEmitter } from "@plugins/baseExperience";
-import itemsList, { type MenuItemType } from "./Items";
+import itemsList, { type MenuItemType } from "../resources/items";
 import { it } from "vitest";
 
 /**

@@ -17,7 +17,8 @@ export default class SubtitleManager extends EventEmitter {
 	declare audioPlayer: HTMLAudioElement;
 	declare typingInterval: number | null;
 
-	init() {
+	constructor() {
+		super();
 		this.subtitleElement = document.getElementById("subtitle") as HTMLElement;
 		this.dialogElement = document.getElementById("dialog") as HTMLElement;
 		this.characterElement = document.getElementById("character") as HTMLElement;
@@ -27,6 +28,8 @@ export default class SubtitleManager extends EventEmitter {
 		this.audioPlayer.preload = "auto";
 		this.typingInterval = null;
 	}
+
+	init() {}
 
 	playAudio(audioSrc: string) {
 		if (!audioSrc) return;
@@ -70,7 +73,7 @@ export default class SubtitleManager extends EventEmitter {
 	}
 
 	// Changement de dialogue automatique
-	async displayDialog(dialogData: DialogInteraction, relatedStep: DialogStep) {
+	async displayDialog(dialogData: DialogInteraction, relatedStep?: DialogStep) {
 		const entries = Object.entries(dialogData);
 		if (entries.length === 0) return;
 
@@ -81,9 +84,9 @@ export default class SubtitleManager extends EventEmitter {
 				this.audioPlayer.addEventListener("error", () => resolve(), { once: true });
 			});
 		}
-		console.log("relatedStep", relatedStep);
+		// console.log("relatedStep", relatedStep);
 		this.hideSubtitle();
-		this.trigger("dialogFinished", [relatedStep.callbackName]);
+		// this.trigger("dialogFinished", [relatedStep.callbackName]);
 	}
 
 	// Changement dialogue au clic
