@@ -20,7 +20,7 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 	}
 	init = () => {
 		this.bindToDialogEvents();
-		this.addActiveStep(0);
+		this.addActiveStep(9);
 	};
 	update = () => {};
 	destroy = () => {};
@@ -93,7 +93,14 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		this.addActiveStep(relatedCompletionCondition.nextStepId);
 	};
 
-	completeStep() {}
+	onStepTimeoutCompleted = (newActiveStep: DialogStep) => {
+		if (newActiveStep.completionCallback) {
+			this.trigger(newActiveStep.completionCallback);
+			console.log("triggered", newActiveStep.completionCallback);
+		}
+		this.addActiveStep(newActiveStep.completionConditions.nextStepId);
+		this.menu.subtitle.off(".condition");
+	};
 
 	addActiveStep = (stepId: number) => {
 		const staticStep = stepDescription.find((s) => s.id === stepId);
@@ -106,12 +113,7 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		if (!Array.isArray(newActiveStep.completionConditions)) {
 			this.menu.subtitle.on("dialogFinished.condition", () => {
 				setTimeout(() => {
-					if (newActiveStep.completionCallback) {
-						this.trigger(newActiveStep.completionCallback);
-						console.log("triggered", newActiveStep.completionCallback);
-					}
-					this.addActiveStep(newActiveStep.completionConditions.nextStepId);
-					this.menu.subtitle.off(".condition");
+					this.onStepTimeoutCompleted(newActiveStep);
 				}, newActiveStep.completionConditions.delay);
 			});
 		}
