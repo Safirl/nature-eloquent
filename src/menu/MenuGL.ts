@@ -86,7 +86,6 @@ export default class MenuView {
 	}
 
 	update() {
-		// Update position
 		const camera = this.experience.camera.instance;
 		const worldOffset = this.localOffset.clone().applyQuaternion(camera.quaternion);
 		this.holder.position.copy(camera.position).add(worldOffset);
@@ -94,7 +93,7 @@ export default class MenuView {
 
 
 
-		
+
 		const controller = this.experience.camera as unknown as FirstPersonCameraOctree;
 		const vel = controller.velocity;
 		const horizontalSpeed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
@@ -145,7 +144,8 @@ export default class MenuView {
 			uAmplitude: { value: this.params.amplitude },
 			uFrequency: { value: this.params.frequency },
 			uAnchor1: { value: this.params.anchor1 },
-			uAnchor2: { value: this.params.anchor2 }
+			uAnchor2: { value: this.params.anchor2 },
+			uDirection: { value: 1 }
 		});
 
 		const index = this.uniforms.length - 1;
@@ -162,6 +162,7 @@ export default class MenuView {
 				uniform float uProgress;
 				uniform float uAnchor1;
 				uniform float uAnchor2;
+				uniform float uDirection;
 
 				varying vec2 vUv;
 				`
@@ -180,14 +181,11 @@ export default class MenuView {
 				`
 				#include <begin_vertex>
 
-				// All vertices lift uniformly — sticker is flat at start and end
 				float lift = uProgress * uAmplitude;
-
-				// Bell-curve envelope: 0 at progress=0 and 1, peak at 0.5
 				float waveEnvelope = sin(uProgress * 3.14159);
 
-				float wave = sin(vUv.y * uFrequency) * uAmplitude * uAnchor1 * waveEnvelope;
-				float lateralWave = sin(vUv.y * uFrequency * 0.7 + vUv.y * 3.14159)
+				float wave = uDirection * sin(vUv.y * uFrequency) * uAmplitude * uAnchor1 * waveEnvelope;
+				float lateralWave = uDirection * sin(vUv.y * uFrequency * 0.7 + vUv.y * 3.14159)
 					* uAmplitude * uAnchor2 * waveEnvelope;
 
 				transformed.z += lift + wave;
@@ -320,6 +318,8 @@ export default class MenuView {
 						duration: 0.3,
 						ease: "sine.inOut",
 					})
+
+				this.uniforms[i].uDirection.value = -1;
 			}
 		}
 
@@ -334,6 +334,7 @@ export default class MenuView {
 
 
 		resetStickers()
+		this.uniforms[this.activeIndex].uDirection.value = 1;
 
 		gsap.to(this.uniforms[this.activeIndex].uProgress, {
 			value: 1,
