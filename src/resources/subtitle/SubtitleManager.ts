@@ -76,6 +76,7 @@ export default class SubtitleManager extends EventEmitter {
 	async displayDialog(dialogData: DialogInteraction, relatedStep?: DialogStep) {
 		const entries = Object.entries(dialogData);
 		if (entries.length === 0) return;
+		this.trigger("dialogStarted", []);
 
 		for (const [_key, item] of entries) {
 			this.showSubtitle(item.dialog, item.speaker, item.audio);

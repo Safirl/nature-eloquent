@@ -9,6 +9,7 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 	//On manipule les completionConditions des active step. Si elles sont vides on remove la step
 	private activeSteps: DialogStep[];
 	private objectCounts: { [key: string]: number } = {};
+	private isDialogPlaying: boolean;
 
 	declare private menu: Menu;
 
@@ -19,12 +20,23 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		this.menu.on("onObjectPlaced", this.onObjectPlaced);
 	}
 	init = () => {
+		this.bindToDialogEvents();
 		this.addActiveStep(0);
 	};
 	update = () => {};
 	destroy = () => {};
 
+	bindToDialogEvents() {
+		this.menu.subtitle.on("dialogFinished.sceneManager", () => {
+			this.isDialogPlaying = false;
+		});
+		this.menu.subtitle.on("dialogStarted.sceneManager", () => {
+			this.isDialogPlaying = true;
+		});
+	}
+
 	onObjectPlaced = (objectName: string) => {
+		if (this.isDialogPlaying) return;
 		if (!this.objectCounts[objectName]) {
 			this.objectCounts[objectName] = 0;
 		}
@@ -86,10 +98,10 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		let newActiveStep = {} as DialogStep;
 		newActiveStep = Object.assign(newActiveStep, staticStep);
 		if (!Array.isArray(newActiveStep.completionConditions)) {
-			this.menu.subtitle.on("dialogFinished", () => {
+			this.menu.subtitle.on("dialogFinished.condition", () => {
 				setTimeout(() => {
 					this.addActiveStep(newActiveStep.completionConditions.nextStepId);
-					this.menu.subtitle.off("dialogFinished");
+					this.menu.subtitle.off(".condition");
 				}, newActiveStep.completionConditions.delay);
 			});
 		}
