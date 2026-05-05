@@ -76,4 +76,15 @@ export default class AudioListenerManager {
         this.allAudio.push({ audioSrc, audio: sound });
         return sound;
     }
+
+    // Pour stoper un sound effect s'il est loopé
+    stopSfxLoop(audioSrc: string) {
+        const found = this.allAudio.find((a) => a.audioSrc === audioSrc);
+
+        if (found) {
+            found.audio.stop();
+            this.experience.scene.remove(found.audio);
+            this.allAudio = this.allAudio.filter((a) => a.audioSrc !== audioSrc);
+        }
+    }
 }
