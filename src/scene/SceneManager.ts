@@ -108,7 +108,6 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 					this.menu.subtitle.off(".condition");
 				}, newActiveStep.completionConditions.delay);
 			});
-			console.log(this.menu.subtitle.callbacks);
 		}
 		this.activeSteps.push(newActiveStep);
 		this.trigger("onActiveStepAdded", [newActiveStep]);

@@ -55,6 +55,7 @@ export default class MenuState extends EventEmitter {
 	}
 
 	removeItems(list: string[] | MenuItemType[]) {
+		this.clearCurrentItem()
 		list.forEach((e) => {
 			let matchingElement: MenuItemType | undefined;
 			if (typeof e === "string") {

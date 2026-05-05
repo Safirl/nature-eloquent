@@ -80,6 +80,26 @@ const sources: Source[] = [
 		type: "gltfModel",
 		path: "models/LD/blocking.glb",
 	},
+
+
+	/**
+	 * Menu assets
+	 */
+	{
+		name: "herbarium",
+		type: "gltfModel",
+		path: "models/Menu/herbarium.glb",
+	},
+	{
+		name: "mushroom",
+		type: "texture",
+		path: "textures/stickers/mushroom.png",
+	},
+	{
+		name: "mushroom2",
+		type: "texture",
+		path: "textures/stickers/mushroom2.png",
+	}
 ];
 
 export default sources;
