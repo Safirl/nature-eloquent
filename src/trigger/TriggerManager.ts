@@ -24,7 +24,6 @@ export default class TriggerManager extends EventEmitter {
         this.sceneManager = menu.sceneManager;
 
         this.init();
-
     }
 
     init() {
