@@ -174,10 +174,10 @@ export const stepDescription: DialogStep[] = [
 		objectsRemoved: ["grassClump", "vine", "rose"],
 		objectsAdded: [
 			{
-				objectId: "ppFlower",
+				objectId: "edeilweiss",
 			},
 		],
-		completionConditions: [{ objectId: "ppFlower", count: 5, nextStepId: 12 }],
+		completionConditions: [{ objectId: "edeilweiss", count: 5, nextStepId: 12 }],
 		// dialogId: "dinosaure_01",
 	},
 
@@ -188,12 +188,12 @@ export const stepDescription: DialogStep[] = [
 		// objectsRemoved: ["mushroomCouc"],
 		objectsAdded: [
 			{
-				objectId: "ppFlower1",
+				objectId: "buttercup",
 			},
 		],
 		completionConditions: [
-			{ objectId: "ppFlower", count: 10, nextStepId: 13 },
-			{ objectId: "ppFlower1", count: 5, nextStepId: 13 },
+			{ objectId: "edeilweiss", count: 10, nextStepId: 13 },
+			{ objectId: "buttercup", count: 5, nextStepId: 13 },
 		],
 		dialogId: "forestLittleFlower_0",
 	},
@@ -205,41 +205,41 @@ export const stepDescription: DialogStep[] = [
 		// objectsRemoved: ["mushroomCouc"],
 		objectsAdded: [
 			{
-				objectId: "clemFlower",
+				objectId: "iris",
 			},
 			{
-				objectId: "clemFlower1",
+				objectId: "lys",
 			},
 		],
 		completionConditions: [
-			{ objectId: "ppFlower", count: 15, nextStepId: 14 },
-			{ objectId: "ppFlower1", count: 10, nextStepId: 14 },
-			{ objectId: "clemFlower", count: 5, nextStepId: 15 },
-			{ objectId: "clemFlower1", count: 5, nextStepId: 15 },
+			{ objectId: "edeilweiss", count: 15, nextStepId: 14 },
+			{ objectId: "buttercup", count: 10, nextStepId: 14 },
+			{ objectId: "iris", count: 5, nextStepId: 15 },
+			{ objectId: "lys", count: 5, nextStepId: 15 },
 		],
 		dialogId: "forestLittleFlower_1",
 	},
 
 	//Le joueur place les fleurs de petit pois
 	{
-		name: "ppFlower",
+		name: "edeilweiss",
 		id: 14,
-		objectsRemoved: ["clemFlower", "clemFlower1", "ppFlower", "ppFlower1"],
+		objectsRemoved: ["iris", "lys", "edeilweiss", "buttercup"],
 		objectsAdded: [
 			{
-				objectId: "giantPPFlower",
+				objectId: "giant_buttercup",
 			},
 		],
-		completionConditions: [{ objectId: "giantPPFlower", count: 5, nextStepId: undefined }],
+		completionConditions: [{ objectId: "giant_buttercup", count: 5, nextStepId: undefined }],
 		dialogId: "ppFlowers",
 		completionCallback: "onGiantFlowersAdded",
 	},
 
 	//Le joueur place les fleurs de clem. Seulement un callback à la fin
 	{
-		name: "clemFlower",
+		name: "iris",
 		id: 15,
-		objectsRemoved: ["clemFlower", "clemFlower1", "ppFlower", "ppFlower1"],
+		objectsRemoved: ["iris", "lys", "edeilweiss", "buttercup"],
 		objectsAdded: [
 			{
 				objectId: "giantClemFlower",
@@ -254,7 +254,7 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "clearingExit",
 		id: 16,
-		objectsRemoved: ["giantClemFlower", "giantPPFlower"],
+		objectsRemoved: ["giantClemFlower", "giant_buttercup"],
 		completionConditions: { delay: 1500, nextStepId: 17 },
 		dialogId: "clearingExit",
 	},

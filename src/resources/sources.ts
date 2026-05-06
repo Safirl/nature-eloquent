@@ -99,6 +99,86 @@ const sources: Source[] = [
 		type: "gltfModel",
 		path: "models/Menu/herbarium.glb",
 	},
+
+	/**
+	 * Menu Stickers
+	 */
+	{
+		name: "edeilweiss_flower",
+		type: "texture",
+		path: "textures/stickers/edeilweiss_flower.png",
+	},
+	{
+		name: "edeilweiss_flower_shadow",
+		type: "texture",
+		path: "textures/stickers/edeilweiss_flower_shadow.png",
+	},
+	{
+		name: "buttercup_flower",
+		type: "texture",
+		path: "textures/stickers/buttercup_flower.png",
+	},
+	{
+		name: "buttercup_flower_shadow",
+		type: "texture",
+		path: "textures/stickers/buttercup_flower_shadow.png",
+	},
+	{
+		name: "iris_stem_flower",
+		type: "texture",
+		path: "textures/stickers/iris_stem_flower.png",
+	},
+	{
+		name: "iris_stem_flower_shadow",
+		type: "texture",
+		path: "textures/stickers/iris_stem_flower_shadow.png",
+	},
+	{
+		name: "buttercup_stem_flower",
+		type: "texture",
+		path: "textures/stickers/buttercup_stem_flower.png",
+	},
+	{
+		name: "buttercup_stem_flower_shadow",
+		type: "texture",
+		path: "textures/stickers/buttercup_stem_flower_shadow.png",
+	},
+	{
+		name: "iris_flower",
+		type: "texture",
+		path: "textures/stickers/iris_flower.png",
+	},
+	{
+		name: "iris_flower_shadow",
+		type: "texture",
+		path: "textures/stickers/iris_flower_shadow.png",
+	},
+	{
+		name: "lys_flower",
+		type: "texture",
+		path: "textures/stickers/lys_flower.png",
+	},
+	{
+		name: "lys_flower_shadow",
+		type: "texture",
+		path: "textures/stickers/lys_flower_shadow.png",
+	},
+	{
+		name: "lys_stem_flower",
+		type: "texture",
+		path: "textures/stickers/lys_stem_flower.png",
+	},
+	{
+		name: "lys_stem_flower_shadow",
+		type: "texture",
+		path: "textures/stickers/lys_stem_flower_shadow.png",
+	},
+
+
+	/**
+	 * PLACE HOLDER STICKERS (TO REMOVE)
+	 */
+
 	{
 		name: "mushroom",
 		type: "texture",
@@ -109,6 +189,8 @@ const sources: Source[] = [
 		type: "texture",
 		path: "textures/stickers/mushroom2.png",
 	},
+
+	/***********/
 ];
 
 export default sources;
