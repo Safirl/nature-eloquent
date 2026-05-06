@@ -67,7 +67,6 @@ export default class Placement {
 		if (!manager) return null;
 		manager.add(this.markerPosition);
 		console.log(`Placed instance of ${id} at`, this.markerPosition);
-		console.log("item sound", item.sound);
 		this.sound = this.audioListenerManager.playSfx(item.sound, false);
 		this.sound.position.copy(this.markerPosition);
 		return manager.count;
