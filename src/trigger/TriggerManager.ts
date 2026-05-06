@@ -2,56 +2,62 @@ import { Experience } from "@plugins/baseExperience";
 import type { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import * as THREE from "three";
 
+type TriggerZone = {
+    box: THREE.Box3,
+    isInZone: boolean,
+    onEnter: () => void,
+    // onExit: () => void
+}
+
 export default class TriggerManager {
     declare experience: Experience;
-    declare triggerZoneBox: THREE.Box3;
-    declare isInTriggerZone: boolean;
-    declare allTriggers: {
-        box: THREE.Box3,
-        onEnter: () => void,
-        onExit: () => void
-    }[];
+    declare allTriggers: TriggerZone[];
     constructor() {
         if (!Experience.instance) throw new Error("TriggerManager: Experience not initialized");
         this.experience = Experience.instance;
+        this.allTriggers = [];
         this.init();
     }
+
     init() {
-        const triggerZone = this.createTriggerZone(
-            { x: 0, y: 0, z: 2 },
-            { width: 2, height: 10, depth: 2 }
-        );
-        this.triggerZoneBox = this.addBoundingBox(triggerZone);
+        this.createTriggerZone({ x: 5, y: 2, z: 0 }, { width: 1, height: 5, depth: 2 }, () => console.log("TRIGGER DIALOGUE 1"));
+        this.createTriggerZone({ x: 9, y: 2, z: 0 }, { width: 1, height: 5, depth: 2 }, () => console.log("TRIGGER DIALOGUE 2"));
     }
 
-    createTriggerZone(position: { x: number, y: number, z: number }, size: { width: number, height: number, depth: number }) {
+    createTriggerZone(position: { x: number, y: number, z: number }, size: { width: number, height: number, depth: number }, callbackOnEnter: () => void) {
         const geometry = new THREE.BoxGeometry(size.width, size.height, size.depth);
         const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
         const triggerZone = new THREE.Mesh(geometry, material);
         triggerZone.position.set(position.x, position.y, position.z);
         this.experience.scene.add(triggerZone);
+
+        const triggerZoneBox = new THREE.Box3().setFromObject(triggerZone);
+        this.allTriggers.push({
+            box: triggerZoneBox,
+            isInZone: false,
+            onEnter: callbackOnEnter,
+            // onExit: () => console.log("Exited trigger zone")
+        });
+
         return triggerZone;
     }
 
-    addBoundingBox(triggerZone: THREE.Mesh) {
-        const triggerZoneBox = new THREE.Box3();
-        return triggerZoneBox.setFromObject(triggerZone);
-    }
-
-
-    checkTrigger(playerBox: THREE.Box3, triggerZoneBox: THREE.Box3) {
-        if (triggerZoneBox.intersectsBox(playerBox) && !this.isInTriggerZone) {
-            this.isInTriggerZone = true;
-            console.log("entrer")
-        } else if (!triggerZoneBox.intersectsBox(playerBox) && this.isInTriggerZone) {
-            this.isInTriggerZone = false;
-            console.log("sortie")
+    checkTrigger(playerBox: THREE.Box3, triggerBox: TriggerZone) {
+        const isIntersecting = triggerBox.box.intersectsBox(playerBox);
+        if (isIntersecting && !triggerBox.isInZone) {
+            triggerBox.isInZone = true;
+            triggerBox.onEnter();
+        } else if (!isIntersecting && triggerBox.isInZone) {
+            triggerBox.isInZone = false;
+            // triggerBox.onExit();
         }
     }
 
     update() {
         const camera = this.experience.camera as FirstPersonCameraOctree;
-        this.checkTrigger(camera.playerBox, this.triggerZoneBox);
+        for (const trigger of this.allTriggers) {
+            this.checkTrigger(camera.playerBox, trigger);
+        }
     }
 }
 
