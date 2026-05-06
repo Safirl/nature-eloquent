@@ -29,7 +29,7 @@ export default class SubtitleManager extends EventEmitter {
 		this.typingInterval = null;
 	}
 
-	init() {}
+	init() { }
 
 	showSubtitle(text: string, characterName: string, audioSrc: string) {
 		if (!this.subtitleElement) return;
@@ -39,7 +39,7 @@ export default class SubtitleManager extends EventEmitter {
 		this.typeText(text);
 		this.characterElement.textContent = characterName;
 		this.characterElement.style.color = characterName === "Clémentine:" ? "#FF9500" : "#00596F";
-		this.audioManager.playAudio(audioSrc);
+		this.audioManager.playAudio(audioSrc, false, 1);
 	}
 
 	typeText(text: string, speed: number = 35) {

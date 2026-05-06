@@ -31,6 +31,8 @@ export default class AudioManager extends EventEmitter {
         await new Promise((resolve) => {
             const audio = new Audio(audioSrc);
             audio.preload = "auto";
+            audio.playbackRate = 1;
+
             audio.play();
             audio.addEventListener("ended", () => {
                 resolve(undefined);

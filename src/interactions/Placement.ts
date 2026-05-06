@@ -6,6 +6,10 @@ import InteractableInstancedMesh from "./InteractableInstancedMesh";
 import AudioListenerManager from "../audio/AudioListenerManager";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import ActorManager from "./ActorManager";
+import type Menu from "../menu";
+import type MenuInput from "../menu/MenuInput";
+import itemsList, { type MenuItemType } from "../resources/items";
+
 
 /**
  * Placement — generic Three.js placement primitive.
@@ -56,13 +60,15 @@ export default class Placement {
 
 	place(id: string): number | null {
 		if (!id) return null;
-
+		const item = itemsList.find((it) => it.id === id);
+		if (!item) return null;
 		if (!this.markerPosition) return null;
 		const manager = this.managers.get(id);
 		if (!manager) return null;
 		manager.add(this.markerPosition);
 		console.log(`Placed instance of ${id} at`, this.markerPosition);
-		this.sound = this.audioListenerManager.playSfx("/audio/welcome.mp3", false);
+		console.log("item sound", item.sound);
+		this.sound = this.audioListenerManager.playSfx(item.sound, false);
 		this.sound.position.copy(this.markerPosition);
 		return manager.count;
 	}

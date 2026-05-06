@@ -9,6 +9,7 @@ export type DialogStep = {
 	//Wait for a delay if there are no completionCondition
 	completionConditions: ObjectCountCondition[] | { delay: number; nextStepId?: number };
 	dialogId?: string;
+	sounds?: { name: string; src: string }[];
 	cleanSteps?: boolean;
 	completionCallback?: string;
 };
@@ -281,6 +282,15 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onStormStarted",
 		dialogId: "storm",
+		sounds: [{
+			name: "thunder",
+			src: "/audio/soundEffects/thunder.mp3",
+		},
+		{
+			name: "lighting",
+			src: "/audio/soundEffects/lighting.mp3"
+		}
+		],
 	},
 
 	//triggerbox entrée seconde clairière
@@ -299,7 +309,7 @@ export const stepDescription: DialogStep[] = [
 			{ objectId: "bramble", count: 5, nextStepId: 20 },
 			{ objectId: "toxicMushroom", count: 5, nextStepId: 21 },
 		],
-		// dialogId: "storm",
+		dialogId: "storm",
 	},
 
 	//Quand les ronces ont été posées
