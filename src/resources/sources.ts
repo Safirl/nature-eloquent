@@ -163,6 +163,16 @@ const sources: Source[] = [
 		type: "texture",
 		path: "textures/stickers/lys_flower_shadow.png",
 	},
+	{
+		name: "lys_stem_flower",
+		type: "texture",
+		path: "textures/stickers/lys_stem_flower.png",
+	},
+	{
+		name: "lys_stem_flower_shadow",
+		type: "texture",
+		path: "textures/stickers/lys_stem_flower_shadow.png",
+	},
 
 
 	/**

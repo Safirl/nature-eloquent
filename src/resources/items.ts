@@ -45,6 +45,13 @@ const itemsList: MenuItemType[] = [
 		vignet: "lys_flower",
 		shadow: "lys_flower_shadow"
 	},
+	{
+		id: "giant_lys",
+		name: "Lys géant",
+		model: "mushroomPaintedModel",
+		vignet: "lys_stem_flower",
+		shadow: "lys_stem_flower_shadow"
+	},
 
 
 
