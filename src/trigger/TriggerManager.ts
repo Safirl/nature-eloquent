@@ -24,6 +24,7 @@ export default class TriggerManager extends EventEmitter {
         this.sceneManager = menu.sceneManager;
 
         this.init();
+        this.setupDebug();
     }
 
     init() {
@@ -34,8 +35,10 @@ export default class TriggerManager extends EventEmitter {
     createTriggerZone(position: { x: number, y: number, z: number }, size: { width: number, height: number, depth: number }, callbackOnEnter: () => void) {
 
         const geometry = new THREE.BoxGeometry(size.width, size.height, size.depth);
-        const material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+        const material = new THREE.MeshBasicMaterial();
         material.transparent = true;
+        material.opacity = 0;
+
         const triggerZone = new THREE.Mesh(geometry, material);
         triggerZone.position.set(position.x, position.y, position.z);
         this.experience.scene.add(triggerZone);
@@ -77,6 +80,16 @@ export default class TriggerManager extends EventEmitter {
         const camera = this.experience.camera as FirstPersonCameraOctree;
         for (const trigger of this.allTriggers) {
             this.checkTrigger(camera.playerBox, trigger);
+        }
+    }
+
+    private setupDebug() {
+        if (!this.experience.debug.active) return;
+        for (const trigger of this.allTriggers) {
+            const material = trigger.mesh.material as THREE.MeshBasicMaterial;
+            material.wireframe = true;
+            material.color.set(0xff0000);
+            material.opacity = 1;
         }
     }
 }

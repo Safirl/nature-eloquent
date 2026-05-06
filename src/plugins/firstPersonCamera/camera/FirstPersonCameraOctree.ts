@@ -183,7 +183,7 @@ export default class FirstPersonCameraOctree extends Camera {
 	}
 
 	private updatePlayer(delta: number): void {
-		console.log(this.instance.position);
+		// console.log(this.instance.position);
 		let damping = Math.exp(-this.friction * delta) - 1;
 
 		if (!this.canJump) {
