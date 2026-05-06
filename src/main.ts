@@ -3,17 +3,18 @@ import "./assets/style.css";
 import { OrbitCamera, type InputProfile } from "@plugins/baseExperience";
 import sources from "./resources/sources";
 import Playground from "./world/PlaygroundWorld";
-import SubtitleManager from "./resources/subtitle/SubtitleManager";
 import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import GameExperience from "./GameExperience";
 import { keyboardProfile } from "./resources/inputProfiles";
-
 const init = () => {
 	const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement;
 	if (!canvas) {
 		console.error("no canvas found with three identifier");
 		return;
 	}
+
+
+
 
 	canvas.style.width = "100%";
 	canvas.style.height = "100%";
