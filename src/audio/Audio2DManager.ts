@@ -24,7 +24,7 @@ export default class AudioManager extends EventEmitter {
         audio.addEventListener("ended", () => {
             this.audios = this.audios.filter((a) => a.audio !== audio);
         });
-        console.log("tous les audios actifs", this.audios)
+        // console.log("tous les audios actifs", this.audios)
 
         return audio;
     }
