@@ -1,5 +1,6 @@
 import { EventEmitter } from "@plugins/baseExperience";
 import type { DialogStep } from "../../scene/sceneDescriptions";
+import AudioManager from "../../audio/Audio2DManager";
 
 type DialogSubtitleStep = {
 	audio: string;
@@ -14,8 +15,8 @@ export default class SubtitleManager extends EventEmitter {
 	declare dialogElement: HTMLElement;
 	declare characterElement: HTMLElement;
 	declare currentIndex: number;
-	declare audioPlayer: HTMLAudioElement;
 	declare typingInterval: number | null;
+	declare audioManager: AudioManager;
 
 	constructor() {
 		super();
@@ -24,20 +25,11 @@ export default class SubtitleManager extends EventEmitter {
 		this.characterElement = document.getElementById("character") as HTMLElement;
 		this.subtitleElement.style.opacity = "0";
 
-		this.audioPlayer = new Audio();
-		this.audioPlayer.preload = "auto";
+		this.audioManager = new AudioManager();
 		this.typingInterval = null;
 	}
 
-	init() {}
-
-	playAudio(audioSrc: string) {
-		if (!audioSrc) return;
-		this.audioPlayer.pause();
-		this.audioPlayer.currentTime = 0;
-		this.audioPlayer.src = audioSrc;
-		this.audioPlayer.play();
-	}
+	init() { }
 
 	showSubtitle(text: string, characterName: string, audioSrc: string) {
 		if (!this.subtitleElement) return;
@@ -46,7 +38,7 @@ export default class SubtitleManager extends EventEmitter {
 		this.subtitleElement.style.opacity = "1";
 		this.typeText(text);
 		this.characterElement.textContent = characterName;
-		this.playAudio(audioSrc);
+		this.audioManager.playAudio(audioSrc);
 	}
 
 	typeText(text: string, speed: number = 35) {
@@ -68,8 +60,6 @@ export default class SubtitleManager extends EventEmitter {
 		if (!this.subtitleElement) return;
 		this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
 		this.subtitleElement.style.opacity = "0";
-		this.audioPlayer.pause();
-		this.audioPlayer.currentTime = 0;
 	}
 
 	// Changement de dialogue automatique
@@ -80,10 +70,13 @@ export default class SubtitleManager extends EventEmitter {
 
 		for (const [_key, item] of entries) {
 			this.showSubtitle(item.dialog, item.speaker, item.audio);
-			await new Promise<void>((resolve) => {
-				this.audioPlayer.addEventListener("ended", () => resolve(), { once: true });
-				this.audioPlayer.addEventListener("error", () => resolve(), { once: true });
-			});
+			const audio = this.audioManager.playAudio(item.audio);
+			if (audio) {
+				await new Promise<void>((resolve) => {
+					audio.addEventListener("ended", () => resolve(), { once: true });
+					audio.addEventListener("error", () => resolve(), { once: true });
+				});
+			}
 		}
 		// console.log("relatedStep", relatedStep);
 		this.hideSubtitle();
