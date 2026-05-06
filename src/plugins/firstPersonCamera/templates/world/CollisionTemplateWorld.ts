@@ -21,7 +21,7 @@ export default class CollisionTemplateWorld extends World {
 			throw new Error(
 				"CollisionTemplateWorld initialization failed: CollisionManager is not available."
 			);
-		collisionManager?.addCollisionObjects([this.floor]);
+		// collisionManager?.addCollisionObjects([this.floor]);
 		collisionManager?.addCollisionObjects([this.wall]);
 	}
 }

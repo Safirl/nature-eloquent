@@ -6,6 +6,8 @@ import Playground from "./world/PlaygroundWorld";
 import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import GameExperience from "./GameExperience";
 import { keyboardProfile } from "./resources/inputProfiles";
+import TriggerManager from "./trigger/TriggerManager";
+
 const init = () => {
 	const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement;
 	if (!canvas) {
