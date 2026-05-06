@@ -58,7 +58,7 @@ const sources: Source[] = [
 	{
 		name: "layoutModel",
 		type: "gltfModel",
-		path: "models/layout/Layout4.glb",
+		path: "models/layout/Layout.glb",
 	},
 	{
 		name: "mushroomModel",
@@ -81,7 +81,6 @@ const sources: Source[] = [
 		path: "models/LD/blocking.glb",
 	},
 
-
 	/**
 	 * Menu assets
 	 */
@@ -99,7 +98,7 @@ const sources: Source[] = [
 		name: "mushroom2",
 		type: "texture",
 		path: "textures/stickers/mushroom2.png",
-	}
+	},
 ];
 
 export default sources;

@@ -125,7 +125,7 @@
 
 	"forestIntro": {
 		"dialog_0": {
-			"audio": "/audio/02_dialog.mp3",
+			"audio": "/audio/forestIntro.mp3",
 			"dialog": "C'était un week-end, au milieu de l'été, pendant les grandes vacances. J'étais parti me promener tout seul avec mon carnet. On nous avait donné comme devoir d'école d'en créer un et je voulais vraiment être fier du mien !",
 			"speaker": "Petit Pois: "
 		}
@@ -165,7 +165,7 @@
 
 	"clearingExit": {
 		"dialog_0": {
-			"audio": "/audio/welcome.mp3",
+			"audio": "/audio/clearingExit.mp3",
 			"dialog": "J’ai continué à m’enfoncer dans la forêt, je voulais voir jusqu’où allait ce champ de fleurs… et j’ai fini par me perdre.",
 			"speaker": "Petit Pois: "
 		}
@@ -173,12 +173,12 @@
 
 	"storm": {
 		"dialog_0": {
-			"audio": "/audio/welcome.mp3",
+			"audio": "/audio/storm1.mp3",
 			"dialog": "T’étais pris sous l’orage ?",
 			"speaker": "Clémentine: "
 		},
 		"dialog_1": {
-			"audio": "/audio/welcome.mp3",
+			"audio": "/audio/storm2.mp3",
 			"dialog": "J’étais terrorisé par les éclairs. Et les fleurs si merveilleuses une seconde avant sont devenues vraiment menaçantes.",
 			"speaker": "Petit Pois: "
 		}

@@ -67,27 +67,19 @@ export default class FirstPersonCameraOctree extends Camera {
 	}
 
 	setControls() {
-		Experience.instance?.canvas.addEventListener(
-			"mousedown",
-			this.lockPointer
-		);
+		Experience.instance?.canvas.addEventListener("mousedown", this.lockPointer);
 
-		Experience.instance?.canvas.addEventListener(
-			"mousemove",
-			(e: MouseEvent) => {
-				if (
-					document.pointerLockElement === Experience.instance?.canvas
-				) {
-					this.instance.rotation.y -= e.movementX / 500;
-					this.instance.rotation.x -= e.movementY / 500;
-					this.instance.rotation.x = THREE.MathUtils.clamp(
-						this.instance.rotation.x,
-						-this.maxPitch,
-						this.maxPitch
-					);
-				}
+		Experience.instance?.canvas.addEventListener("mousemove", (e: MouseEvent) => {
+			if (document.pointerLockElement === Experience.instance?.canvas) {
+				this.instance.rotation.y -= e.movementX / 500;
+				this.instance.rotation.x -= e.movementY / 500;
+				this.instance.rotation.x = THREE.MathUtils.clamp(
+					this.instance.rotation.x,
+					-this.maxPitch,
+					this.maxPitch
+				);
 			}
-		);
+		});
 
 		this.bindInputs();
 	}
@@ -98,54 +90,39 @@ export default class FirstPersonCameraOctree extends Camera {
 
 	bindInputs() {
 		if (Experience.instance) {
-			Experience.instance.inputSystem.on(
-				"forward",
-				(args: InputEventArgs) => {
-					if (args.type === "pressed") {
-						this.moveForward = true;
-					} else if (args.type === "released") {
-						this.moveForward = false;
-					}
+			Experience.instance.inputSystem.on("forward", (args: InputEventArgs) => {
+				if (args.type === "pressed") {
+					this.moveForward = true;
+				} else if (args.type === "released") {
+					this.moveForward = false;
 				}
-			);
-			Experience.instance.inputSystem.on(
-				"backward",
-				(args: InputEventArgs) => {
-					if (args.type === "pressed") {
-						this.moveBackward = true;
-					} else if (args.type === "released") {
-						this.moveBackward = false;
-					}
+			});
+			Experience.instance.inputSystem.on("backward", (args: InputEventArgs) => {
+				if (args.type === "pressed") {
+					this.moveBackward = true;
+				} else if (args.type === "released") {
+					this.moveBackward = false;
 				}
-			);
-			Experience.instance.inputSystem.on(
-				"left",
-				(args: InputEventArgs) => {
-					if (args.type === "pressed") {
-						this.moveLeft = true;
-					} else if (args.type === "released") {
-						this.moveLeft = false;
-					}
+			});
+			Experience.instance.inputSystem.on("left", (args: InputEventArgs) => {
+				if (args.type === "pressed") {
+					this.moveLeft = true;
+				} else if (args.type === "released") {
+					this.moveLeft = false;
 				}
-			);
-			Experience.instance.inputSystem.on(
-				"right",
-				(args: InputEventArgs) => {
-					if (args.type === "pressed") {
-						this.moveRight = true;
-					} else if (args.type === "released") {
-						this.moveRight = false;
-					}
+			});
+			Experience.instance.inputSystem.on("right", (args: InputEventArgs) => {
+				if (args.type === "pressed") {
+					this.moveRight = true;
+				} else if (args.type === "released") {
+					this.moveRight = false;
 				}
-			);
-			Experience.instance.inputSystem.on(
-				"jump",
-				(args: InputEventArgs) => {
-					if (args.type === "pressed" && this.canJump) {
-						this.velocity.y = 15;
-					}
+			});
+			Experience.instance.inputSystem.on("jump", (args: InputEventArgs) => {
+				if (args.type === "pressed" && this.canJump) {
+					this.velocity.y = 15;
 				}
-			);
+			});
 		} else {
 			throw new Error("Experience instance is not defined");
 		}
@@ -170,28 +147,18 @@ export default class FirstPersonCameraOctree extends Camera {
 	private applyControls(delta: number): void {
 		const speedDelta = delta * (this.canJump ? this.speed : 8);
 
-		if (this.moveForward)
-			this.velocity.add(
-				this.getForwardVector().multiplyScalar(speedDelta)
-			);
+		if (this.moveForward) this.velocity.add(this.getForwardVector().multiplyScalar(speedDelta));
 		if (this.moveBackward)
-			this.velocity.add(
-				this.getForwardVector().multiplyScalar(-speedDelta)
-			);
-		if (this.moveLeft)
-			this.velocity.add(this.getSideVector().multiplyScalar(-speedDelta));
-		if (this.moveRight)
-			this.velocity.add(this.getSideVector().multiplyScalar(speedDelta));
+			this.velocity.add(this.getForwardVector().multiplyScalar(-speedDelta));
+		if (this.moveLeft) this.velocity.add(this.getSideVector().multiplyScalar(-speedDelta));
+		if (this.moveRight) this.velocity.add(this.getSideVector().multiplyScalar(speedDelta));
 	}
 
-	private playerCollisions(): void {
+	private updatePlayerCollisions(): void {
 		const collisionManager = this.experience.collisionManager;
-		if (!collisionManager)
-			throw new Error("Experience instance is not defined");
+		if (!collisionManager) throw new Error("Experience instance is not defined");
 
-		const result = collisionManager.worldOctree.capsuleIntersect(
-			this.playerCollider
-		);
+		const result = collisionManager.worldOctree.capsuleIntersect(this.playerCollider);
 		this.canJump = false;
 
 		if (result) {
@@ -199,21 +166,22 @@ export default class FirstPersonCameraOctree extends Camera {
 
 			if (!this.canJump) {
 				// Annule la vitesse du joueur face à un mur
-				this.velocity.addScaledVector(
-					result.normal,
-					-result.normal.dot(this.velocity)
-				);
+				this.velocity.addScaledVector(result.normal, -result.normal.dot(this.velocity));
 			}
 			if (result.depth >= 1e-10) {
 				// En cas que le joueur traverse le mur
-				this.playerCollider.translate(
-					result.normal.multiplyScalar(result.depth)
-				);
+				this.playerCollider.translate(result.normal.multiplyScalar(result.depth));
 			}
 		}
 	}
 
+	teleportPlayer(newPosition: THREE.Vector3) {
+		//{ x: 32.28367313757795, y: 1.19999999992237, z: -40.68886466113165 }
+		this.playerCollider.translate(newPosition);
+	}
+
 	private updatePlayer(delta: number): void {
+		console.log(this.instance.position);
 		let damping = Math.exp(-this.friction * delta) - 1;
 
 		if (!this.canJump) {
@@ -227,7 +195,7 @@ export default class FirstPersonCameraOctree extends Camera {
 		const deltaPosition = this.velocity.clone().multiplyScalar(delta);
 		this.playerCollider.translate(deltaPosition);
 
-		this.playerCollisions();
+		this.updatePlayerCollisions();
 
 		this.instance.position.copy(this.playerCollider.end);
 	}
@@ -259,8 +227,7 @@ export default class FirstPersonCameraOctree extends Camera {
 		if (!Experience.instance) {
 			return;
 		}
-		this.velocity.y -=
-			(9.8 * this.mass * Experience.instance.time.delta) / 10000;
+		this.velocity.y -= (9.8 * this.mass * Experience.instance.time.delta) / 10000;
 	}
 
 	setDebugObject(): void {
@@ -271,18 +238,8 @@ export default class FirstPersonCameraOctree extends Camera {
 
 		const movementsFolder = this.debugFolder.addFolder("movements");
 
-		movementsFolder
-			.add(this, "speed")
-			.name("speed")
-			.min(1)
-			.max(100)
-			.step(0.1);
-		movementsFolder
-			.add(this, "friction")
-			.name("friction")
-			.min(1)
-			.max(800)
-			.step(0.1);
+		movementsFolder.add(this, "speed").name("speed").min(1).max(100).step(0.1);
+		movementsFolder.add(this, "friction").name("friction").min(1).max(800).step(0.1);
 		movementsFolder
 			.add(this, "height")
 			.name("height")

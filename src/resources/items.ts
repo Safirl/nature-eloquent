@@ -27,8 +27,8 @@ const itemsList: MenuItemType[] = [
 		vignet: mushroom2Icon,
 	},
 	{
-		id: "rose",
-		name: "Touffe d'herbe",
+		id: "fern",
+		name: "Fougère",
 		model: "mushroomModel",
 		vignet: mushroom2Icon,
 	},

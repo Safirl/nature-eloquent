@@ -162,7 +162,7 @@ export const stepDescription: DialogStep[] = [
 		// 		// resourceName: "mushroomPaintedModel",
 		// 	},
 		// ],
-		completionConditions: { delay: 2500, nextStepId: 6 },
+		completionConditions: { delay: 2500, nextStepId: undefined },
 		dialogId: "forestIntro",
 	},
 
@@ -250,7 +250,7 @@ export const stepDescription: DialogStep[] = [
 		completionCallback: "onGiantFlowersAdded",
 	},
 
-	//L'animation des fleurs a été déclenchée. Le joueur déclenche cette step en rentrant dans la chemin ouvert.
+	//(trigger box) L'animation des fleurs a été déclenchée. Le joueur déclenche cette step en rentrant dans la chemin ouvert.
 	{
 		name: "clearingExit",
 		id: 16,
@@ -337,5 +337,13 @@ export const stepDescription: DialogStep[] = [
 		],
 		completionConditions: [{ objectId: "deadwood", count: 5, nextStepId: undefined }],
 		completionCallback: "onDeadwoodPlaced",
+	},
+
+	//Fire
+	{
+		name: "fire",
+		id: 24,
+		completionConditions: { delay: 1500, nextStepId: undefined },
+		completionCallback: "onGameEnded",
 	},
 ];
