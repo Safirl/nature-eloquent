@@ -27,6 +27,17 @@ export default class AudioManager extends EventEmitter {
         return audio;
     }
 
+    async playFootStepAudio(audioSrc: string) {
+        await new Promise((resolve) => {
+            const audio = new Audio(audioSrc);
+            audio.preload = "auto";
+            audio.play();
+            audio.addEventListener("ended", () => {
+                resolve(undefined);
+            });
+        });
+    }
+
     async fadeOutAudio(audio: HTMLAudioElement, duration: number = 1000) {
         const initialVolume = audio.volume;
         const fadeOutSteps = 20;

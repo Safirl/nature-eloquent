@@ -25,8 +25,8 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		this.bindToDialogEvents();
 		this.addActiveStep(exp.debug.active ? 1 : 0);
 	};
-	update = () => {};
-	destroy = () => {};
+	update = () => { };
+	destroy = () => { };
 
 	bindToDialogEvents() {
 		this.menu.subtitle.on("dialogFinished.sceneManager", () => {
