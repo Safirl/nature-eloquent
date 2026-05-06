@@ -24,7 +24,6 @@ const init = () => {
 	const world = new Playground();
 	const experience = new GameExperience(canvas, sources, camera, world);
 	//new SubtitleManager();
-	new TriggerManager();
 	const profiles: InputProfile[] = [keyboardProfile];
 
 	experience.inputSystem.addInputProfiles(profiles);

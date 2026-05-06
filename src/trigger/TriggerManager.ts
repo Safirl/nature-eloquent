@@ -1,6 +1,8 @@
 import { EventEmitter, Experience } from "@plugins/baseExperience";
 import type { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import * as THREE from "three";
+import SceneManager from "../scene/SceneManager";
+import Menu from "../menu";
 
 type TriggerZone = {
     box: THREE.Box3,
@@ -12,16 +14,22 @@ type TriggerZone = {
 export default class TriggerManager extends EventEmitter {
     declare experience: Experience;
     declare allTriggers: TriggerZone[];
-    constructor() {
+    declare sceneManager: SceneManager;
+
+    constructor(menu: Menu) {
         super();
         if (!Experience.instance) throw new Error("TriggerManager: Experience not initialized");
         this.experience = Experience.instance;
         this.allTriggers = [];
+        // if (!menu || !menu.sceneManager) throw new Error("TriggerManager: menu.sceneManager is undefined");
+        this.sceneManager = menu.sceneManager;
+
         this.init();
+
     }
 
     init() {
-        this.createTriggerZone({ x: 5, y: 2, z: 0 }, { width: 1, height: 5, depth: 2 }, () => console.log("TRIGGER DIALOGUE 1"));
+        this.createTriggerZone({ x: 5, y: 2, z: 0 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(10));
         this.createTriggerZone({ x: 9, y: 2, z: 0 }, { width: 1, height: 5, depth: 2 }, () => console.log("TRIGGER DIALOGUE 2"));
     }
 
@@ -48,7 +56,7 @@ export default class TriggerManager extends EventEmitter {
         if (isIntersecting && !triggerBox.isInZone) {
             triggerBox.isInZone = true;
             triggerBox.onEnter();
-            this.trigger("enterTriggerBox", [triggerBox]);
+            this.allTriggers.filter(t => t !== triggerBox).forEach(t => t.isInZone = false);
         } else if (!isIntersecting && triggerBox.isInZone) {
             triggerBox.isInZone = false;
             // triggerBox.onExit();

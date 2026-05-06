@@ -10,6 +10,7 @@ import dialogSubtitleAudio from "../resources/subtitle/dialogSubtitleAudio.json"
 import SceneManager from "../scene/SceneManager";
 import type { DialogStep } from "../scene/sceneDescriptions";
 import { type MenuItemType } from "../resources/items";
+import TriggerManager from "../trigger/TriggerManager";
 // import mushroomIcon from "../books/mushroom.png";
 
 /**
@@ -41,7 +42,8 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 	declare dialogsAudio: {
 		[key: string]: { [value: string]: { audio: string; dialog: string; speaker: string } };
 	};
-	private sceneManager: SceneManager;
+	public sceneManager: SceneManager;
+	public triggerManager: TriggerManager;
 
 	private buttonContainerId = "tool-selector";
 
@@ -65,6 +67,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		this.sceneManager.on("onActiveStepAdded", this.onActiveStepAdded);
 
 		this.sceneManager.init();
+		this.triggerManager = new TriggerManager(this);
 	}
 
 	private onActiveStepAdded = (dialogueStep: DialogStep) => {
@@ -123,6 +126,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 	update = () => {
 		this.placement.update();
 		this.view.update()
+		this.triggerManager.update();
 	};
 	destroy = () => {
 		this.state.off(".menu");

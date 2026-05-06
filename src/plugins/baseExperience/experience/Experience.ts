@@ -51,7 +51,6 @@ export default class Experience implements LifeTimeObject {
 		this.resources = new Resources(sources);
 		this.inputSystem = new InputSystem();
 		this.collisionManager = new CollisionManager();
-		this.triggerManager = new TriggerManager();
 
 		/**
 		 * constructor parameter values
@@ -104,7 +103,6 @@ export default class Experience implements LifeTimeObject {
 		this.world.update();
 		this.renderer.update();
 		this.inputSystem.update();
-		this.triggerManager.update();
 	}
 
 	destroy() {

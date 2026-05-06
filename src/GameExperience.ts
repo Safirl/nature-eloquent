@@ -1,6 +1,7 @@
 import { Camera, Experience, World, type Source } from "@plugins/baseExperience";
 import SceneManager from "./scene/SceneManager";
 import SubtitleManager from "./resources/subtitle/SubtitleManager";
+import TriggerManager from "./trigger/TriggerManager";
 import AudioListenerManager from "./audio/AudioListenerManager";
 
 export default class GameExperience extends Experience {
