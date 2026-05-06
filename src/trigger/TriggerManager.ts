@@ -1,4 +1,4 @@
-import { Experience } from "@plugins/baseExperience";
+import { EventEmitter, Experience } from "@plugins/baseExperience";
 import type { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import * as THREE from "three";
 
@@ -9,10 +9,11 @@ type TriggerZone = {
     // onExit: () => void
 }
 
-export default class TriggerManager {
+export default class TriggerManager extends EventEmitter {
     declare experience: Experience;
     declare allTriggers: TriggerZone[];
     constructor() {
+        super();
         if (!Experience.instance) throw new Error("TriggerManager: Experience not initialized");
         this.experience = Experience.instance;
         this.allTriggers = [];
@@ -47,11 +48,13 @@ export default class TriggerManager {
         if (isIntersecting && !triggerBox.isInZone) {
             triggerBox.isInZone = true;
             triggerBox.onEnter();
+            this.trigger("enterTriggerBox", [triggerBox]);
         } else if (!isIntersecting && triggerBox.isInZone) {
             triggerBox.isInZone = false;
             // triggerBox.onExit();
         }
     }
+
 
     update() {
         const camera = this.experience.camera as FirstPersonCameraOctree;
@@ -60,5 +63,3 @@ export default class TriggerManager {
         }
     }
 }
-
-// à voir : https://jainmanshu.medium.com/exploring-collision-detection-in-three-js-82dc95a383f4
