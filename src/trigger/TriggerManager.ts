@@ -6,9 +6,9 @@ import Menu from "../menu";
 
 type TriggerZone = {
     box: THREE.Box3,
+    mesh: THREE.Mesh,
     isInZone: boolean,
     onEnter: () => void,
-    // onExit: () => void
 }
 
 export default class TriggerManager extends EventEmitter {
@@ -21,7 +21,6 @@ export default class TriggerManager extends EventEmitter {
         if (!Experience.instance) throw new Error("TriggerManager: Experience not initialized");
         this.experience = Experience.instance;
         this.allTriggers = [];
-        // if (!menu || !menu.sceneManager) throw new Error("TriggerManager: menu.sceneManager is undefined");
         this.sceneManager = menu.sceneManager;
 
         this.init();
@@ -34,35 +33,46 @@ export default class TriggerManager extends EventEmitter {
     }
 
     createTriggerZone(position: { x: number, y: number, z: number }, size: { width: number, height: number, depth: number }, callbackOnEnter: () => void) {
+
         const geometry = new THREE.BoxGeometry(size.width, size.height, size.depth);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+        material.transparent = true;
         const triggerZone = new THREE.Mesh(geometry, material);
         triggerZone.position.set(position.x, position.y, position.z);
         this.experience.scene.add(triggerZone);
 
         const triggerZoneBox = new THREE.Box3().setFromObject(triggerZone);
+
         this.allTriggers.push({
             box: triggerZoneBox,
+            mesh: triggerZone,
             isInZone: false,
             onEnter: callbackOnEnter,
-            // onExit: () => console.log("Exited trigger zone")
         });
 
         return triggerZone;
     }
 
+    removeTriggerZone(triggerZone: THREE.Mesh) {
+        this.experience.scene.remove(triggerZone);
+
+        triggerZone.geometry.dispose();
+        triggerZone.material.dispose();
+    }
+
     checkTrigger(playerBox: THREE.Box3, triggerBox: TriggerZone) {
         const isIntersecting = triggerBox.box.intersectsBox(playerBox);
+
         if (isIntersecting && !triggerBox.isInZone) {
             triggerBox.isInZone = true;
             triggerBox.onEnter();
-            this.allTriggers.filter(t => t !== triggerBox).forEach(t => t.isInZone = false);
-        } else if (!isIntersecting && triggerBox.isInZone) {
+            this.removeTriggerZone(triggerBox.mesh);
+            this.allTriggers = this.allTriggers.filter((t) => t !== triggerBox);
+        }
+        else if (!isIntersecting && triggerBox.isInZone) {
             triggerBox.isInZone = false;
-            // triggerBox.onExit();
         }
     }
-
 
     update() {
         const camera = this.experience.camera as FirstPersonCameraOctree;
