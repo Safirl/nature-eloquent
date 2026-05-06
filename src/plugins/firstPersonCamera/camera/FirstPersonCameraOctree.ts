@@ -12,6 +12,7 @@ export default class FirstPersonCameraOctree extends Camera {
 	declare canJump: boolean;
 
 	declare playerCollider: Capsule;
+	declare playerBox: THREE.Box3;
 
 	declare velocity: THREE.Vector3;
 	declare direction: THREE.Vector3;
@@ -51,6 +52,7 @@ export default class FirstPersonCameraOctree extends Camera {
 			new THREE.Vector3(0, this.height, 0),
 			0.35
 		);
+		this.playerBox = new THREE.Box3();
 		this.playerCollider.translate(new THREE.Vector3(0, 0, 5));
 	}
 
@@ -198,6 +200,11 @@ export default class FirstPersonCameraOctree extends Camera {
 		this.updatePlayerCollisions();
 
 		this.instance.position.copy(this.playerCollider.end);
+
+		this.playerBox.setFromPoints([
+			this.playerCollider.start,
+			this.playerCollider.end
+		]);
 	}
 
 	update(): void {

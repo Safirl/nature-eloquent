@@ -10,6 +10,7 @@ import Debug from "../utils/Debug";
 import InputSystem from "../inputs/InputSystem";
 import CollisionManager from "../world/CollisionManager";
 import Stats from "three/addons/libs/stats.module.js";
+import TriggerManager from "../../../trigger/TriggerManager";
 
 export default class Experience implements LifeTimeObject {
 	declare canvas: HTMLCanvasElement;
@@ -24,6 +25,7 @@ export default class Experience implements LifeTimeObject {
 	declare inputSystem: InputSystem;
 	declare collisionManager: CollisionManager;
 	declare private stats: Stats;
+	declare triggerManager: TriggerManager;
 
 	static instance: Experience | null = null;
 
@@ -49,6 +51,7 @@ export default class Experience implements LifeTimeObject {
 		this.resources = new Resources(sources);
 		this.inputSystem = new InputSystem();
 		this.collisionManager = new CollisionManager();
+		this.triggerManager = new TriggerManager();
 
 		/**
 		 * constructor parameter values
@@ -101,6 +104,7 @@ export default class Experience implements LifeTimeObject {
 		this.world.update();
 		this.renderer.update();
 		this.inputSystem.update();
+		this.triggerManager.update();
 	}
 
 	destroy() {
