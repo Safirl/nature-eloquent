@@ -139,7 +139,7 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomPaintedModel",
 		vignet: "mushroom",
 		shadow: "mushroom",
-		sound: [{ src: "/audio/soundEffects/postcard_02.mp3", volume: 1 }],
+		sound: [{ src: "/audio/soundEffects/roarDino_01.mp3", volume: 1 }, { src: "/audio/soundEffects/roarDino_02.mp3", volume: 1 }],
 	},
 	{
 		id: "postcard",
