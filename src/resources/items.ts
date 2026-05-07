@@ -3,7 +3,7 @@ const itemsList: MenuItemType[] = [
 	/**
 	 * Exists 
 	 * */
-	{ 
+	{
 		id: "edeilweiss",
 		name: "Edeilweiss",
 		model: "mushroomPaintedModel",
@@ -52,8 +52,62 @@ const itemsList: MenuItemType[] = [
 		vignet: "lys_stem_flower",
 		shadow: "lys_stem_flower_shadow"
 	},
-
-
+	{
+		id: "butterfly",
+		name: "Papillon",
+		model: "mushroomPaintedModel",
+		vignet: "butterfly",
+		shadow: "butterfly_shadow"
+	},
+	{
+		id: "grass",
+		name: "Herbe",
+		model: "mushroomPaintedModel",
+		vignet: "grass",
+		shadow: "grass_shadow"
+	},
+	{
+		id: "ivy_leaf",
+		name: "Feuille de lierre",
+		model: "mushroomPaintedModel",
+		vignet: "ivy_leaf",
+		shadow: "ivy_leaf_shadow"
+	},
+	{
+		id: "mushroom",
+		name: "Champignon",
+		model: "mushroomPaintedModel",
+		vignet: "mushroom",
+		shadow: "mushroom_shadow"
+	},
+	{
+		id: "neroli_leaves",
+		name: "Feuilles de néroli",
+		model: "mushroomPaintedModel",
+		vignet: "neroli_leaves",
+		shadow: "neroli_leaves_shadow"
+	},
+	{
+		id: "neroli",
+		name: "Néroli",
+		model: "mushroomPaintedModel",
+		vignet: "neroli",
+		shadow: "neroli_shadow"
+	},
+	{
+		id: "fern",
+		name: "Fougère",
+		model: "mushroomModel",
+		vignet: "mushroom",
+		shadow: "mushroom"
+	},
+	{
+		id: "bramble",
+		name: "Ronces",
+		model: "mushroomPaintedModel",
+		vignet: "bramble",
+		shadow: "bramble_shadow"
+	},
 
 
 
@@ -91,13 +145,7 @@ const itemsList: MenuItemType[] = [
 		vignet: "mushroom",
 		shadow: "mushroom"
 	},
-	{
-		id: "fern",
-		name: "Fougère",
-		model: "mushroomModel",
-		vignet: "mushroom",
-		shadow: "mushroom"
-	},
+
 
 	{
 		id: "giantClemFlower",
@@ -106,20 +154,7 @@ const itemsList: MenuItemType[] = [
 		vignet: "mushroom",
 		shadow: "mushroom"
 	},
-	{
-		id: "butterfly",
-		name: "Papillon",
-		model: "mushroomPaintedModel",
-		vignet: "mushroom",
-		shadow: "mushroom"
-	},
-	{
-		id: "bramble",
-		name: "Ronces",
-		model: "mushroomPaintedModel",
-		vignet: "mushroom",
-		shadow: "mushroom"
-	},
+
 	{
 		id: "toxicMushroom",
 		name: "Champignon vénéneux",
