@@ -3,6 +3,8 @@ import SceneManager from "./scene/SceneManager";
 import SubtitleManager from "./resources/subtitle/SubtitleManager";
 import TriggerManager from "./trigger/TriggerManager";
 import AudioListenerManager from "./audio/AudioListenerManager";
+import Introduction from "./introduction/Introduction";
+import Menu from "./menu";
 
 export default class GameExperience extends Experience {
 	declare public sceneManager: SceneManager;
@@ -10,9 +12,14 @@ export default class GameExperience extends Experience {
 	// declare public subtitleManager: SubtitleManager;
 	declare replaceAmbiantSoundBtn: HTMLDivElement;
 	declare audioManager: AudioListenerManager;
+	declare private introductionSequence: Introduction;
+	declare public menu: Menu;
+
 	constructor(canvas: HTMLCanvasElement, sources: Source[], camera: Camera, world: World) {
 		super(canvas, sources, camera, world);
-		this.replaceAmbiantSoundBtn = document.getElementById("replace-ambient-sound") as HTMLDivElement;
+		this.replaceAmbiantSoundBtn = document.getElementById(
+			"replace-ambient-sound"
+		) as HTMLDivElement;
 
 		//this.subtitleManager = new SubtitleManager();
 		//this.sceneManager = new SceneManager();
@@ -25,10 +32,24 @@ export default class GameExperience extends Experience {
 	onResourcesLoaded(): void {
 		super.onResourcesLoaded();
 		this.audioListenerManager = new AudioListenerManager();
-		this.audioListenerManager.playAmbiantSound("/audio/ambiantSounds/EV_Impro_modal_PP_intro.mp3");
-
+		this.introductionSequence = new Introduction();
 
 		// this.subtitleManager.init();
 		// this.sceneManager.init();
+	}
+
+	init = () => {
+		this.menu = new Menu();
+		this.sceneManager = new SceneManager(this.menu);
+		this.menu.init();
+		this.sceneManager.init();
+	};
+
+	update(): void {
+		if (this.menu) {
+			this.menu.update();
+		}
+		super.update();
+		this.introductionSequence.update();
 	}
 }

@@ -20,7 +20,7 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 	}
 	init = () => {
 		this.bindToDialogEvents();
-		this.addActiveStep(9);
+		this.addActiveStep(0);
 	};
 	update = () => {};
 	destroy = () => {};
@@ -111,11 +111,17 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		let newActiveStep = {} as DialogStep;
 		newActiveStep = Object.assign(newActiveStep, staticStep);
 		if (!Array.isArray(newActiveStep.completionConditions)) {
-			this.menu.subtitle.on("dialogFinished.condition", () => {
+			if (!newActiveStep.dialogId) {
 				setTimeout(() => {
 					this.onStepTimeoutCompleted(newActiveStep);
 				}, newActiveStep.completionConditions.delay);
-			});
+			} else {
+				this.menu.subtitle.on("dialogFinished.condition", () => {
+					setTimeout(() => {
+						this.onStepTimeoutCompleted(newActiveStep);
+					}, newActiveStep.completionConditions.delay);
+				});
+			}
 		}
 		console.log("step:", newActiveStep);
 

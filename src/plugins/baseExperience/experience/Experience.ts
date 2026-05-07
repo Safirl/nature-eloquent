@@ -85,7 +85,6 @@ export default class Experience implements LifeTimeObject {
 		this.time.on("tick", () => {
 			this.update();
 		});
-		// Time tick event
 		this.camera.init();
 		this.world.init();
 	}

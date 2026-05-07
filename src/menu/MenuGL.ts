@@ -113,7 +113,7 @@ export default class MenuView {
 		this.holder.position.copy(camera.position).add(worldOffset);
 		this.holder.quaternion.copy(camera.quaternion).multiply(this.baseRotation);
 
-		const controller = this.experience.camera as unknown as FirstPersonCameraOctree;
+		const controller = this.experience.camera as FirstPersonCameraOctree;
 		const vel = controller.velocity;
 		const horizontalSpeed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
 		const targetIntensity = Math.min(horizontalSpeed / 8, 1);

@@ -37,7 +37,7 @@ export default class GameEnvironment extends Environment {
 		this.sky = new Sky(0, this.debugFolder);
 		this.setFog();
 		this.setBloom();
-		this.setForest();
+		// this.setForest();
 		this.grass = new Grass();
 		// this.cloud = new Cloud();
 		// const bg = this.createBackground();
@@ -195,7 +195,7 @@ export default class GameEnvironment extends Environment {
 			new THREE.Vector2(resolution.width, resolution.height),
 			1.5,
 			0.4,
-			5,
+			5
 		);
 		Experience.instance?.renderer.addComposerPass(this.bloomPass, false);
 

@@ -21,7 +21,6 @@ export default class Playground extends World {
 	declare layout: Actor;
 	declare forestModel: Actor;
 	declare invisibleWall: Actor;
-	declare private introductionSequence;
 
 	init() {
 		super.init();
@@ -63,9 +62,6 @@ export default class Playground extends World {
 				child.material.opacity = 0;
 			}
 		});
-
-		this.menu = new Menu();
-		this.introductionSequence = new Introduction();
 
 		// Add colisions
 		const collisionManager = Experience.instance?.collisionManager;

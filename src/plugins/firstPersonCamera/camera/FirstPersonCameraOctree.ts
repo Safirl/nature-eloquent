@@ -54,7 +54,6 @@ export default class FirstPersonCameraOctree extends Camera {
 			0.35
 		);
 		this.playerBox = new THREE.Box3();
-		this.playerCollider.translate(new THREE.Vector3(0, 0, 5));
 	}
 
 	// Création de la camra
@@ -185,7 +184,6 @@ export default class FirstPersonCameraOctree extends Camera {
 	}
 
 	private updatePlayer(delta: number): void {
-		// console.log(this.instance.position);
 		let damping = Math.exp(-this.friction * delta) - 1;
 
 		if (!this.canJump) {
@@ -214,7 +212,7 @@ export default class FirstPersonCameraOctree extends Camera {
 		if (!Experience.instance) {
 			return;
 		}
-		if (document.pointerLockElement !== Experience.instance.canvas) return;
+		// if (document.pointerLockElement !== Experience.instance.canvas) return;
 
 		const delta = Experience.instance.time.delta / 1000;
 

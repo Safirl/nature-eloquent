@@ -3,8 +3,9 @@ import Experience from "../experience/Experience";
 import type Debug from "../utils/Debug";
 import type GUI from "lil-gui";
 import EnvironmentMap from "./EnvironmentMap";
+import type { LifeTimeObject } from "../types/types";
 
-export default class Environment {
+export default class Environment implements LifeTimeObject {
 	declare shadowHelper: THREE.CameraHelper;
 	declare experience: Experience;
 	declare scene: Experience["scene"];
@@ -46,6 +47,9 @@ export default class Environment {
 		this.setDebugObject();
 	}
 
+	init = () => {};
+	destroy = () => {};
+
 	update() {
 		this.shadowHelper.update();
 	}
@@ -72,9 +76,7 @@ export default class Environment {
 			useAsBackground
 		);
 		if (useAsBackground && backgroundEnvironmentMap) {
-			this.environmentMap.setBackgroundEnvironment(
-				backgroundEnvironmentMap
-			);
+			this.environmentMap.setBackgroundEnvironment(backgroundEnvironmentMap);
 		}
 		this.environmentMap.texture.colorSpace = THREE.SRGBColorSpace;
 
@@ -91,11 +93,8 @@ export default class Environment {
 				.step(0.001)
 				.onChange(this.environmentMap.updateMaterials);
 
-			this.sunlightDebugFolder =
-				this.debugFolder.addFolder("☀️ sunlight");
-			this.shadowHelper = new THREE.CameraHelper(
-				this.sunLight.shadow.camera
-			);
+			this.sunlightDebugFolder = this.debugFolder.addFolder("☀️ sunlight");
+			this.shadowHelper = new THREE.CameraHelper(this.sunLight.shadow.camera);
 			this.shadowHelper.layers.set(2);
 			this.scene.add(this.shadowHelper);
 
