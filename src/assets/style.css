@@ -27,6 +27,7 @@
 	right: 0;
 	padding-bottom: 16px;
 	padding-right: 16px;
+	align-items: end;
 }
 
 .next-dialog {
