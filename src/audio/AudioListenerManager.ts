@@ -5,6 +5,8 @@ export default class AudioListenerManager {
     private declare experience: Experience;
     declare listener: THREE.AudioListener;
     declare allAudio: { audioSrc: string; audio: THREE.Audio | THREE.PositionalAudio }[];
+    // All object element in nature to put positionnal fixe on scene
+    declare soundElementNature: { name: string; src: string; volume: number; position: THREE.Vector3 }[]
 
     constructor() {
         if (!Experience.instance)
@@ -16,6 +18,15 @@ export default class AudioListenerManager {
         this.listener = new THREE.AudioListener();
         this.experience.camera.instance.add(this.listener);
         this.allAudio = [];
+
+        // Si on veut ajouter des sons disposés dans la scène 3D
+        this.soundElementNature = [{
+            name: "bee",
+            src: "/audio/soundEffects/bee.mp3",
+            volume: 0.5,
+            position: new THREE.Vector3(0, 0, 0)
+        }];
+
         this.init();
     }
 
@@ -68,48 +79,14 @@ export default class AudioListenerManager {
             await new Promise((resolve) => setTimeout(resolve, duration / fadeOutSteps));
         }
     }
+
+    playAllSounDElementNature() {
+        this.soundElementNature.forEach((item) => {
+            this.playSfx(item.src, true, item.volume);
+            // Ajouter le son dans la scène à la position définie
+            const sound = this.allAudio[this.allAudio.length - 1].audio as THREE.PositionalAudio;
+            sound.position.copy(item.position);
+        });
+    }
+
 }
-
-// --- OLD, logique déplacé dans Audio2DManager 
-
-// Pour le son globale d'ambiance
-// playAmbiantSound(audioSrc: string) {
-//     const sound = new THREE.Audio(this.listener);
-//     const loader = new THREE.AudioLoader();
-//     loader.load(audioSrc, (buffer) => {
-//         sound.setBuffer(buffer);
-//         sound.setVolume(1);
-//         sound.setLoop(true);
-//         sound.play();
-//     });
-//     this.experience.scene.add(sound);
-//     this.allAudio.push({ audioSrc, audio: sound });
-//     return sound;
-// }
-
-// Pour passer de la musique du début à une autre avec un fondu d'audio
-// async replaceAmbiantSound(oldAudioSrc: string, newAudioSrc: string) {
-//     const found = this.allAudio.find((a) => a.audioSrc === oldAudioSrc);
-
-//     if (found) {
-//         const initialVolume = found.audio.getVolume();
-//         const fadeOutSteps = 20;
-
-//         for (let currentStep = 1; currentStep <= fadeOutSteps; currentStep++) {
-//             const newVolume = initialVolume * (1 - currentStep / fadeOutSteps);
-//             found.audio.setVolume(newVolume);
-//             await this.delayAfterNextAmbiantSound(5);
-//         }
-
-//         found.audio.stop();
-//         this.experience.scene.remove(found.audio);
-//         this.allAudio = this.allAudio.filter((a) => a.audioSrc !== oldAudioSrc);
-
-//     }
-
-//     this.playAmbiantSound(newAudioSrc);
-// }
-
-// delayAfterNextAmbiantSound(duration: number = 100) {
-//     return new Promise((resolve) => setTimeout(resolve, duration));
-// }

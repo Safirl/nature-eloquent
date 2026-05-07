@@ -19,42 +19,53 @@ export default class AudioManager extends EventEmitter {
             this.easingAudio(this.currentAmbient).then(() => {
                 this.currentAmbient.pause();
                 this.audios = this.audios.filter((a) => a.audio !== this.currentAmbient);
-                this.currentAmbient = this.playAudio(audioSrc, true, volume) ?? null;
+                this.currentAmbient = this.playAudio(audioSrc, true, 0) ?? null;
+                if (this.currentAmbient) {
+                    this.easingAudio(this.currentAmbient, true, 2000, volume);
+                }
             });
         } else {
-            this.currentAmbient = this.playAudio(audioSrc, true, volume) ?? null;
+            this.currentAmbient = this.playAudio(audioSrc, true, 0) ?? null;
+            if (this.currentAmbient) {
+                this.easingAudio(this.currentAmbient, true, 2000, volume);
+            }
         }
     }
 
-    playAudio(audioSrc: string, loop: boolean = false, volume: number = 1, startDelay: number = 0) {
+    playAudio(audioSrc: string, loop: boolean = false, volume: number = 1, startDelay: number = 0, fadeIn: boolean = false) {
         if (!audioSrc) return;
 
         const audio = new Audio(audioSrc);
         audio.preload = "auto";
         audio.loop = loop;
-        audio.volume = volume;
+        audio.volume = fadeIn ? 0 : volume;
 
-        this.audios.push({ audio, src: audioSrc, volume });
-        this.setupDebug({ audio, src: audioSrc, volume });
-
-        // Si on veut ajouter un délai avant de jouer le son
         setTimeout(() => {
             audio.play();
+            this.audios.push({ audio, src: audioSrc, volume });
+            if (fadeIn) {
+                this.easingAudio(audio, true, 2000, volume);
+            }
         }, startDelay);
 
-        audio.addEventListener("ended", () => {
-            this.audios = this.audios.filter((a) => a.audio !== audio);
-        });
+        if (!loop) {
+            audio.addEventListener("ended", () => {
+                this.audios = this.audios.filter((a) => a.audio !== audio);
+            });
+        }
+
         return audio;
     }
 
-    stopAudio(audioSrc: string) {
-        const audio = this.audios.find((aud) => aud.src === audioSrc);
-        if (audio) {
-            audio.audio.pause();
-            audio.audio.currentTime = 0;
-            this.audios = this.audios.filter((a) => a !== audio);
+    async stopAudio(audioSrc: string, fade: boolean = false) {
+        const found = this.audios.find((a) => a.src === audioSrc);
+        if (!found) return;
+        if (fade) {
+            await this.easingAudio(found.audio, false);
         }
+        found.audio.pause();
+        found.audio.currentTime = 0;
+        this.audios = this.audios.filter((a) => a !== found);
     }
 
     async playFootStepAudio(audioSrc: string, volume: number = 1) {
@@ -71,16 +82,21 @@ export default class AudioManager extends EventEmitter {
         });
     }
 
-    async easingAudio(audio: HTMLAudioElement, fadeIn: boolean = false, duration: number = 2000) {
-        const initialVolume = fadeIn ? 0 : audio.volume;
-        const fadeOutSteps = 20;
+    async easingAudio(audio: HTMLAudioElement, fadeIn: boolean = false, duration: number = 2000, targetVolume: number = 1) {
+        const steps = 20;
 
-        for (let i = 0; i <= fadeOutSteps; i++) {
-            const newVolume = fadeIn
-                ? (i / fadeOutSteps) * initialVolume
-                : initialVolume * (1 - i / fadeOutSteps);
-            audio.volume = newVolume;
-            await this.delayAfterNextAudio(duration / fadeOutSteps);
+        if (fadeIn) {
+            audio.volume = 0;
+            for (let i = 0; i <= steps; i++) {
+                audio.volume = (i / steps) * targetVolume;
+                await this.delayAfterNextAudio(duration / steps);
+            }
+        } else {
+            const initialVolume = audio.volume;
+            for (let i = 0; i <= steps; i++) {
+                audio.volume = initialVolume * (1 - i / steps);
+                await this.delayAfterNextAudio(duration / steps);
+            }
         }
     }
 
@@ -88,31 +104,15 @@ export default class AudioManager extends EventEmitter {
         return new Promise((resolve) => setTimeout(resolve, duration));
     }
 
-    setupDebug(entry: { audio: HTMLAudioElement, src: string, volume: number }) {
-        if (!this.experience.debug.active) return;
-        if (!this.experience.debug.ui) return;
+    // setupDebug(entry: { audio: HTMLAudioElement, src: string, volume: number }) {
+    //     if (!this.experience.debug.active) return;
+    //     if (!this.experience.debug.ui) return;
 
-        const folder = this.experience.debug.ui.addFolder(entry.src);
-        folder.add(entry, "volume", 0, 1, 0.01)
-            .name("volume")
-            .onChange((v: number) => {
-                entry.audio.volume = v;
-            });
-    }
-
-
-    // --- Aujourd'hui fonction pas encore utilisée
-
-    // loopAudio(audioSrc: string) {
-    //     return this.playAudio(audioSrc, true);
-    // }
-
-    // replaceAudio(oldAudioSrc: string, newAudioSrc: string, loop: boolean = false) {
-    //     this.stopAudio(oldAudioSrc);
-    //     return this.playAudio(newAudioSrc, loop);
-    // }
-
-    // stopLoopAudio(audioSrc: string) {
-    //     this.stopAudio(audioSrc);
+    //     const folder = this.experience.debug.ui.addFolder(entry.src);
+    //     folder.add(entry, "volume", 0, 1, 0.01)
+    //         .name("volume")
+    //         .onChange((v: number) => {
+    //             entry.audio.volume = v;
+    //         });
     // }
 }
