@@ -166,12 +166,92 @@ const sources: Source[] = [
 	{
 		name: "lys_stem_flower",
 		type: "texture",
-		path: "textures/stickers/lys_stem_flower.png",
+		path: "textures/stickers/lys_flower_stem.png",
 	},
 	{
 		name: "lys_stem_flower_shadow",
 		type: "texture",
-		path: "textures/stickers/lys_stem_flower_shadow.png",
+		path: "textures/stickers/lys_flower_stem_shadow.png",
+	},
+	{
+		name: "butterfly",
+		type: "texture",
+		path: "textures/stickers/butterfly.png",
+	},
+	{
+		name: "butterfly_shadow",
+		type: "texture",
+		path: "textures/stickers/butterfly_shadow.png",
+	},
+	{
+		name: "grass",
+		type: "texture",
+		path: "textures/stickers/grass.png",
+	},
+	{
+		name: "grass_shadow",
+		type: "texture",
+		path: "textures/stickers/grass_shadow.png",
+	},
+	{
+		name: "ivy_leaf",
+		type: "texture",
+		path: "textures/stickers/ivy_leaf.png",
+	},
+	{
+		name: "ivy_leaf_shadow",
+		type: "texture",
+		path: "textures/stickers/ivy_leaf_shadow.png",
+	},
+	{
+		name: "mushroom",
+		type: "texture",
+		path: "textures/stickers/mushroom.png",
+	},
+	{
+		name: "mushroom_shadow",
+		type: "texture",
+		path: "textures/stickers/mushroom_shadow.png",
+	},
+	{
+		name: "neroli_leaves",
+		type: "texture",
+		path: "textures/stickers/neroli_leaves.png",
+	},
+	{
+		name: "neroli_leaves_shadow",
+		type: "texture",
+		path: "textures/stickers/neroli_leaves_shadow.png",
+	},
+	{
+		name: "neroli",
+		type: "texture",
+		path: "textures/stickers/neroli.png",
+	},
+	{
+		name: "neroli_shadow",
+		type: "texture",
+		path: "textures/stickers/neroli_shadow.png",
+	},
+	{
+		name: "fern",
+		type: "texture",
+		path: "textures/stickers/fern.png",
+	},
+	{
+		name: "fern_shadow",
+		type: "texture",
+		path: "textures/stickers/fern_shadow.png",
+	},
+	{
+		name: "bramble",
+		type: "texture",
+		path: "textures/stickers/bramble.png",
+	},
+	{
+		name: "bramble_shadow",
+		type: "texture",
+		path: "textures/stickers/bramble_shadow.png",
 	},
 
 
@@ -179,11 +259,6 @@ const sources: Source[] = [
 	 * PLACE HOLDER STICKERS (TO REMOVE)
 	 */
 
-	{
-		name: "mushroom",
-		type: "texture",
-		path: "textures/stickers/mushroom.png",
-	},
 	{
 		name: "mushroom2",
 		type: "texture",
