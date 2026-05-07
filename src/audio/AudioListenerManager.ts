@@ -24,13 +24,27 @@ export default class AudioListenerManager {
             src: "/audio/welcome.mp3",
             volume: 0.5,
             position: new THREE.Vector3(0, 0, 0)
-        }];
+        }, {
+            name: "bird",
+            src: "/audio/welcome.mp3",
+            volume: 0.5,
+            position: new THREE.Vector3(5, 0, -0)
+        }, {
+            name: "water",
+            src: "/audio/welcome.mp3",
+            volume: 0.5,
+            position: new THREE.Vector3(10, 0, 0)
+        }
+        ];
 
         this.init();
     }
 
     init() {
         this.playAllSoundElementNature();
+        this.addDebugControl(this.allAudio[0].audio as THREE.PositionalAudio);
+        this.addDebugControl(this.allAudio[1].audio as THREE.PositionalAudio);
+        this.addDebugControl(this.allAudio[2].audio as THREE.PositionalAudio);
     }
 
     // Pour un son qu'on dépose dans l'espace
@@ -90,7 +104,21 @@ export default class AudioListenerManager {
         this.soundElementNature.forEach((item) => {
             const sound = this.playSfx(item.src, true, item.volume);
             sound.position.copy(item.position);
+            this.addDebugControl(sound);
         });
     }
 
+    addDebugControl(sound: THREE.PositionalAudio) {
+        if (!this.experience.debug.active) return;
+        if (!this.experience.debug.ui) return;
+
+        const sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(0.2),
+            new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true })
+        );
+        sphere.position.copy(sound.position);
+        this.experience.scene.add(sphere);
+
+
+    }
 }
