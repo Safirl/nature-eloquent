@@ -143,7 +143,7 @@ export default class FirstPersonCameraOctree extends Camera {
 	async playFootStepAudio() {
 		if (this.isPlayingFootstep) return;
 		this.isPlayingFootstep = true;
-		await this.gameExperience.audio2DManager.playFootStepAudio("/audio/soundEffects/grassWalk.mp3", 0.8);
+		await this.gameExperience.audio2DManager.playFootStepAudio("/audio/soundEffects/grassWalk.mp3", 0.6);
 		this.isPlayingFootstep = false;
 	}
 
