@@ -63,6 +63,7 @@ export default class Resources extends EventEmitter {
 		}
 	}
 
+
 	sourceLoaded(
 		source: Source,
 		file: GLTF | THREE.Texture | THREE.CubeTexture
