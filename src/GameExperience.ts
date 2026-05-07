@@ -12,6 +12,7 @@ export default class GameExperience extends Experience {
 	declare public audioListenerManager: AudioListenerManager;
 	declare replaceAmbiantSoundBtn: HTMLDivElement;
 	declare audioManager: AudioListenerManager;
+	declare audio2DManager: AudioManager;
 	declare private introductionSequence: Introduction;
 	declare public menu: Menu;
 	declare triggerManager: TriggerManager;
@@ -23,6 +24,7 @@ export default class GameExperience extends Experience {
 	onResourcesLoaded(): void {
 		super.onResourcesLoaded();
 		this.audioListenerManager = new AudioListenerManager();
+		this.audio2DManager = new AudioManager();
 		this.introductionSequence = new Introduction();
 
 
