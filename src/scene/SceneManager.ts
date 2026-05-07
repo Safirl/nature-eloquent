@@ -123,31 +123,37 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		newActiveStep = Object.assign(newActiveStep, staticStep);
 		if (!Array.isArray(newActiveStep.completionConditions)) {
 			if (!newActiveStep.dialogId) {
-				setTimeout(() => {
-					this.onStepTimeoutCompleted(newActiveStep);
-				}, newActiveStep.completionConditions.delay);
+				this.playOnCompletedAudio(newActiveStep);
+				setTimeout(() => this.onStepTimeoutCompleted(newActiveStep), newActiveStep.completionConditions.delay);
 			} else {
 				this.menu.subtitle.on("dialogFinished.condition", () => {
-					setTimeout(() => {
-						this.onStepTimeoutCompleted(newActiveStep);
-					}, newActiveStep.completionConditions.delay);
+					this.playOnCompletedAudio(newActiveStep);
+					setTimeout(() => this.onStepTimeoutCompleted(newActiveStep), newActiveStep.completionConditions.delay);
 				});
 			}
 		}
 		console.log("step:", newActiveStep);
 
 		// S'il y a des bruits d'ambiance dans la scène
-		if (newActiveStep.sceneAudio) {
-			newActiveStep.sceneAudio.forEach((audio) => {
-				if (audio.type === "ambient") {
-					this.audio2DManager.playAmbient(audio.src, audio.volume);
-				} else {
-					this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0);
-				}
-			});
-		}
+		this.playStepAudio(newActiveStep);
 
 		this.activeSteps.push(newActiveStep);
 		this.trigger("onActiveStepAdded", [newActiveStep]);
 	};
+
+	private playStepAudio(step: DialogStep) {
+		step.sceneAudio?.forEach((audio) => {
+			if (audio.type === "ambient") {
+				this.audio2DManager.playAmbient(audio.src, audio.volume);
+			} else if (audio.type === "sfx") {
+				this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0);
+			}
+		});
+	}
+
+	private playOnCompletedAudio(step: DialogStep) {
+		step.sceneAudio?.filter(a => a.type === "onCompleted").forEach((audio) => {
+			this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0);
+		});
+	}
 }

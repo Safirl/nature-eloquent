@@ -32,6 +32,7 @@ export const stepDescription: DialogStep[] = [
 		id: 0,
 		completionConditions: { delay: 1500, nextStepId: 1 },
 		dialogId: "introduction",
+		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_02.mp3", volume: 1, loop: false, startDelay: 0 }],
 	},
 	//reçoit le dinosaure : pas de dialogues
 	{
@@ -45,7 +46,7 @@ export const stepDescription: DialogStep[] = [
 			},
 		],
 		completionConditions: [{ objectId: "dinosaur", count: 1, nextStepId: 2 }],
-		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 500 }],
+
 		// dialogId: "dinosaure_0",
 	},
 	//a posé un premier dinosaure --> dialogue
