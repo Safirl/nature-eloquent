@@ -136,7 +136,7 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 				if (audio.type === "ambient") {
 					this.audio2DManager.playAmbient(audio.src, audio.volume);
 				} else {
-					this.audio2DManager.playAudio(audio.src, true, audio.volume);
+					this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume);
 				}
 			});
 		}

@@ -68,7 +68,8 @@ export default class Placement {
 		manager.add(this.markerPosition);
 		console.log(`Placed instance of ${id} at`, this.markerPosition);
 		const playedAudioSrc = this.audioListenerManager.playRandomSrc(item.sound);
-		this.sound = this.audioListenerManager.playSfx(playedAudioSrc.src, false, playedAudioSrc.volume);
+		const isLoop = item.sound[0].loop ?? false
+		this.sound = this.audioListenerManager.playSfx(playedAudioSrc.src, isLoop, playedAudioSrc.volume);
 		this.sound.position.copy(this.markerPosition);
 		return manager.count;
 	}

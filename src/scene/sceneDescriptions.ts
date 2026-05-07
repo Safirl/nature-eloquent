@@ -10,7 +10,7 @@ export type DialogStep = {
 	completionConditions: ObjectCountCondition[] | { delay: number; nextStepId?: number };
 	dialogId?: string;
 	sounds?: { name: string; src: string }[];
-	sceneAudio?: { type?: "ambient" | "sfx", src: string; volume: number }[];
+	sceneAudio?: { type?: "ambient" | "sfx", src: string; volume: number, loop?: boolean }[];
 	cleanSteps?: boolean;
 	completionCallback?: string;
 };
@@ -353,5 +353,6 @@ export const stepDescription: DialogStep[] = [
 		id: 24,
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onGameEnded",
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/fire_01.mp3", volume: 1 }],
 	},
 ];

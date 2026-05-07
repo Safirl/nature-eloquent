@@ -28,7 +28,7 @@ export default class AudioListenerManager {
         const loader = new THREE.AudioLoader();
         loader.load(audioSrc, (buffer) => {
             sound.setLoop(loop);
-            sound.setRefDistance(3);
+            sound.setRefDistance(2);
             sound.setBuffer(buffer);
             sound.setVolume(volume);
             sound.play();
