@@ -8,6 +8,7 @@ import * as THREE from "three";
 import GameEnvironment from "./GameEnvironment";
 import Menu from "../menu";
 import { add } from "three/tsl";
+import Introduction from "../introduction/Introduction";
 
 export default class Playground extends World {
 	declare experience: Experience;
@@ -20,6 +21,7 @@ export default class Playground extends World {
 	declare layout: Actor;
 	declare forestModel: Actor;
 	declare invisibleWall: Actor;
+	declare private introductionSequence;
 
 	init() {
 		super.init();
@@ -53,7 +55,7 @@ export default class Playground extends World {
 			true,
 			false,
 			this.resources.items.invisibleWallModel as GLTF
-		)
+		);
 
 		this.invisibleWall.model.traverse((child) => {
 			if (child instanceof THREE.Mesh) {
@@ -63,6 +65,7 @@ export default class Playground extends World {
 		});
 
 		this.menu = new Menu();
+		this.introductionSequence = new Introduction();
 
 		// Add colisions
 		const collisionManager = Experience.instance?.collisionManager;
@@ -70,7 +73,7 @@ export default class Playground extends World {
 			throw new Error("Playground initialization failed: CollisionManager is not available.");
 		collisionManager?.addCollisionObjects([this.floor]);
 		collisionManager?.addCollisionObjects([this.layout]);
-		collisionManager?.addCollisionObjects([this.invisibleWall])
+		collisionManager?.addCollisionObjects([this.invisibleWall]);
 	}
 
 	getMenu(): Menu {
@@ -87,5 +90,6 @@ export default class Playground extends World {
 		if (this.environment) {
 			this.environment.update();
 		}
+		if (this.introductionSequence) this.introductionSequence.update();
 	}
 }

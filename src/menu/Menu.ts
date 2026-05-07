@@ -34,7 +34,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 	private experience: Experience;
 
 	private state: MenuState;
-	private view: MenuGL;
+	public view: MenuGL;
 	private input: MenuInput;
 	private placement: Placement;
 
@@ -122,7 +122,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		// }
 	}
 
-	init = () => { };
+	init = () => {};
 	update = () => {
 		this.placement.update();
 		this.view.update()

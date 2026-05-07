@@ -1,6 +1,6 @@
 import "./assets/reset.css";
 import "./assets/style.css";
-import { OrbitCamera, type InputProfile } from "@plugins/baseExperience";
+import { Camera, OrbitCamera, type InputProfile } from "@plugins/baseExperience";
 import sources from "./resources/sources";
 import Playground from "./world/PlaygroundWorld";
 import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
@@ -14,9 +14,6 @@ const init = () => {
 		console.error("no canvas found with three identifier");
 		return;
 	}
-
-
-
 
 	canvas.style.width = "100%";
 	canvas.style.height = "100%";
