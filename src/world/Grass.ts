@@ -19,14 +19,15 @@ export default class Grass implements LifeTimeObject {
 	declare private material: THREE.MeshStandardMaterial;
 	declare private depthMaterial: THREE.MeshDepthMaterial;
 	declare private geometry: THREE.InstancedBufferGeometry;
-	declare private mesh: THREE.Mesh;
+	declare public mesh: THREE.Mesh;
 
 	declare private grassMap: THREE.Texture;
 	declare private grassAlphaMap: THREE.Texture;
 	private grassFieldSizes = { x: 10, y: 10 };
 	public heightRandomness = 1;
+	private count: number = 100000;
 
-	private uniforms = {
+	public uniforms = {
 		uTime: { value: 0 },
 		uWindStrength: { value: 0.118 },
 		uWindFrequency: { value: 0.0006 },
@@ -39,13 +40,22 @@ export default class Grass implements LifeTimeObject {
 		uHeightRandomness: { value: 1 },
 	};
 
-	constructor() {
+	constructor(count?: number, fieldSizeX?: number, fieldSizeZ?: number) {
 		if (!Experience.instance) return;
 
 		this.experience = Experience.instance;
 
 		if (this.experience?.debug.active) {
 			this.debugFolder = this.experience?.debug.ui.addFolder("🌿 Grass");
+		}
+		if (count) {
+			this.count = count;
+		}
+		if (fieldSizeX) {
+			this.grassFieldSizes.x = fieldSizeX;
+		}
+		if (fieldSizeZ) {
+			this.grassFieldSizes.y = fieldSizeZ;
 		}
 		this.setDebugObject();
 
@@ -55,8 +65,6 @@ export default class Grass implements LifeTimeObject {
 	}
 
 	setGeometry() {
-		const count = 100000;
-
 		//prettier-ignore
 		const positions = new Float32Array([
 			0.5, -0.5, 0,
@@ -71,13 +79,13 @@ export default class Grass implements LifeTimeObject {
 		// //prettier-ignore
 		const normals = [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1];
 
-		const globalPositions = new Float32Array(3 * count);
+		const globalPositions = new Float32Array(3 * this.count);
 
 		const fieldWidth = this.grassFieldSizes.x;
 		const fieldDepth = this.grassFieldSizes.y;
 		const fieldHeight = 0;
 
-		for (let i = 0; i < count; i++) {
+		for (let i = 0; i < this.count; i++) {
 			const i3 = i * 3;
 
 			const posX = Math.random() * fieldWidth - fieldWidth * 0.5;
@@ -89,7 +97,7 @@ export default class Grass implements LifeTimeObject {
 		}
 
 		this.geometry = new THREE.InstancedBufferGeometry();
-		this.geometry.instanceCount = count;
+		this.geometry.instanceCount = this.count;
 		this.geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
 		this.geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
 		this.geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
@@ -226,7 +234,16 @@ export default class Grass implements LifeTimeObject {
 	}
 
 	init = () => {};
-	destroy = () => {};
+	destroy = () => {
+		this.mesh.geometry.dispose();
+		for (const key in this.mesh.material) {
+			const value = this.mesh.material[key];
+			if (value && typeof value.dispose === "function") {
+				value.dispose();
+			}
+		}
+		this.experience.scene.remove(this.mesh);
+	};
 	update = () => {
 		if (!Experience.instance) return;
 		this.uniforms.uCameraPosition.value.copy(this.experience.camera.instance.position);

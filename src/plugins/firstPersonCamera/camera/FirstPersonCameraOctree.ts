@@ -23,6 +23,7 @@ export default class FirstPersonCameraOctree extends Camera {
 	declare mass: number;
 	declare delta: number;
 	declare maxPitch: number;
+	public enable = true;
 
 	constructor(height = 1.2, speed = 40, mass = 50, friction = 10) {
 		super();
@@ -53,7 +54,6 @@ export default class FirstPersonCameraOctree extends Camera {
 			0.35
 		);
 		this.playerBox = new THREE.Box3();
-		this.playerCollider.translate(new THREE.Vector3(0, 0, 5));
 	}
 
 	// Création de la camra
@@ -72,6 +72,7 @@ export default class FirstPersonCameraOctree extends Camera {
 		Experience.instance?.canvas.addEventListener("mousedown", this.lockPointer);
 
 		Experience.instance?.canvas.addEventListener("mousemove", (e: MouseEvent) => {
+			if (!this.enable) return;
 			if (document.pointerLockElement === Experience.instance?.canvas) {
 				this.instance.rotation.y -= e.movementX / 500;
 				this.instance.rotation.x -= e.movementY / 500;
@@ -183,7 +184,6 @@ export default class FirstPersonCameraOctree extends Camera {
 	}
 
 	private updatePlayer(delta: number): void {
-		// console.log(this.instance.position);
 		let damping = Math.exp(-this.friction * delta) - 1;
 
 		if (!this.canJump) {
@@ -208,10 +208,11 @@ export default class FirstPersonCameraOctree extends Camera {
 	}
 
 	update(): void {
+		if (!this.enable) return;
 		if (!Experience.instance) {
 			return;
 		}
-		if (document.pointerLockElement !== Experience.instance.canvas) return;
+		// if (document.pointerLockElement !== Experience.instance.canvas) return;
 
 		const delta = Experience.instance.time.delta / 1000;
 

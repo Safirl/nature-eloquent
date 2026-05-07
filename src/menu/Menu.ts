@@ -7,10 +7,10 @@ import MenuInput from "./MenuInput";
 import Placement from "../interactions/Placement";
 import SubtitleManager from "../resources/subtitle/SubtitleManager";
 import dialogSubtitleAudio from "../resources/subtitle/dialogSubtitleAudio.json";
-import SceneManager from "../scene/SceneManager";
 import type { DialogStep } from "../scene/sceneDescriptions";
 import { type MenuItemType } from "../resources/items";
 import TriggerManager from "../trigger/TriggerManager";
+import type GameExperience from "../GameExperience";
 // import mushroomIcon from "../books/mushroom.png";
 
 /**
@@ -31,10 +31,10 @@ import TriggerManager from "../trigger/TriggerManager";
  */
 export default class Menu extends EventEmitter implements LifeTimeObject {
 	public enabled: boolean = true;
-	private experience: Experience;
+	private experience: GameExperience;
 
 	private state: MenuState;
-	private view: MenuGL;
+	public view: MenuGL;
 	private input: MenuInput;
 	private placement: Placement;
 
@@ -42,36 +42,31 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 	declare dialogsAudio: {
 		[key: string]: { [value: string]: { audio: string; dialog: string; speaker: string } };
 	};
-	public sceneManager: SceneManager;
-	public triggerManager: TriggerManager;
 
 	private buttonContainerId = "tool-selector";
 
 	constructor() {
 		super();
 		if (!Experience.instance) throw new Error("Menu: Experience is not initialized");
-		this.experience = Experience.instance;
+		this.experience = Experience.instance as GameExperience;
 
 		this.subtitle = new SubtitleManager();
-		this.subtitle.init();
 		this.dialogsAudio = dialogSubtitleAudio;
 
 		this.state = new MenuState();
 		this.view = new MenuGL(this.state, this.buttonContainerId);
 		this.input = new MenuInput(this.state, this.experience.canvas);
 		this.placement = new Placement();
-		this.sceneManager = new SceneManager(this);
 
 		this.state.on("itemListChanged.menu", this.onItemListChanged);
 		this.input.on("placeRequested.menu", this.onPlaceRequested);
-		this.sceneManager.on("onActiveStepAdded", this.onActiveStepAdded);
-
-		this.sceneManager.init();
-		this.triggerManager = new TriggerManager(this);
 	}
 
+	init = () => {
+		this.experience.sceneManager.on("onActiveStepAdded", this.onActiveStepAdded);
+	};
+
 	private onActiveStepAdded = (dialogueStep: DialogStep) => {
-		// let currentList = this.state.getItemList();
 		const oldItems = dialogueStep.objectsRemoved;
 		if (oldItems) {
 			this.state.removeItems(oldItems);
@@ -82,7 +77,6 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		if (newItems) {
 			this.state.pushItems(newItems);
 		}
-		// console.log("new items", newItems);
 		if (dialogueStep.dialogId) {
 			this.playDialog(dialogueStep.dialogId);
 		}
@@ -106,31 +100,22 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		if (!currentId) return;
 		const count = this.placement.place(currentId);
 		if (count === null) return;
-		// this.maybePlayDialog(currentId, count);
 		this.trigger("onObjectPlaced", [currentId]);
-		// console.log(currentId);
 	};
 
 	private playDialog(itemId: string) {
-		// Ex d'enchaînement du dialogue en fonction du nombre d'objets placés.
 		const dialogData = this.dialogsAudio[itemId];
 		this.subtitle.displayDialog(dialogData);
-		// this.subtitle.displayDialog(itemId);
-		// if (itemId !== "mushroom") return;
-		// if (count === 1) {
-		// } else if (count === 5) {
-		// }
 	}
 
-	init = () => { };
 	update = () => {
 		this.placement.update();
-		this.view.update()
-		this.triggerManager.update();
+		this.view.update();
 	};
 	destroy = () => {
 		this.state.off(".menu");
 		this.input.off(".menu");
+		this.experience.sceneManager.off("onActiveStepAdded");
 		this.input.destroy();
 		this.view.destroy();
 		this.placement.destroy();

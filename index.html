@@ -7,14 +7,20 @@
 		<title>Petit Pois</title>
 	</head>
 	<body>
-		<div class="start-btn">Start the experience</div>
+		<div id="transition-foreground">
+			<div class="loading-container">
+				<p class="loading">Loading...</p>
+				<img src="textures/loading.gif" width="60px"></img>
+			</div>
+		</div>
+		<div class="start-btn">Cliquez pour charger le jeu</div>
 
 		<!-- Btn pour remplacer le son ambiant par un autre -->
 		<!-- <div id="replace-ambient-sound">Replace Ambient Sound</div> -->
 
 		<div id="tool-selector"></div>
 
-		<div id="subtitle">
+		<div id="subtitle" style="opacity: 1;">
 			<p id="character"></p>
 			<p id="dialog"></p>
 		</div>

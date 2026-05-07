@@ -8,15 +8,16 @@ import * as THREE from "three";
 import GameEnvironment from "./GameEnvironment";
 import Menu from "../menu";
 import { add } from "three/tsl";
+import Introduction from "../introduction/Introduction";
+import type GameExperience from "../GameExperience";
 
 export default class Playground extends World {
-	declare experience: Experience;
+	// declare experience: GameExperience;
 	declare scene: Experience["scene"];
 	declare environment: Environment;
 	declare resources: Experience["resources"];
 	declare floor: Floor;
 	declare fox: Actor;
-	declare public menu: Menu;
 	declare layout: Actor;
 	declare forestModel: Actor;
 	declare invisibleWall: Actor;
@@ -53,7 +54,7 @@ export default class Playground extends World {
 			true,
 			false,
 			this.resources.items.invisibleWallModel as GLTF
-		)
+		);
 
 		this.invisibleWall.model.traverse((child) => {
 			if (child instanceof THREE.Mesh) {
@@ -62,30 +63,26 @@ export default class Playground extends World {
 			}
 		});
 
-		this.menu = new Menu();
-
 		// Add colisions
 		const collisionManager = Experience.instance?.collisionManager;
 		if (!collisionManager)
 			throw new Error("Playground initialization failed: CollisionManager is not available.");
 		collisionManager?.addCollisionObjects([this.floor]);
 		collisionManager?.addCollisionObjects([this.layout]);
-		collisionManager?.addCollisionObjects([this.invisibleWall])
-	}
-
-	getMenu(): Menu {
-		return this.menu;
+		collisionManager?.addCollisionObjects([this.invisibleWall]);
 	}
 
 	update() {
 		if (this.fox) {
 			this.fox.update();
 		}
-		if (this.menu) {
-			this.menu.update();
+		const gameExperience = this.experience as GameExperience;
+		if (gameExperience.menu) {
+			gameExperience.menu.update();
 		}
 		if (this.environment) {
 			this.environment.update();
 		}
+		// if (this.introductionSequence) this.introductionSequence.update();
 	}
 }
