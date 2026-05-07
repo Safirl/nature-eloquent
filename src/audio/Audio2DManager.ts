@@ -1,14 +1,31 @@
-import { EventEmitter } from "@plugins/baseExperience";
+import { EventEmitter, Experience } from "@plugins/baseExperience";
 
 export default class AudioManager extends EventEmitter {
-    public audios: { audio: HTMLAudioElement, src: string }[] = []
-
+    public audios: { audio: HTMLAudioElement, src: string, volume: number }[] = []
+    declare experience: Experience;
+    declare currentAmbient: any;
     constructor() {
         super();
+        if (!Experience.instance) throw new Error("AudioManager: Experience is not initialized");
+        this.experience = Experience.instance;
         this.init()
+        this.currentAmbient = null;
+
     }
 
     init() { }
+
+    playAmbient(audioSrc: string, volume: number = 1) {
+        if (this.currentAmbient) {
+            this.fadeOutAudio(this.currentAmbient).then(() => {
+                this.currentAmbient!.pause();
+                this.audios = this.audios.filter((a) => a.audio !== this.currentAmbient);
+                this.currentAmbient = this.playAudio(audioSrc, true, volume) ?? null;
+            });
+        } else {
+            this.currentAmbient = this.playAudio(audioSrc, true, volume) ?? null;
+        }
+    }
 
     playAudio(audioSrc: string, loop: boolean = false, volume: number = 1) {
         if (!audioSrc) return;
@@ -18,8 +35,9 @@ export default class AudioManager extends EventEmitter {
         audio.loop = loop;
         audio.volume = volume;
 
-        this.audios.push({ audio, src: audioSrc });
+        this.audios.push({ audio, src: audioSrc, volume });
         audio.play();
+        this.setupDebug({ audio, src: audioSrc, volume });
 
         audio.addEventListener("ended", () => {
             this.audios = this.audios.filter((a) => a.audio !== audio);
@@ -27,11 +45,12 @@ export default class AudioManager extends EventEmitter {
         return audio;
     }
 
-    async playFootStepAudio(audioSrc: string) {
+    async playFootStepAudio(audioSrc: string, volume: number = 1) {
         await new Promise((resolve) => {
             const audio = new Audio(audioSrc);
             audio.preload = "auto";
             audio.playbackRate = 1;
+            audio.volume = volume;
 
             audio.play();
             audio.addEventListener("ended", () => {
@@ -53,6 +72,18 @@ export default class AudioManager extends EventEmitter {
 
     delayAfterNextAudio(duration: number = 100) {
         return new Promise((resolve) => setTimeout(resolve, duration));
+    }
+
+    setupDebug(entry: { audio: HTMLAudioElement, src: string, volume: number }) {
+        if (!this.experience.debug.active) return;
+        if (!this.experience.debug.ui) return;
+
+        const folder = this.experience.debug.ui.addFolder(entry.src);
+        folder.add(entry, "volume", 0, 1, 0.01)
+            .name("volume")
+            .onChange((v: number) => {
+                entry.audio.volume = v;
+            });
     }
 
 

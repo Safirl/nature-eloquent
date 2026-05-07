@@ -10,6 +10,7 @@ export type DialogStep = {
 	completionConditions: ObjectCountCondition[] | { delay: number; nextStepId?: number };
 	dialogId?: string;
 	sounds?: { name: string; src: string }[];
+	sceneAudio?: { type?: "ambient" | "sfx", src: string; volume: number }[];
 	cleanSteps?: boolean;
 	completionCallback?: string;
 };
@@ -166,6 +167,7 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 2500, nextStepId: undefined },
 		dialogId: "forestIntro",
+		sceneAudio: [{ type: "ambient", src: "/audio/ambiantSounds/EV_Impro_modal_PP_intro.mp3", volume: 1 }]
 	},
 
 	//Autre triggerbox --> L'utilisateur reçoit les fleurs quand il rentre dans la clairière.
@@ -282,15 +284,7 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onStormStarted",
 		dialogId: "storm",
-		sounds: [{
-			name: "thunder",
-			src: "/audio/soundEffects/thunder.mp3",
-		},
-		{
-			name: "lighting",
-			src: "/audio/soundEffects/lighting.mp3"
-		}
-		],
+
 	},
 
 	//triggerbox entrée seconde clairière
@@ -310,6 +304,9 @@ export const stepDescription: DialogStep[] = [
 			{ objectId: "toxicMushroom", count: 5, nextStepId: 21 },
 		],
 		dialogId: "storm",
+		sceneAudio: [{ type: "ambient", src: "/audio/ambiantSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.5 }, {
+			type: "sfx", src: "/audio/soundEffects/lighting.mp3", volume: 1
+		}]
 	},
 
 	//Quand les ronces ont été posées

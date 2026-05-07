@@ -2,6 +2,7 @@ import { EventEmitter, Experience, type LifeTimeObject } from "@plugins/baseExpe
 import type Menu from "../menu";
 import { stepDescription } from "./sceneDescriptions";
 import type { DialogStep, ObjectCountCondition } from "./sceneDescriptions";
+import AudioManager from "../audio/Audio2DManager";
 
 export default class SceneManager extends EventEmitter implements LifeTimeObject {
 	// private currentSceneId: number = 0;
@@ -11,12 +12,14 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 	private isDialogPlaying: boolean = false;
 
 	declare private menu: Menu;
+	declare audio2DManager: AudioManager;
 
 	constructor(menu: Menu) {
 		super();
 		this.activeSteps = [];
 		this.menu = menu;
 		this.menu.on("onObjectPlaced", this.onObjectPlaced);
+		this.audio2DManager = new AudioManager();
 	}
 	init = () => {
 		const exp = Experience.instance;
@@ -127,6 +130,16 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 			}
 		}
 		console.log("step:", newActiveStep);
+
+		if (newActiveStep.sceneAudio) {
+			newActiveStep.sceneAudio.forEach((audio) => {
+				if (audio.type === "ambient") {
+					this.audio2DManager.playAmbient(audio.src, audio.volume);
+				} else {
+					this.audio2DManager.playAudio(audio.src, true, audio.volume);
+				}
+			});
+		}
 
 		this.activeSteps.push(newActiveStep);
 		this.trigger("onActiveStepAdded", [newActiveStep]);

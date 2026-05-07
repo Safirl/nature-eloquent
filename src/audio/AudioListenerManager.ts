@@ -16,24 +16,33 @@ export default class AudioListenerManager {
         this.listener = new THREE.AudioListener();
         this.experience.camera.instance.add(this.listener);
         this.allAudio = [];
+        this.init();
     }
 
-    init() { }
+    init() {
+    }
 
     // Pour un son qu'on dépose dans l'espace
-    playSfx(audioSrc: string, loop: boolean = false) {
+    playSfx(audioSrc: string, loop: boolean = false, volume: number = 1) {
         const sound = new THREE.PositionalAudio(this.listener);
         const loader = new THREE.AudioLoader();
         loader.load(audioSrc, (buffer) => {
             sound.setLoop(loop);
             sound.setRefDistance(3);
             sound.setBuffer(buffer);
-            sound.setVolume(3);
+            sound.setVolume(volume);
             sound.play();
         });
         this.experience.scene.add(sound);
         this.allAudio.push({ audioSrc, audio: sound });
         return sound;
+    }
+
+    // Si on veut un son aléatoire parmi une liste
+    playRandomSrc(audioSrcArray: { src: string, volume?: number }[]) {
+        const randomIndex = Math.floor(Math.random() * audioSrcArray.length);
+        const { src, volume } = audioSrcArray[randomIndex];
+        return { src, volume };
     }
 
     // Pour stoper un sound effect s'il est loopé

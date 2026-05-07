@@ -65,7 +65,7 @@ export default class MenuInput extends EventEmitter {
 		const item = this.state.getItemList()[index];
 		if (!item) return;
 
-		this.audio2DManager.playAudio("/audio/soundEffects/peelSticker.mp3", false, 1);
+		this.audio2DManager.playAudio("/audio/soundEffects/peelSticker_01.mp3", false, 1);
 
 		if (this.lastPressedKeyIndex === index) {
 			this.state.clearCurrentItem();
