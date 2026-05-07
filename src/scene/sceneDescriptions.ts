@@ -10,7 +10,7 @@ export type DialogStep = {
 	completionConditions: ObjectCountCondition[] | { delay: number; nextStepId?: number };
 	dialogId?: string;
 	sounds?: { name: string; src: string }[];
-	sceneAudio?: { type?: "ambient" | "sfx", src: string; volume: number, loop?: boolean }[];
+	sceneAudio?: { type?: "ambient" | "sfx" | "onCompleted", src: string; volume: number, loop?: boolean, startDelay?: number }[];
 	cleanSteps?: boolean;
 	completionCallback?: string;
 };
@@ -45,6 +45,7 @@ export const stepDescription: DialogStep[] = [
 			},
 		],
 		completionConditions: [{ objectId: "dinosaur", count: 1, nextStepId: 2 }],
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 500 }],
 		// dialogId: "dinosaure_0",
 	},
 	//a posé un premier dinosaure --> dialogue
@@ -153,6 +154,7 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		dialogId: "herbarium_3",
 		completionCallback: "onIntroCompleted",
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/openDoor_01.mp3", volume: 1, loop: false, startDelay: 2000 }]
 	},
 	//Déclenché par la triggerbox
 	{
@@ -284,7 +286,6 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onStormStarted",
 		dialogId: "storm",
-
 	},
 
 	//triggerbox entrée seconde clairière
@@ -305,7 +306,7 @@ export const stepDescription: DialogStep[] = [
 		],
 		dialogId: "storm",
 		sceneAudio: [{ type: "ambient", src: "/audio/ambiantSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.5 }, {
-			type: "sfx", src: "/audio/soundEffects/lighting.mp3", volume: 1
+			type: "sfx", src: "/audio/soundEffects/lighting.mp3", volume: 1, loop: false
 		}]
 	},
 

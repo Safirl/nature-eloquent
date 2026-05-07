@@ -58,6 +58,8 @@ export default class FirstPersonCameraOctree extends Camera {
 			0.35
 		);
 		this.playerBox = new THREE.Box3();
+		// Test bug player
+		// this.playerCollider.translate(new THREE.Vector3(0, 10, 0));
 	}
 
 	// Création de la camra

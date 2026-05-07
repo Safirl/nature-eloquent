@@ -10,7 +10,6 @@ export default class AudioManager extends EventEmitter {
         this.experience = Experience.instance;
         this.init()
         this.currentAmbient = null;
-
     }
 
     init() { }
@@ -27,17 +26,19 @@ export default class AudioManager extends EventEmitter {
         }
     }
 
-    playAudio(audioSrc: string, loop: boolean = false, volume: number = 1) {
+    playAudio(audioSrc: string, loop: boolean = false, volume: number = 1, startDelay: number = 0) {
         if (!audioSrc) return;
-
         const audio = new Audio(audioSrc);
         audio.preload = "auto";
         audio.loop = loop;
         audio.volume = volume;
 
         this.audios.push({ audio, src: audioSrc, volume });
-        audio.play();
         this.setupDebug({ audio, src: audioSrc, volume });
+
+        setTimeout(() => {
+            audio.play();
+        }, startDelay);
 
         audio.addEventListener("ended", () => {
             this.audios = this.audios.filter((a) => a.audio !== audio);

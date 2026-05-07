@@ -3,6 +3,8 @@ import type Menu from "../menu";
 import { stepDescription } from "./sceneDescriptions";
 import type { DialogStep, ObjectCountCondition } from "./sceneDescriptions";
 import AudioManager from "../audio/Audio2DManager";
+import AudioListenerManager from "../audio/AudioListenerManager";
+import * as THREE from "three";
 
 export default class SceneManager extends EventEmitter implements LifeTimeObject {
 	// private currentSceneId: number = 0;
@@ -13,6 +15,8 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 
 	declare private menu: Menu;
 	declare audio2DManager: AudioManager;
+	declare audioListenerManager: AudioListenerManager;
+	declare sound: THREE.PositionalAudio;
 
 	constructor(menu: Menu) {
 		super();
@@ -20,6 +24,7 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		this.menu = menu;
 		this.menu.on("onObjectPlaced", this.onObjectPlaced);
 		this.audio2DManager = new AudioManager();
+		this.audioListenerManager = new AudioListenerManager();
 	}
 	init = () => {
 		const exp = Experience.instance;
@@ -131,12 +136,13 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		}
 		console.log("step:", newActiveStep);
 
+		// S'il y a des bruits d'ambiance dans la scène
 		if (newActiveStep.sceneAudio) {
 			newActiveStep.sceneAudio.forEach((audio) => {
 				if (audio.type === "ambient") {
 					this.audio2DManager.playAmbient(audio.src, audio.volume);
 				} else {
-					this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume);
+					this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0);
 				}
 			});
 		}
