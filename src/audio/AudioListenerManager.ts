@@ -45,14 +45,27 @@ export default class AudioListenerManager {
         return { src, volume };
     }
 
-    // Pour stoper un sound effect s'il est loopé
-    stopSfxLoop(audioSrc: string) {
+    // Pour stoper un sound effect
+    stopSfx(audioSrc: string) {
         const found = this.allAudio.find((a) => a.audioSrc === audioSrc);
 
         if (found) {
             found.audio.stop();
             this.experience.scene.remove(found.audio);
             this.allAudio = this.allAudio.filter((a) => a.audioSrc !== audioSrc);
+        }
+    }
+
+    async easingAudio(audio: THREE.Audio | THREE.PositionalAudio, duration: number = 2000, fadeIn: boolean = false) {
+        const initialVolume = fadeIn ? 0 : audio.getVolume();
+        const fadeOutSteps = 20;
+
+        for (let i = 0; i <= fadeOutSteps; i++) {
+            const newVolume = fadeIn
+                ? (i / fadeOutSteps) * initialVolume
+                : initialVolume * (1 - i / fadeOutSteps);
+            audio.setVolume(newVolume);
+            await new Promise((resolve) => setTimeout(resolve, duration / fadeOutSteps));
         }
     }
 }

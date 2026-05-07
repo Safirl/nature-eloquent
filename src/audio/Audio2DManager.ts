@@ -16,8 +16,8 @@ export default class AudioManager extends EventEmitter {
 
     playAmbient(audioSrc: string, volume: number = 1) {
         if (this.currentAmbient) {
-            this.fadeOutAudio(this.currentAmbient).then(() => {
-                this.currentAmbient!.pause();
+            this.easingAudio(this.currentAmbient).then(() => {
+                this.currentAmbient.pause();
                 this.audios = this.audios.filter((a) => a.audio !== this.currentAmbient);
                 this.currentAmbient = this.playAudio(audioSrc, true, volume) ?? null;
             });
@@ -28,6 +28,7 @@ export default class AudioManager extends EventEmitter {
 
     playAudio(audioSrc: string, loop: boolean = false, volume: number = 1, startDelay: number = 0) {
         if (!audioSrc) return;
+
         const audio = new Audio(audioSrc);
         audio.preload = "auto";
         audio.loop = loop;
@@ -36,6 +37,7 @@ export default class AudioManager extends EventEmitter {
         this.audios.push({ audio, src: audioSrc, volume });
         this.setupDebug({ audio, src: audioSrc, volume });
 
+        // Si on veut ajouter un délai avant de jouer le son
         setTimeout(() => {
             audio.play();
         }, startDelay);
@@ -44,6 +46,15 @@ export default class AudioManager extends EventEmitter {
             this.audios = this.audios.filter((a) => a.audio !== audio);
         });
         return audio;
+    }
+
+    stopAudio(audioSrc: string) {
+        const audio = this.audios.find((aud) => aud.src === audioSrc);
+        if (audio) {
+            audio.audio.pause();
+            audio.audio.currentTime = 0;
+            this.audios = this.audios.filter((a) => a !== audio);
+        }
     }
 
     async playFootStepAudio(audioSrc: string, volume: number = 1) {
@@ -60,12 +71,14 @@ export default class AudioManager extends EventEmitter {
         });
     }
 
-    async fadeOutAudio(audio: HTMLAudioElement, duration: number = 1000) {
-        const initialVolume = audio.volume;
+    async easingAudio(audio: HTMLAudioElement, fadeIn: boolean = false, duration: number = 2000) {
+        const initialVolume = fadeIn ? 0 : audio.volume;
         const fadeOutSteps = 20;
 
-        for (let currentStep = 1; currentStep <= fadeOutSteps; currentStep++) {
-            const newVolume = initialVolume * (1 - currentStep / fadeOutSteps);
+        for (let i = 0; i <= fadeOutSteps; i++) {
+            const newVolume = fadeIn
+                ? (i / fadeOutSteps) * initialVolume
+                : initialVolume * (1 - i / fadeOutSteps);
             audio.volume = newVolume;
             await this.delayAfterNextAudio(duration / fadeOutSteps);
         }
@@ -97,16 +110,6 @@ export default class AudioManager extends EventEmitter {
     // replaceAudio(oldAudioSrc: string, newAudioSrc: string, loop: boolean = false) {
     //     this.stopAudio(oldAudioSrc);
     //     return this.playAudio(newAudioSrc, loop);
-    // }
-
-    // stopAudio(audioSrc: string) {
-    //     const audio = this.audios.find((aud) => aud.src === audioSrc);
-
-    //     if (audio) {
-    //         audio.audio.pause();
-    //         audio.audio.currentTime = 0;
-    //         this.audios = this.audios.filter((a) => a !== audio);
-    //     }
     // }
 
     // stopLoopAudio(audioSrc: string) {
