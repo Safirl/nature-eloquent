@@ -5,7 +5,6 @@ export default class AudioListenerManager {
     private declare experience: Experience;
     declare listener: THREE.AudioListener;
     declare allAudio: { audioSrc: string; audio: THREE.Audio | THREE.PositionalAudio }[];
-    // All object element in nature to put positionnal fixe on scene
     declare soundElementNature: { name: string; src: string; volume: number; position: THREE.Vector3 }[]
 
     constructor() {
@@ -22,7 +21,7 @@ export default class AudioListenerManager {
         // Si on veut ajouter des sons disposés dans la scène 3D
         this.soundElementNature = [{
             name: "bee",
-            src: "/audio/soundEffects/bee.mp3",
+            src: "/audio/welcome.mp3",
             volume: 0.5,
             position: new THREE.Vector3(0, 0, 0)
         }];
@@ -31,6 +30,7 @@ export default class AudioListenerManager {
     }
 
     init() {
+        this.playAllSoundElementNature();
     }
 
     // Pour un son qu'on dépose dans l'espace
@@ -67,24 +67,28 @@ export default class AudioListenerManager {
         }
     }
 
-    async easingAudio(audio: THREE.Audio | THREE.PositionalAudio, duration: number = 2000, fadeIn: boolean = false) {
-        const initialVolume = fadeIn ? 0 : audio.getVolume();
-        const fadeOutSteps = 20;
+    async easingAudio(audio: THREE.Audio | THREE.PositionalAudio, duration: number = 2000, fadeIn: boolean = false, targetVolume: number = 1) {
+        const steps = 20;
 
-        for (let i = 0; i <= fadeOutSteps; i++) {
-            const newVolume = fadeIn
-                ? (i / fadeOutSteps) * initialVolume
-                : initialVolume * (1 - i / fadeOutSteps);
-            audio.setVolume(newVolume);
-            await new Promise((resolve) => setTimeout(resolve, duration / fadeOutSteps));
+        if (fadeIn) {
+            audio.setVolume(0);
+            for (let i = 0; i <= steps; i++) {
+                audio.setVolume((i / steps) * targetVolume);
+                await new Promise((resolve) => setTimeout(resolve, duration / steps));
+            }
+        } else {
+            const initialVolume = audio.getVolume();
+            for (let i = 0; i <= steps; i++) {
+                audio.setVolume(initialVolume * (1 - i / steps));
+                await new Promise((resolve) => setTimeout(resolve, duration / steps));
+            }
         }
     }
 
-    playAllSounDElementNature() {
+    // Ajouter des éléments sonores fixes dans la scène
+    playAllSoundElementNature() {
         this.soundElementNature.forEach((item) => {
-            this.playSfx(item.src, true, item.volume);
-            // Ajouter le son dans la scène à la position définie
-            const sound = this.allAudio[this.allAudio.length - 1].audio as THREE.PositionalAudio;
+            const sound = this.playSfx(item.src, true, item.volume);
             sound.position.copy(item.position);
         });
     }

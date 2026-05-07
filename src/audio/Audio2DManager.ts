@@ -14,6 +14,7 @@ export default class AudioManager extends EventEmitter {
 
     init() { }
 
+    // Juste pour le son d'ambiance -> pour avoir une transition plus smooth entre les deux musique (forêt -> orage)
     playAmbient(audioSrc: string, volume: number = 1) {
         if (this.currentAmbient) {
             this.easingAudio(this.currentAmbient).then(() => {
@@ -57,6 +58,7 @@ export default class AudioManager extends EventEmitter {
         return audio;
     }
 
+    // Stopper un son avec fondu si souhaité
     async stopAudio(audioSrc: string, fade: boolean = false) {
         const found = this.audios.find((a) => a.src === audioSrc);
         if (!found) return;
@@ -68,20 +70,7 @@ export default class AudioManager extends EventEmitter {
         this.audios = this.audios.filter((a) => a !== found);
     }
 
-    async playFootStepAudio(audioSrc: string, volume: number = 1) {
-        await new Promise((resolve) => {
-            const audio = new Audio(audioSrc);
-            audio.preload = "auto";
-            audio.playbackRate = 1;
-            audio.volume = volume;
-
-            audio.play();
-            audio.addEventListener("ended", () => {
-                resolve(undefined);
-            });
-        });
-    }
-
+    // Fonction pour faire un fondu
     async easingAudio(audio: HTMLAudioElement, fadeIn: boolean = false, duration: number = 2000, targetVolume: number = 1) {
         const steps = 20;
 
@@ -98,6 +87,21 @@ export default class AudioManager extends EventEmitter {
                 await this.delayAfterNextAudio(duration / steps);
             }
         }
+    }
+
+    // Bruit de pas -> fonction qui attend que l'audio soit terminé (pour éviter de lancer le son des pas trop de fois)
+    async playFootStepAudio(audioSrc: string, volume: number = 1) {
+        await new Promise((resolve) => {
+            const audio = new Audio(audioSrc);
+            audio.preload = "auto";
+            audio.playbackRate = 1;
+            audio.volume = volume;
+
+            audio.play();
+            audio.addEventListener("ended", () => {
+                resolve(undefined);
+            });
+        });
     }
 
     delayAfterNextAudio(duration: number = 100) {
