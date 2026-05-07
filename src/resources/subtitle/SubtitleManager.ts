@@ -39,7 +39,8 @@ export default class SubtitleManager extends EventEmitter {
 		this.typeText(text);
 		this.characterElement.textContent = characterName;
 		this.characterElement.style.color = characterName === "Clémentine:" ? "#FF9500" : "#00596F";
-		this.audioManager.playAudio(audioSrc, false, 1);
+		// this.audioManager.playAudio(audioSrc, false, 1);
+		return this.audioManager.playAudio(audioSrc, false, 1);
 	}
 
 	typeText(text: string, speed: number = 35) {
@@ -70,8 +71,7 @@ export default class SubtitleManager extends EventEmitter {
 		this.trigger("dialogStarted");
 
 		for (const [_key, item] of entries) {
-			this.showSubtitle(item.dialog, item.speaker, item.audio);
-			const audio = this.audioManager.playAudio(item.audio);
+			const audio = this.showSubtitle(item.dialog, item.speaker, item.audio);
 			if (audio) {
 				await new Promise<void>((resolve) => {
 					audio.addEventListener("ended", () => resolve(), { once: true });
