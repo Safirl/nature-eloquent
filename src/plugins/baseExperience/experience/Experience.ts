@@ -100,8 +100,8 @@ export default class Experience implements LifeTimeObject {
 		this.stats?.update();
 		this.camera.update();
 		this.world.update();
-		this.renderer.update();
 		this.inputSystem.update();
+		this.renderer.update();
 	}
 
 	destroy() {

@@ -46,10 +46,10 @@ export default class GameExperience extends Experience {
 	};
 
 	update(): void {
-		if (this.menu) {
-			this.menu.update();
-		}
 		super.update();
+		// if (this.menu) {
+		// 	this.menu.update();
+		// }
 		this.introductionSequence.update();
 	}
 }

@@ -9,15 +9,15 @@ import GameEnvironment from "./GameEnvironment";
 import Menu from "../menu";
 import { add } from "three/tsl";
 import Introduction from "../introduction/Introduction";
+import type GameExperience from "../GameExperience";
 
 export default class Playground extends World {
-	declare experience: Experience;
+	// declare experience: GameExperience;
 	declare scene: Experience["scene"];
 	declare environment: Environment;
 	declare resources: Experience["resources"];
 	declare floor: Floor;
 	declare fox: Actor;
-	declare public menu: Menu;
 	declare layout: Actor;
 	declare forestModel: Actor;
 	declare invisibleWall: Actor;
@@ -72,20 +72,17 @@ export default class Playground extends World {
 		collisionManager?.addCollisionObjects([this.invisibleWall]);
 	}
 
-	getMenu(): Menu {
-		return this.menu;
-	}
-
 	update() {
 		if (this.fox) {
 			this.fox.update();
 		}
-		if (this.menu) {
-			this.menu.update();
+		const gameExperience = this.experience as GameExperience;
+		if (gameExperience.menu) {
+			gameExperience.menu.update();
 		}
 		if (this.environment) {
 			this.environment.update();
 		}
-		if (this.introductionSequence) this.introductionSequence.update();
+		// if (this.introductionSequence) this.introductionSequence.update();
 	}
 }
