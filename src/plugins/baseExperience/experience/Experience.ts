@@ -10,7 +10,6 @@ import Debug from "../utils/Debug";
 import InputSystem from "../inputs/InputSystem";
 import CollisionManager from "../world/CollisionManager";
 import Stats from "three/addons/libs/stats.module.js";
-import TriggerManager from "../../../trigger/TriggerManager";
 
 export default class Experience implements LifeTimeObject {
 	declare canvas: HTMLCanvasElement;
@@ -25,7 +24,6 @@ export default class Experience implements LifeTimeObject {
 	declare inputSystem: InputSystem;
 	declare collisionManager: CollisionManager;
 	declare private stats: Stats;
-	declare triggerManager: TriggerManager;
 
 	static instance: Experience | null = null;
 
@@ -89,7 +87,7 @@ export default class Experience implements LifeTimeObject {
 		this.world.init();
 	}
 
-	init = () => { };
+	init = () => {};
 
 	resize() {
 		this.camera.resize();

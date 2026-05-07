@@ -42,7 +42,6 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 	declare dialogsAudio: {
 		[key: string]: { [value: string]: { audio: string; dialog: string; speaker: string } };
 	};
-	public triggerManager: TriggerManager;
 
 	private buttonContainerId = "tool-selector";
 
@@ -61,7 +60,6 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 
 		this.state.on("itemListChanged.menu", this.onItemListChanged);
 		this.input.on("placeRequested.menu", this.onPlaceRequested);
-		this.triggerManager = new TriggerManager(this);
 	}
 
 	init = () => {
@@ -113,7 +111,6 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 	update = () => {
 		this.placement.update();
 		this.view.update();
-		this.triggerManager.update();
 	};
 	destroy = () => {
 		this.state.off(".menu");

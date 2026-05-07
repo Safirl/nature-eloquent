@@ -14,6 +14,7 @@ export default class GameExperience extends Experience {
 	declare audioManager: AudioListenerManager;
 	declare private introductionSequence: Introduction;
 	declare public menu: Menu;
+	declare triggerManager: TriggerManager;
 
 	constructor(canvas: HTMLCanvasElement, sources: Source[], camera: Camera, world: World) {
 		super(canvas, sources, camera, world);
@@ -41,6 +42,8 @@ export default class GameExperience extends Experience {
 	init = () => {
 		this.menu = new Menu();
 		this.sceneManager = new SceneManager(this.menu);
+		this.triggerManager = new TriggerManager(this.menu);
+
 		this.menu.init();
 		this.sceneManager.init();
 	};
@@ -51,5 +54,8 @@ export default class GameExperience extends Experience {
 		// 	this.menu.update();
 		// }
 		this.introductionSequence.update();
+		if (this.triggerManager) {
+			this.triggerManager.update();
+		}
 	}
 }
