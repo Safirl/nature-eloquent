@@ -19,14 +19,14 @@ export default class Grass implements LifeTimeObject {
 	declare private material: THREE.MeshStandardMaterial;
 	declare private depthMaterial: THREE.MeshDepthMaterial;
 	declare private geometry: THREE.InstancedBufferGeometry;
-	declare private mesh: THREE.Mesh;
+	declare public mesh: THREE.Mesh;
 
 	declare private grassMap: THREE.Texture;
 	declare private grassAlphaMap: THREE.Texture;
 	private grassFieldSizes = { x: 10, y: 10 };
 	public heightRandomness = 1;
 
-	private uniforms = {
+	public uniforms = {
 		uTime: { value: 0 },
 		uWindStrength: { value: 0.118 },
 		uWindFrequency: { value: 0.0006 },

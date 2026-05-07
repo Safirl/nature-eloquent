@@ -1,37 +1,63 @@
 @import "./toolSelector.css";
 @import "./subtitle.css";
+@import "./font.css";
 
-:root{
-  background-color: #485345;
+:root {
+	background-color: #2a393b;
+	font-family: "Reddit Mono";
 }
 
-.next-dialog{
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background-color: rgb(255, 142, 142);
-    cursor: pointer;
+#transition-foreground {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 100000;
+	background-color: #2a393b;
+	top: 0;
+	opacity: 0;
+	color: #fffefb;
+	display: none;
 }
 
-.start-btn{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background-color: white;
-    cursor: pointer;
+.loading-container {
+	display: flex;
+	gap: 16px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding-bottom: 16px;
+	padding-right: 16px;
+}
+
+.next-dialog {
+	position: absolute;
+	top: 20%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px;
+	background-color: rgb(255, 142, 142);
+	cursor: pointer;
+}
+
+.start-btn {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px;
+	/*background-color: white;*/
+	color: #fffefb;
+	cursor: pointer;
 }
 
 #camera-cursor {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.8);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.8);
+	opacity: 0;
 }

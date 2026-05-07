@@ -6,31 +6,52 @@ import Playground from "./world/PlaygroundWorld";
 import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import GameExperience from "./GameExperience";
 import { keyboardProfile } from "./resources/inputProfiles";
-import TriggerManager from "./trigger/TriggerManager";
+import gsap from "gsap";
+import { exp } from "three/src/nodes/TSL.js";
 
-const init = () => {
+const transitionForeground = document.getElementById("transition-foreground") as HTMLDivElement;
+const startBtn = document.querySelector(".start-btn") as HTMLDivElement;
+
+const startLoading = () => {
 	const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement;
 	if (!canvas) {
 		console.error("no canvas found with three identifier");
 		return;
 	}
-
 	canvas.style.width = "100%";
 	canvas.style.height = "100%";
+
 	const camera = new FirstPersonCameraOctree();
 	const world = new Playground();
 	const experience = new GameExperience(canvas, sources, camera, world);
-	//new SubtitleManager();
 	const profiles: InputProfile[] = [keyboardProfile];
-
 	experience.inputSystem.addInputProfiles(profiles);
-	canvas.requestPointerLock();
+
+	experience.resources.on("ready", () => {
+		gsap.to(transitionForeground.style, {
+			opacity: 0,
+			duration: 2,
+			ease: "power1.inOut",
+			onComplete: () => {
+				transitionForeground.style.display = "none";
+			},
+		});
+	});
+	//new SubtitleManager();
 };
 
-const startBtn = document.querySelector(".start-btn") as HTMLDivElement;
+const init = () => {
+	document.removeEventListener("click", init);
+	// canvas.requestPointerLock();
+	transitionForeground.style.display = "inherit";
+	gsap.to(transitionForeground.style, {
+		opacity: 1,
+		duration: 2,
+		onComplete: () => {
+			startBtn.style.display = "none";
+			startLoading();
+		},
+	});
+};
 
-startBtn.addEventListener("click", () => {
-	startBtn.style.display = "none";
-	init();
-});
-// init();
+document.addEventListener("click", init);

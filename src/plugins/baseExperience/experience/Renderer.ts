@@ -1,6 +1,12 @@
 import * as THREE from "three";
 import Experience from "./Experience";
-import { EffectComposer, OutputPass, RenderPass, ShaderPass, type Pass } from "three/examples/jsm/Addons.js";
+import {
+	EffectComposer,
+	OutputPass,
+	RenderPass,
+	ShaderPass,
+	type Pass,
+} from "three/examples/jsm/Addons.js";
 import { GammaCorrectionShader } from "three/examples/jsm/Addons.js";
 
 export default class Renderer {

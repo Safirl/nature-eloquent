@@ -1,6 +1,6 @@
 import type MenuState from "./MenuState";
 import { Experience, type LifeTimeObject } from "@plugins/baseExperience";
-import * as THREE from "three"
+import * as THREE from "three";
 import { plane, type GLTF } from "three/examples/jsm/Addons.js";
 import gsap from "gsap";
 import type FirstPersonCameraOctree from "@plugins/firstPersonCamera/camera/FirstPersonCameraOctree";
@@ -14,7 +14,7 @@ import type FirstPersonCameraOctree from "@plugins/firstPersonCamera/camera/Firs
  * not listen to user input — it is a pure observer of MenuState.
  */
 
-const TRANSITION_DURATION_S = 0.3
+const TRANSITION_DURATION_S = 0.3;
 
 export default class MenuView {
 	private state: MenuState;
@@ -22,21 +22,20 @@ export default class MenuView {
 	private buttons: { id: string; el: HTMLButtonElement }[] = [];
 	private experience: Experience;
 	private scene: THREE.Scene;
-	private declare herbium: THREE.Group;
+	declare private herbium: THREE.Group;
 	private readonly localOffset = new THREE.Vector3(0, -0.275, -0.25);
 	private readonly baseRotation = new THREE.Quaternion().setFromAxisAngle(
 		new THREE.Vector3(0.1, 1, -0.1),
-		-90 * Math.PI / 180
+		(-90 * Math.PI) / 180
 	);
-	private declare holder: THREE.Object3D
-	private stickers = [] as THREE.Mesh[]
-	private stickersProgress = [] as number[]
-	private activeIndex: number = -1
-	private walkIntensity: number = 0
-	private readonly _shakeVec = new THREE.Vector3()
-	private readonly _shakeTilt = new THREE.Quaternion()
-	private readonly _shakeTiltAxis = new THREE.Vector3(0, 0, 1)
-
+	declare private holder: THREE.Object3D;
+	private stickers = [] as THREE.Mesh[];
+	private stickersProgress = [] as number[];
+	private activeIndex: number = -1;
+	private walkIntensity: number = 0;
+	private readonly _shakeVec = new THREE.Vector3();
+	private readonly _shakeTilt = new THREE.Quaternion();
+	private readonly _shakeTiltAxis = new THREE.Vector3(0, 0, 1);
 
 	params = {
 		progress: 0,
@@ -44,74 +43,68 @@ export default class MenuView {
 		frequency: 8,
 		anchor1: 0.2,
 		anchor2: 0.4,
-	}
+	};
 
 	private uniforms = [] as any;
 
 	constructor(state: MenuState, containerId: string) {
 		this.state = state;
 
-		if (!Experience.instance)
-			throw new Error("Menu: Experience is not initialized");
+		if (!Experience.instance) throw new Error("Menu: Experience is not initialized");
 
 		this.experience = Experience.instance;
-		this.scene = this.experience.scene
-
+		this.scene = this.experience.scene;
 
 		const container = document.getElementById(containerId);
-		if (!container)
-			throw new Error(
-				`MenuView: container "${containerId}" not found`
-			);
+		if (!container) throw new Error(`MenuView: container "${containerId}" not found`);
 		this.container = container;
 
 		this.state.on("itemListChanged.menuView", this.onItemListChanged);
 		this.state.on("currentItemChanged.menuView", this.onCurrentItemChanged);
 
-		this.init()
-		this.createTweak()
+		this.init();
+		this.createTweak();
 	}
 
 	private onItemListChanged = () => {
 		this.removeStickers();
 		this.render();
-	}
+	};
 	private onCurrentItemChanged = () => this.updateActive();
 
-
+	hide(isHidden: boolean) {
+		this.herbium.visible = !isHidden;
+	}
 
 	removeStickers() {
-
 		for (const sticker of this.stickers) {
-			this.holder.remove(sticker)
-			sticker.geometry?.dispose()
+			this.holder.remove(sticker);
+			sticker.geometry?.dispose();
 			if (Array.isArray(sticker.material)) {
-				sticker.material.forEach(mat => {
-					mat.dispose()
-				})
+				sticker.material.forEach((mat) => {
+					mat.dispose();
+				});
 			} else {
-				sticker.material?.dispose()
+				sticker.material?.dispose();
 			}
-
 		}
 
-		this.stickers = []
-		this.stickersProgress = []
-		this.activeIndex = -1
-		this.uniforms = []
-
+		this.stickers = [];
+		this.stickersProgress = [];
+		this.activeIndex = -1;
+		this.uniforms = [];
 	}
 
 	init() {
-		this.holder = new THREE.Object3D()
-		this.herbium = (this.experience.resources.items.herbarium as GLTF).scene
-		this.herbium.traverse(obj => {
+		this.holder = new THREE.Object3D();
+		this.herbium = (this.experience.resources.items.herbarium as GLTF).scene;
+		this.herbium.traverse((obj) => {
 			if (obj.name === "pages") {
-				obj.receiveShadow = true
+				obj.receiveShadow = true;
 			}
-		})
-		this.holder.add(this.herbium)
-		this.scene.add(this.holder)
+		});
+		this.holder.add(this.herbium);
+		this.scene.add(this.holder);
 	}
 
 	update() {
@@ -119,9 +112,6 @@ export default class MenuView {
 		const worldOffset = this.localOffset.clone().applyQuaternion(camera.quaternion);
 		this.holder.position.copy(camera.position).add(worldOffset);
 		this.holder.quaternion.copy(camera.quaternion).multiply(this.baseRotation);
-
-
-
 
 		const controller = this.experience.camera as unknown as FirstPersonCameraOctree;
 		const vel = controller.velocity;
@@ -133,20 +123,18 @@ export default class MenuView {
 
 		// Idle
 		const idleStrength = 1 - this.walkIntensity;
-		this._shakeVec.set(0, Math.sin(t * 1.2) * 0.003 * idleStrength, 0)
+		this._shakeVec
+			.set(0, Math.sin(t * 1.2) * 0.003 * idleStrength, 0)
 			.applyQuaternion(camera.quaternion);
 		this.holder.position.add(this._shakeVec);
-
 
 		// Struggle
 		if (this.walkIntensity > 0.001) {
 			const amp = 0.005 * this.walkIntensity;
 
-			this._shakeVec.set(
-				Math.sin(t * 11) * amp,
-				Math.abs(Math.sin(t * 5.5)) * amp * 0.6,
-				0
-			).applyQuaternion(camera.quaternion);
+			this._shakeVec
+				.set(Math.sin(t * 11) * amp, Math.abs(Math.sin(t * 5.5)) * amp * 0.6, 0)
+				.applyQuaternion(camera.quaternion);
 			this.holder.position.add(this._shakeVec);
 
 			this._shakeTilt.setFromAxisAngle(
@@ -156,9 +144,6 @@ export default class MenuView {
 			this.holder.quaternion.multiply(this._shakeTilt);
 		}
 	}
-
-
-
 
 	createStickerMaterial(texture: THREE.Texture) {
 		const material = new THREE.MeshStandardMaterial({
@@ -174,7 +159,7 @@ export default class MenuView {
 			uFrequency: { value: this.params.frequency },
 			uAnchor1: { value: this.params.anchor1 },
 			uAnchor2: { value: this.params.anchor2 },
-			uDirection: { value: 1 }
+			uDirection: { value: 1 },
 		});
 
 		const index = this.uniforms.length - 1;
@@ -183,7 +168,7 @@ export default class MenuView {
 			Object.assign(shader.uniforms, this.uniforms[index]);
 
 			shader.vertexShader = shader.vertexShader.replace(
-				'#include <common>',
+				"#include <common>",
 				`
 				#include <common>
 				uniform float uAmplitude;
@@ -198,7 +183,7 @@ export default class MenuView {
 			);
 
 			shader.vertexShader = shader.vertexShader.replace(
-				'	#include <uv_vertex>',
+				"	#include <uv_vertex>",
 				`
 					#include <uv_vertex>
 					vUv = uv;
@@ -206,7 +191,7 @@ export default class MenuView {
 			);
 
 			shader.vertexShader = shader.vertexShader.replace(
-				'#include <begin_vertex>',
+				"#include <begin_vertex>",
 				`
 				#include <begin_vertex>
 
@@ -223,7 +208,7 @@ export default class MenuView {
 			);
 
 			shader.fragmentShader = shader.fragmentShader.replace(
-				'#include <map_pars_fragment>',
+				"#include <map_pars_fragment>",
 				`
 				#include <map_pars_fragment>
 				uniform sampler2D uTexture;
@@ -232,7 +217,7 @@ export default class MenuView {
 			);
 
 			shader.fragmentShader = shader.fragmentShader.replace(
-				'#include <map_fragment>',
+				"#include <map_fragment>",
 				`
 				vec4 texelColor = texture2D(uTexture, vUv);
 				diffuseColor *= texelColor;
@@ -243,55 +228,48 @@ export default class MenuView {
 		return material;
 	}
 
-
 	private render() {
-		const listToDisplay = this.state.getItemList()
-		const herbariumPosition = new THREE.Vector3()
-		herbariumPosition.copy(this.herbium.position)
+		const listToDisplay = this.state.getItemList();
+		const herbariumPosition = new THREE.Vector3();
+		herbariumPosition.copy(this.herbium.position);
 
-		const stickerWidth = 0.04
+		const stickerWidth = 0.04;
 
 		const stickerGeometry = new THREE.PlaneGeometry(stickerWidth, stickerWidth, 64, 64);
 
-		const startingPos = this.herbium.children[1].geometry.boundingBox.max.y + stickerWidth
-		const gap = 0.01
+		const startingPos = this.herbium.children[1].geometry.boundingBox.max.y + stickerWidth;
+		const gap = 0.01;
 
-		let i = 0
-		let pageIndex = 0
+		let i = 0;
+		let pageIndex = 0;
 
 		for (const el of listToDisplay) {
+			const stickerMaterial = this.createStickerMaterial(
+				this.experience.resources.items[el.vignet] as THREE.Texture
+			);
 
-			const stickerMaterial = this.createStickerMaterial(this.experience.resources.items[el.vignet] as THREE.Texture)
-
-
-			const sticker = new THREE.Mesh(
-				stickerGeometry,
-				stickerMaterial,
-			)
-			sticker.castShadow = true
+			const sticker = new THREE.Mesh(stickerGeometry, stickerMaterial);
+			sticker.castShadow = true;
 
 			sticker.position.set(
 				herbariumPosition.x,
 				herbariumPosition.y + 0.112,
-				herbariumPosition.z
-				+ startingPos
-				- (i * gap + i * stickerWidth)
-				- (pageIndex === 1 ? 0.095 : 0),
-			)
+				herbariumPosition.z +
+					startingPos -
+					(i * gap + i * stickerWidth) -
+					(pageIndex === 1 ? 0.095 : 0)
+			);
 
-			sticker.rotation.y = Math.PI / 2
+			sticker.rotation.y = Math.PI / 2;
 
-			this.holder.add(sticker)
-			this.stickers.push(sticker)
-			this.stickersProgress.push(0)
+			this.holder.add(sticker);
+			this.stickers.push(sticker);
+			this.stickersProgress.push(0);
 
-
-
-			i++
-			pageIndex = i > 2 ? 1 : 0
+			i++;
+			pageIndex = i > 2 ? 1 : 0;
 		}
 	}
-
 
 	private createTweak() {
 		if (this.experience.debug.active) {
@@ -299,73 +277,67 @@ export default class MenuView {
 			debugFolder.add(this.params, "progress", 0, 1, 0.01).onChange((v: number) => {
 				this.stickers.map((s, i) => {
 					this.uniforms[i].uProgress.value = v;
-				})
-			})
+				});
+			});
 			debugFolder.add(this.params, "amplitude", 0, 0.1, 0.001).onChange((v: number) => {
 				this.stickers.map((s, i) => {
 					this.uniforms[i].uAmplitude.value = v;
-				})
-			})
+				});
+			});
 			debugFolder.add(this.params, "frequency", 0, 50, 0.1).onChange((v: number) => {
 				this.stickers.map((s, i) => {
 					this.uniforms[i].uFrequency.value = v;
-				})
-			})
+				});
+			});
 			debugFolder.add(this.params, "anchor1", 0, 1, 0.01).onChange((v: number) => {
 				this.stickers.map((s, i) => {
 					this.uniforms[i].uAnchor1.value = v;
-				})
-			})
+				});
+			});
 			debugFolder.add(this.params, "anchor2", 0, 1, 0.01).onChange((v: number) => {
 				this.stickers.map((s, i) => {
 					this.uniforms[i].uAnchor2.value = v;
-				})
-			})
-
-
+				});
+			});
 		}
 	}
 
 	private updateActive() {
-
 		const resetStickers = () => {
-			let i = -1
+			let i = -1;
 
 			for (const _el of this.stickers) {
-				i++
+				i++;
 				if (i !== this.activeIndex)
 					gsap.to(this.uniforms[i].uProgress, {
 						value: 0,
 						duration: TRANSITION_DURATION_S,
 						ease: "sine.inOut",
-					})
+					});
 
 				this.uniforms[i].uDirection.value = -1;
 			}
-		}
+		};
 
-		this.activeIndex = this.state.getItemList().findIndex(el => el.id === this.state.getCurrentItemId())
+		this.activeIndex = this.state
+			.getItemList()
+			.findIndex((el) => el.id === this.state.getCurrentItemId());
 
+		if (this.activeIndex === -1) return resetStickers();
 
-		if (this.activeIndex === -1) return resetStickers()
+		const selectedSticker = this.stickers[this.activeIndex];
 
-		const selectedSticker = this.stickers[this.activeIndex]
+		if (!selectedSticker) return;
 
-		if (!selectedSticker) return
-
-
-		resetStickers()
+		resetStickers();
 		this.uniforms[this.activeIndex].uDirection.value = 1;
 
 		gsap.to(this.uniforms[this.activeIndex].uProgress, {
 			value: 1,
 			duration: TRANSITION_DURATION_S,
 			ease: "sine.inOut",
-		})
+		});
 	}
 
-	destroy() {
-
-
-	}
+	destroy() {}
 }
