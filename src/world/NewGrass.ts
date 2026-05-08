@@ -142,8 +142,8 @@ export default class Grass implements LifeTimeObject {
 		const matrix = new THREE.Matrix4();
 		const yAxis = new THREE.Vector3(0, 1, 0);
 
-		const offsetX = this.geoMinX + (chunkX / this.xChuncksAmount) * this.geoLegnthX;
-		const offsetZ = this.geoMinZ + (chunkZ / this.zChuncksAmount) * this.geoLegnthZ;
+		const offsetX = this.geoMinX + chunkX * this.chunkSize;
+		const offsetZ = this.geoMinZ + chunkZ * this.chunkSize;
 
 		const raycaster = new THREE.Raycaster();
 		raycaster.ray.direction.set(0, -1, 0);
