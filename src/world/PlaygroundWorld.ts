@@ -20,7 +20,7 @@ export default class Playground extends World {
 	declare fox: Actor;
 	declare layout: Actor;
 	declare forestModel: Actor;
-	declare invisibleWall: Actor;
+	declare invisibleWallModel: Actor;
 
 	init() {
 		super.init();
@@ -48,15 +48,15 @@ export default class Playground extends World {
 			this.resources.items.forestModel as GLTF
 		);
 
-		this.invisibleWall = new Actor(
-			"invisibleWall",
+		this.invisibleWallModel = new Actor(
+			"invisibleWallModel",
 			this.resources.items.invisibleWallModel as GLTF,
 			true,
 			false,
 			this.resources.items.invisibleWallModel as GLTF
 		);
 
-		this.invisibleWall.model.traverse((child) => {
+		this.invisibleWallModel.model.traverse((child) => {
 			if (child instanceof THREE.Mesh) {
 				child.material.transparent = true;
 				child.material.opacity = 0;
@@ -69,7 +69,7 @@ export default class Playground extends World {
 			throw new Error("Playground initialization failed: CollisionManager is not available.");
 		collisionManager?.addCollisionObjects([this.floor]);
 		collisionManager?.addCollisionObjects([this.layout]);
-		collisionManager?.addCollisionObjects([this.invisibleWall]);
+		collisionManager?.addCollisionObjects([this.invisibleWallModel]);
 	}
 
 	update() {
