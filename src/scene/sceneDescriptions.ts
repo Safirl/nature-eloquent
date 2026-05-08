@@ -11,6 +11,7 @@ export type DialogStep = {
 	dialogId?: string;
 	sounds?: { name: string; src: string }[];
 	sceneAudio?: { type?: "ambient" | "sfx" | "onCompleted", src: string; volume: number, loop?: boolean, startDelay?: number }[];
+	removeAudio?: string[];
 	cleanSteps?: boolean;
 	completionCallback?: string;
 };
@@ -275,17 +276,26 @@ export const stepDescription: DialogStep[] = [
 				objectId: "butterfly",
 			},
 		],
-		completionConditions: [{ objectId: "butterfly", count: 5, nextStepId: undefined }],
+		completionConditions: [{ objectId: "butterfly", count: 5, nextStepId: 99 }],
 		completionCallback: "onButterflyPlaced",
 	},
-	// Je rajoute une "scène" en plus pour jouer l'éclair juste avant la triggerbox dans les chemins de forêt -> pour avoir un meilleure cohérence ? éclair -> tu étais sous l'orage ?
-	// Je rajoute également une triggerbox juste avant la triggerbox dans les chemins de forêt
+	// Je rajoute une "scène" en plus pour jouer l'éclair juste avant le blabla du "tu avais du l'orage?"
+	// code qui peut mieux être fait 
 	{
 		name: "lighting",
 		id: 99,
-		completionConditions: { delay: 1500, nextStepId: undefined },
+		completionConditions: { delay: 4000, nextStepId: 18 },
 		completionCallback: "onLighting",
-		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/lighting.mp3", volume: 0.2, loop: true }],
+		sceneAudio: [
+			{
+				type: "sfx",
+				src: "/audio/soundEffects/oneLighting.mp3",
+				volume: 1,
+				loop: false,
+				startDelay: 1500
+			}
+		],
+		dialogId: "void",
 	},
 
 	//triggerbox dans les chemins dans la forêt
@@ -296,7 +306,7 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onStormStarted",
 		dialogId: "storm",
-		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.5 }],
+		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.5 }, { type: "sfx", src: "/audio/soundEffects/orageWind.mp3", volume: 0.8, loop: true, startDelay: 800 }, { type: "sfx", src: "/audio/soundEffects/lightingOrage.mp3", volume: 1, loop: false, startDelay: 800 }],
 	},
 
 	//triggerbox entrée seconde clairière
@@ -316,6 +326,7 @@ export const stepDescription: DialogStep[] = [
 			{ objectId: "toxicMushroom", count: 5, nextStepId: 21 },
 		],
 		dialogId: "storm",
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/slowBreathStress.mp3", volume: 0.7, loop: true }],
 	},
 
 	//Quand les ronces ont été posées
@@ -329,7 +340,6 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "poisonousMushroom",
 		id: 21,
-		objectsRemoved: ["toxicMushroom"],
 		completionConditions: [{ objectId: "toxicMushroom", count: 10, nextStepId: 23 }],
 		dialogId: "poisonousMushroom",
 	},
@@ -337,9 +347,10 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "bramble1",
 		id: 22,
-		objectsRemoved: ["bramble"],
 		completionConditions: [{ objectId: "bramble", count: 10, nextStepId: 23 }],
 		dialogId: "bramble_1",
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/fastBreathStress.mp3", volume: 0.7, loop: true }],
+		removeAudio: ["/audio/soundEffects/slowBreathStress.mp3"],
 	},
 
 	//Dead wood
@@ -354,7 +365,6 @@ export const stepDescription: DialogStep[] = [
 		],
 		completionConditions: [{ objectId: "deadwood", count: 5, nextStepId: 24 }],
 		completionCallback: "onDeadwoodPlaced",
-		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/fire_01.mp3", volume: 1 }],
 	},
 
 	//Fire
@@ -363,6 +373,7 @@ export const stepDescription: DialogStep[] = [
 		id: 24,
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onGameEnded",
-		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/fire_01.mp3", volume: 1 }],
+		dialogId: "fire",
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/fire_01.mp3", volume: 1, loop: true, startDelay: 0 }],
 	},
 ];

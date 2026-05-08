@@ -32,6 +32,7 @@ export default class SubtitleManager extends EventEmitter {
 	init() { }
 
 	showSubtitle(text: string, characterName: string, audioSrc: string) {
+		if (audioSrc === undefined) return
 		if (!this.subtitleElement) return;
 		// this.subtitleElement.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
 		// this.subtitleElement.style.transition = "opacity 0.1s ease-in-out";

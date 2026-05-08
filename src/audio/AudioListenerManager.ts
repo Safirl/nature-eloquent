@@ -48,7 +48,7 @@ export default class AudioListenerManager {
     }
 
     // Pour un son qu'on dépose dans l'espace
-    playSfx(audioSrc: string, loop: boolean = false, volume: number = 1) {
+    playSfx(audioSrc: string, loop: boolean = false, volume: number = 1, startDelay: number = 0) {
         const sound = new THREE.PositionalAudio(this.listener);
         const loader = new THREE.AudioLoader();
         loader.load(audioSrc, (buffer) => {
@@ -56,7 +56,13 @@ export default class AudioListenerManager {
             sound.setRefDistance(2);
             sound.setBuffer(buffer);
             sound.setVolume(volume);
-            sound.play();
+            if (startDelay > 0) {
+                setTimeout(() => {
+                    sound.play();
+                }, startDelay);
+            } else {
+                sound.play();
+            }
         });
         this.experience.scene.add(sound);
         this.allAudio.push({ audioSrc, audio: sound });

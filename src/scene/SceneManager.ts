@@ -137,6 +137,15 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		// S'il y a des bruits d'ambiance dans la scène
 		this.playStepAudio(newActiveStep);
 
+		// Stoper le son qu'on ne souhaite plus entendre
+		if (newActiveStep.removeAudio) {
+			newActiveStep.removeAudio.forEach((audioSrc) => {
+				this.audio2DManager.stopAudio(audioSrc, true);
+			});
+		}
+
+
+
 		this.activeSteps.push(newActiveStep);
 		this.trigger("onActiveStepAdded", [newActiveStep]);
 	};

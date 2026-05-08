@@ -214,5 +214,13 @@
 			"dialog": "J’ai vraiment senti que j’étais dans la merde à ce moment-là.",
 			"speaker": "Petit Pois:"
 		}
+	},
+
+	"void": {
+		"dialog_0": {
+			"audio": "",
+			"dialog": "",
+			"speaker": ""
+		}
 	}
 }

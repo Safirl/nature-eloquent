@@ -35,12 +35,15 @@ export default class TriggerManager extends EventEmitter {
         // Entrée de la première clairière
         this.createTriggerZone({ x: 9, y: 2, z: -61 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(11));
         // Chemin ouvert ??
-        this.createTriggerZone({ x: 20, y: 2, z: -61 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(16));
-        // Entrée des deux chemins (lighting -> storm)
-        this.createTriggerZone({ x: 44, y: 2, z: -59 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(99));
-        this.createTriggerZone({ x: 45, y: 2, z: -59 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(18));
+        this.createTriggerZone({ x: 44, y: 2, z: -59 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(16));
+
         // Entrée de la deuxième clairière
         this.createTriggerZone({ x: 100, y: 11, z: -12 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(19));
+
+
+        // // **** OLD - Entrée des deux chemins (lighting -> storm)
+        // this.createTriggerZone({ x: 44, y: 2, z: -59 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(99));
+        // this.createTriggerZone({ x: 45, y: 2, z: -59 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(18));
     }
 
     createTriggerZone(

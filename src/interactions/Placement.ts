@@ -67,11 +67,19 @@ export default class Placement {
 		if (!manager) return null;
 		manager.add(this.markerPosition);
 		console.log(`Placed instance of ${id} at`, this.markerPosition);
+
 		const playedAudioSrc = this.audioListenerManager.playRandomSrc(item.sound);
 		const isLoop = item.sound[0].loop ?? false
 		this.sound = this.audioListenerManager.playSfx(playedAudioSrc.src, isLoop, playedAudioSrc.volume);
 		this.sound.position.copy(this.markerPosition);
+
+		if (item.animationSound) {
+			const animationSound = this.audioListenerManager.playSfx(item.animationSound.src, item.animationSound.loop ?? false, item.animationSound.volume);
+			animationSound.position.copy(this.markerPosition);
+		}
+
 		return manager.count;
+
 	}
 
 	getCount(id: string): number {

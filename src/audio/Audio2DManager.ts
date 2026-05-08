@@ -72,14 +72,14 @@ export default class AudioManager extends EventEmitter {
         if (fadeIn) {
             audio.volume = 0;
             for (let i = 0; i <= steps; i++) {
-                console.log("volume1:", audio.volume);
+                // console.log("volume1:", audio.volume);
                 audio.volume = (i / steps) * targetVolume;
                 await this.delayAfterNextAudio(duration / steps);
             }
         } else {
             const initialVolume = audio.volume;
             for (let i = 0; i <= steps; i++) {
-                console.log("volume2:", audio.volume);
+                // console.log("volume2:", audio.volume);
                 audio.volume = initialVolume * (1 - i / steps);
                 await this.delayAfterNextAudio(duration / steps);
             }
