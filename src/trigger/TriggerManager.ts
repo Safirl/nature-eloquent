@@ -6,11 +6,12 @@ import Menu from "../menu";
 import type GameExperience from "../GameExperience";
 
 type TriggerZone = {
-    box: THREE.Box3;
-    mesh: THREE.Mesh;
-    isInZone: boolean;
-    onEnter: () => void;
-};
+    box: THREE.Box3,
+    mesh: THREE.Mesh,
+    helper?: THREE.Box3Helper,
+    isInZone: boolean,
+    onEnter: () => void,
+}
 
 export default class TriggerManager extends EventEmitter {
     declare experience: GameExperience;
@@ -31,7 +32,12 @@ export default class TriggerManager extends EventEmitter {
     init() {
         // La porte de la chambre
         this.createTriggerZone({ x: 2, y: 2, z: 1 }, { width: 1, height: 3, depth: 2 }, () => this.sceneManager.addActiveStep(10));
-        this.createTriggerZone({ x: 13, y: 2, z: -20 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(19));
+        // Entrée de la première clairière
+        this.createTriggerZone({ x: 9, y: 2, z: -61 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(11));
+        // Entrée des deux chemins
+        this.createTriggerZone({ x: 45, y: 2, z: -59 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(18));
+        // Entrée de la deuxième clairière
+        this.createTriggerZone({ x: 100, y: 11, z: -12 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(19));
     }
 
     createTriggerZone(
@@ -83,17 +89,41 @@ export default class TriggerManager extends EventEmitter {
     update() {
         const camera = this.experience.camera as FirstPersonCameraOctree;
         for (const trigger of this.allTriggers) {
+            trigger.box.setFromObject(trigger.mesh);
             this.checkTrigger(camera.playerBox, trigger);
         }
     }
 
     private setupDebug() {
         if (!this.experience.debug.active) return;
-        for (const trigger of this.allTriggers) {
+
+        const debugFolder =
+            this.experience.debug.ui.addFolder("Triggers");
+
+        for (const [index, trigger] of this.allTriggers.entries()) {
+
             const material = trigger.mesh.material as THREE.MeshBasicMaterial;
+
             material.wireframe = true;
             material.color.set(0xff0000);
-            material.opacity = 1;
+            material.opacity = 0.3;
+
+            const folder = debugFolder.addFolder(`Trigger ${index}`);
+
+            folder.add(trigger.mesh.position, "x")
+                .min(-200)
+                .max(200)
+                .step(1);
+
+            folder.add(trigger.mesh.position, "y")
+                .min(-50)
+                .max(50)
+                .step(0.1);
+
+            folder.add(trigger.mesh.position, "z")
+                .min(-200)
+                .max(200)
+                .step(1);
         }
     }
 }
