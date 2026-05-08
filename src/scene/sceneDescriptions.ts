@@ -278,6 +278,15 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: [{ objectId: "butterfly", count: 5, nextStepId: undefined }],
 		completionCallback: "onButterflyPlaced",
 	},
+	// Je rajoute une "scène" en plus pour jouer l'éclair juste avant la triggerbox dans les chemins de forêt -> pour avoir un meilleure cohérence ? éclair -> tu étais sous l'orage ?
+	// Je rajoute également une triggerbox juste avant la triggerbox dans les chemins de forêt
+	{
+		name: "lighting",
+		id: 99,
+		completionConditions: { delay: 1500, nextStepId: undefined },
+		completionCallback: "onLighting",
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/lighting.mp3", volume: 0.2, loop: true }],
+	},
 
 	//triggerbox dans les chemins dans la forêt
 	{
@@ -287,6 +296,7 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onStormStarted",
 		dialogId: "storm",
+		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.5 }],
 	},
 
 	//triggerbox entrée seconde clairière
@@ -306,9 +316,6 @@ export const stepDescription: DialogStep[] = [
 			{ objectId: "toxicMushroom", count: 5, nextStepId: 21 },
 		],
 		dialogId: "storm",
-		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.5 }, {
-			type: "sfx", src: "/audio/soundEffects/lighting.mp3", volume: 1, loop: false
-		}]
 	},
 
 	//Quand les ronces ont été posées
@@ -345,7 +352,7 @@ export const stepDescription: DialogStep[] = [
 				objectId: "deadwood",
 			},
 		],
-		completionConditions: [{ objectId: "deadwood", count: 5, nextStepId: undefined }],
+		completionConditions: [{ objectId: "deadwood", count: 5, nextStepId: 24 }],
 		completionCallback: "onDeadwoodPlaced",
 		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/fire_01.mp3", volume: 1 }],
 	},
@@ -356,6 +363,6 @@ export const stepDescription: DialogStep[] = [
 		id: 24,
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onGameEnded",
-
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/fire_01.mp3", volume: 1 }],
 	},
 ];

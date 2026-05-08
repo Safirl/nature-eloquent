@@ -78,7 +78,7 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomPaintedModel",
 		vignet: "butterfly",
 		shadow: "butterfly_shadow",
-		sound: [{ src: "/audio/soundEffects/butterfly_01.mp3", volume: 2, loop: true }],
+		sound: [{ src: "/audio/soundEffects/butterfly_01.mp3", volume: 1, loop: false }],
 	},
 	{
 		id: "grass",
