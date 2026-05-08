@@ -9,7 +9,9 @@ const itemsList: MenuItemType[] = [
 		vignet: "edeilweiss_flower",
 		shadow: "edeilweiss_flower_shadow",
 		isActor: true,
-		sound: [{ src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 1 }]
+		sound: [
+			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
+			{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 4 }, { src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 }, { src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 4 }]
 	},
 	{
 		id: "buttercup",
@@ -17,7 +19,9 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomPaintedModel",
 		vignet: "buttercup_flower",
 		shadow: "buttercup_flower_shadow",
-		sound: [{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 }]
+		sound: [
+			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
+			{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 4 }, { src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 }, { src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 4 }]
 	},
 	{
 		id: "giant_iris",
@@ -44,7 +48,9 @@ const itemsList: MenuItemType[] = [
 		vignet: "iris_flower",
 		shadow: "iris_flower_shadow",
 		isActor: true,
-		sound: [{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 1 }]
+		sound: [
+			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
+			{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 4 }, { src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 }, { src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 4 }]
 	},
 	{
 		id: "lys",
@@ -53,7 +59,9 @@ const itemsList: MenuItemType[] = [
 		vignet: "lys_flower",
 		shadow: "lys_flower_shadow",
 		isActor: true,
-		sound: [{ src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 }]
+		sound: [
+			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
+			{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 4 }, { src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 }, { src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 4 }]
 	},
 	{
 		id: "giant_lys",
@@ -102,7 +110,9 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomPaintedModel",
 		vignet: "neroli_leaves",
 		shadow: "neroli_leaves_shadow",
-		sound: [{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 }]
+		sound: [
+			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
+			{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 4 }, { src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 }, { src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 4 }]
 	},
 	{
 		id: "neroli",
@@ -110,7 +120,9 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomPaintedModel",
 		vignet: "neroli",
 		shadow: "neroli_shadow",
-		sound: [{ src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 }]
+		sound: [
+			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
+			{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 4 }, { src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 }, { src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 4 }]
 	},
 	{
 		id: "fern",
@@ -118,7 +130,7 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomModel",
 		vignet: "mushroom",
 		shadow: "mushroom",
-		sound: [{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 1 }],
+		sound: [{ src: "/audio/soundEffects/fern_01.mp3", volume: 1 }, { src: "/audio/soundEffects/fern_02.mp3", volume: 1 }],
 	},
 	{
 		id: "bramble",
@@ -139,7 +151,7 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomPaintedModel",
 		vignet: "mushroom",
 		shadow: "mushroom",
-		sound: [{ src: "/audio/soundEffects/roarDino_01.mp3", volume: 1 }, { src: "/audio/soundEffects/roarDino_02.mp3", volume: 1 }],
+		sound: [{ src: "/audio/soundEffects/roarDino_01.mp3", volume: 0.2 }, { src: "/audio/soundEffects/roarDino_02.mp3", volume: 0.2 }],
 	},
 	{
 		id: "postcard",
@@ -147,7 +159,7 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomModel",
 		vignet: "mushroom",
 		shadow: "mushroom",
-		sound: [{ src: "/audio/soundEffects/postcard_02.mp3", volume: 1 }],
+		sound: [{ src: "/audio/soundEffects/postcard_01.mp3", volume: 1 }, { src: "/audio/soundEffects/postcard_02.mp3", volume: 1 }],
 	},
 	{
 		id: "vine",
@@ -155,7 +167,7 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomModel",
 		vignet: "mushroom",
 		shadow: "mushroom",
-		sound: [{ src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 1 }]
+		sound: [{ src: "/audio/soundEffects/vine_01.mp3", volume: 2 }, { src: "/audio/soundEffects/vine_02.mp3", volume: 2 }, { src: "/audio/soundEffects/vine_03.mp3", volume: 2 }]
 	},
 	{
 		id: "grassClump",
@@ -163,7 +175,7 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomModel",
 		vignet: "mushroom",
 		shadow: "mushroom",
-		sound: [{ src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 }]
+		sound: [{ src: "/audio/soundEffects/grassClump_01.mp3", volume: 1 }, { src: "/audio/soundEffects/grassClump_02.mp3", volume: 1 }, { src: "/audio/soundEffects/grassClump_03.mp3", volume: 1 }]
 	},
 
 	{
@@ -189,7 +201,7 @@ const itemsList: MenuItemType[] = [
 		model: "mushroomPaintedModel",
 		vignet: "mushroom",
 		shadow: "mushroom",
-		sound: [{ src: "/audio/deadwood.mp3" }],
+		sound: [{ src: "/audio/soundEffects/deadwood_01.mp3", volume: 0.8 }, { src: "/audio/soundEffects/deadwood_02.mp3", volume: 0.8 }, { src: "/audio/soundEffects/deadwood_03.mp3", volume: 0.6 }],
 	},
 ];
 

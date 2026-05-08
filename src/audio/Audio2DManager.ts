@@ -67,7 +67,7 @@ export default class AudioManager extends EventEmitter {
 
     // Fonction pour faire un fondu
     async easingAudio(audio: HTMLAudioElement, fadeIn: boolean = false, duration: number = 2000, targetVolume: number = 1) {
-        const steps = 20;
+        const steps = 80;
 
         if (fadeIn) {
             audio.volume = 0;

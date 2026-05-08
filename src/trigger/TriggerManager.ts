@@ -29,12 +29,9 @@ export default class TriggerManager extends EventEmitter {
     }
 
     init() {
-        this.createTriggerZone({ x: 5, y: 2, z: 0 }, { width: 1, height: 5, depth: 2 }, () =>
-            this.sceneManager.addActiveStep(10)
-        );
-        this.createTriggerZone({ x: 9, y: 2, z: 0 }, { width: 1, height: 5, depth: 2 }, () =>
-            console.log("TRIGGER DIALOGUE 2")
-        );
+        // La porte de la chambre
+        this.createTriggerZone({ x: 2, y: 2, z: 1 }, { width: 1, height: 3, depth: 2 }, () => this.sceneManager.addActiveStep(10));
+        this.createTriggerZone({ x: 13, y: 2, z: -20 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(19));
     }
 
     createTriggerZone(

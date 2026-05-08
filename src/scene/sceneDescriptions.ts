@@ -24,7 +24,6 @@ export type ObjectCountCondition = {
 export function instanceOfObjectCountCondition(object: any): object is ObjectCountCondition {
 	return "objectId" in object;
 }
-
 export const stepDescription: DialogStep[] = [
 	//intro
 	{
@@ -32,7 +31,7 @@ export const stepDescription: DialogStep[] = [
 		id: 0,
 		completionConditions: { delay: 1500, nextStepId: 1 },
 		dialogId: "introduction",
-		sceneAudio: [{ type: "onCompleted", src: "/audio/dooo.mp3", volume: 1, loop: false, startDelay: 0 }],
+		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 0 }],
 	},
 	//reçoit le dinosaure : pas de dialogues
 	{
@@ -76,6 +75,7 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 2500, nextStepId: 4 },
 		dialogId: "dinosaure_1",
+		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 0 }],
 	},
 	//Dialogue fini --> reçoit la post card, pas de dialogue
 	{
@@ -102,6 +102,7 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 1500, nextStepId: 6 },
 		dialogId: "classroom",
+		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 0 }],
 	},
 	// Reçoit l'herbarium --> Dialogue d'objet reçu
 	{
@@ -136,10 +137,10 @@ export const stepDescription: DialogStep[] = [
 		// objectsRemoved: ["grassClump", "vine"],
 		objectsAdded: [
 			{
-				objectId: "rose",
+				objectId: "neroli",
 			},
 		],
-		completionConditions: [{ objectId: "rose", count: 5, nextStepId: 9 }],
+		completionConditions: [{ objectId: "neroli", count: 5, nextStepId: 9 }],
 		dialogId: "herbarium_2",
 	},
 	// a posé les dernier objets --> Dialogue puis suite automatique
@@ -148,7 +149,7 @@ export const stepDescription: DialogStep[] = [
 		id: 9,
 		// objectsAdded: [
 		// 	{
-		// 		objectId: "rose",
+		// 		objectId: "neroli",
 		// 	},
 		// ],
 		// pas de next step, la suivante est trigger par une triggerbox
@@ -170,15 +171,14 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 2500, nextStepId: undefined },
 		dialogId: "forestIntro",
-		sceneAudio: [{ type: "ambient", src: "/audio/dooo.mp3", volume: 1 }]
+		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", volume: 0.2, loop: true }, { type: "sfx", src: "/audio/ambientSounds/forestAmbient.mp3", volume: 0.1, loop: false, startDelay: 0 }],
 	},
 
 	//Autre triggerbox --> L'utilisateur reçoit les fleurs quand il rentre dans la clairière.
-
 	{
 		name: "flower",
 		id: 11,
-		objectsRemoved: ["grassClump", "vine", "rose"],
+		objectsRemoved: ["grassClump", "vine", "neroli"],
 		objectsAdded: [
 			{
 				objectId: "edeilweiss",
@@ -306,7 +306,7 @@ export const stepDescription: DialogStep[] = [
 			{ objectId: "toxicMushroom", count: 5, nextStepId: 21 },
 		],
 		dialogId: "storm",
-		sceneAudio: [{ type: "ambient", src: "/audio/ambiantSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.5 }, {
+		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.5 }, {
 			type: "sfx", src: "/audio/soundEffects/lighting.mp3", volume: 1, loop: false
 		}]
 	},
@@ -347,6 +347,7 @@ export const stepDescription: DialogStep[] = [
 		],
 		completionConditions: [{ objectId: "deadwood", count: 5, nextStepId: undefined }],
 		completionCallback: "onDeadwoodPlaced",
+		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/fire_01.mp3", volume: 1 }],
 	},
 
 	//Fire
@@ -355,6 +356,6 @@ export const stepDescription: DialogStep[] = [
 		id: 24,
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onGameEnded",
-		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/fire_01.mp3", volume: 1 }],
+
 	},
 ];
