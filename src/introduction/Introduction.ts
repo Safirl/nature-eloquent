@@ -37,11 +37,11 @@ export default class Introduction implements LifeTimeObject {
 
 		// const position = new THREE.Vector3()
 
-		this.grass = new Grass(4000, 3, 3);
-		this.grass.mesh.position.set(0, 49.8, -0.3);
-		this.grass.uniforms.uWindScale = { value: 2 };
-		this.grass.uniforms.uWindStrength = { value: 0.039 };
-		this.grass.uniforms.uWindFrequency = { value: 0.0006 };
+		// this.grass = new Grass(4000, 3, 3);
+		// this.grass.mesh.position.set(0, 49.8, -0.3);
+		// this.grass.uniforms.uWindScale = { value: 2 };
+		// this.grass.uniforms.uWindStrength = { value: 0.039 };
+		// this.grass.uniforms.uWindFrequency = { value: 0.0006 };
 
 		camera.instance.position.set(0, 50, 0);
 		camera.instance.rotation.set(0.4, 0, 0);
@@ -96,7 +96,7 @@ export default class Introduction implements LifeTimeObject {
 
 	onIntroductionCompleted = () => {
 		this.exp.init();
-		this.grass.destroy();
+		// this.grass.destroy();
 		this.initPlayerPosition();
 		const dot = document.getElementById("camera-cursor");
 		dot.style.opacity = "1";
@@ -130,7 +130,7 @@ export default class Introduction implements LifeTimeObject {
 	}
 	init = () => {};
 	update = () => {
-		if (this.grass) this.grass.update();
+		// if (this.grass) this.grass.update();
 	};
 	destroy = () => {};
 }

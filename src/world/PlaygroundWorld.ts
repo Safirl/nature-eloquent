@@ -63,6 +63,8 @@ export default class Playground extends World {
 			}
 		});
 
+		(this.environment as GameEnvironment).setGrassTerrain(this.layout.model);
+
 		// Add colisions
 		const collisionManager = Experience.instance?.collisionManager;
 		if (!collisionManager)

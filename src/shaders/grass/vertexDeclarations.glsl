@@ -8,6 +8,7 @@ uniform float uWindFrequency;
 uniform float uWindScale;
 uniform float uHeight;
 uniform float uHeightRandomness;
+uniform float uRenderDistance;
 
 attribute vec3 aGlobalPosition;
 

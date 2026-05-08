@@ -20,7 +20,7 @@ export default class GameEnvironment extends Environment {
 	declare sky: Sky;
 	declare fog: THREE.Fog;
 	declare cloud: Cloud;
-	declare private grass: Grass;
+	declare grass: Grass;
 	declare private pineTreesManager: InstancedMeshManager;
 
 	declare private sunMesh: THREE.Mesh;
@@ -223,6 +223,12 @@ export default class GameEnvironment extends Environment {
 				.min(0)
 				.max(1)
 				.step(0.01);
+		}
+	}
+
+	setGrassTerrain(terrainObject: THREE.Object3D): void {
+		if (this.grass) {
+			this.grass.setTerrain(terrainObject);
 		}
 	}
 
