@@ -32,7 +32,7 @@ export const stepDescription: DialogStep[] = [
 		id: 0,
 		completionConditions: { delay: 1500, nextStepId: 1 },
 		dialogId: "introduction",
-		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_02.mp3", volume: 1, loop: false, startDelay: 0 }],
+		sceneAudio: [{ type: "onCompleted", src: "/audio/dooo.mp3", volume: 1, loop: false, startDelay: 0 }],
 	},
 	//reçoit le dinosaure : pas de dialogues
 	{
@@ -170,7 +170,7 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 2500, nextStepId: undefined },
 		dialogId: "forestIntro",
-		sceneAudio: [{ type: "ambient", src: "/audio/ambiantSounds/EV_Impro_modal_PP_intro.mp3", volume: 1 }]
+		sceneAudio: [{ type: "ambient", src: "/audio/dooo.mp3", volume: 1 }]
 	},
 
 	//Autre triggerbox --> L'utilisateur reçoit les fleurs quand il rentre dans la clairière.

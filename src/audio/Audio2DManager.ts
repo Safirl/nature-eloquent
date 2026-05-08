@@ -3,34 +3,25 @@ import { EventEmitter, Experience } from "@plugins/baseExperience";
 export default class AudioManager extends EventEmitter {
     public audios: { audio: HTMLAudioElement, src: string, volume: number }[] = []
     declare experience: Experience;
-    declare currentAmbient: any;
+    declare currentAmbient: { audio: HTMLAudioElement | null, src: string, volume: number } | null;
+
     constructor() {
         super();
         if (!Experience.instance) throw new Error("AudioManager: Experience is not initialized");
         this.experience = Experience.instance;
         this.init()
         this.currentAmbient = null;
+
     }
 
     init() { }
 
     // Juste pour le son d'ambiance -> pour avoir une transition plus smooth entre les deux musique (forêt -> orage)
-    playAmbient(audioSrc: string, volume: number = 1) {
+    async playAmbient(audioSrc: string, volume: number = 1) {
         if (this.currentAmbient) {
-            this.easingAudio(this.currentAmbient).then(() => {
-                this.currentAmbient.pause();
-                this.audios = this.audios.filter((a) => a.audio !== this.currentAmbient);
-                this.currentAmbient = this.playAudio(audioSrc, true, 0) ?? null;
-                if (this.currentAmbient) {
-                    this.easingAudio(this.currentAmbient, true, 2000, volume);
-                }
-            });
-        } else {
-            this.currentAmbient = this.playAudio(audioSrc, true, 0) ?? null;
-            if (this.currentAmbient) {
-                this.easingAudio(this.currentAmbient, true, 2000, volume);
-            }
+            await this.stopAudio(this.currentAmbient.src, true);
         }
+        this.currentAmbient = { audio: this.playAudio(audioSrc, true, volume, 0, true) ?? null, src: audioSrc, volume };
     }
 
     playAudio(audioSrc: string, loop: boolean = false, volume: number = 1, startDelay: number = 0, fadeIn: boolean = false) {
@@ -68,6 +59,10 @@ export default class AudioManager extends EventEmitter {
         found.audio.pause();
         found.audio.currentTime = 0;
         this.audios = this.audios.filter((a) => a !== found);
+
+        if (this.currentAmbient?.src === audioSrc) {
+            this.currentAmbient = null;
+        }
     }
 
     // Fonction pour faire un fondu
@@ -77,12 +72,14 @@ export default class AudioManager extends EventEmitter {
         if (fadeIn) {
             audio.volume = 0;
             for (let i = 0; i <= steps; i++) {
+                console.log("volume1:", audio.volume);
                 audio.volume = (i / steps) * targetVolume;
                 await this.delayAfterNextAudio(duration / steps);
             }
         } else {
             const initialVolume = audio.volume;
             for (let i = 0; i <= steps; i++) {
+                console.log("volume2:", audio.volume);
                 audio.volume = initialVolume * (1 - i / steps);
                 await this.delayAfterNextAudio(duration / steps);
             }
