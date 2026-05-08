@@ -29,15 +29,16 @@ export default class SubtitleManager extends EventEmitter {
 		this.typingInterval = null;
 	}
 
-	init() { }
+	init() {}
 
 	showSubtitle(text: string, characterName: string, audioSrc: string) {
 		if (!this.subtitleElement) return;
-		this.subtitleElement.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
-		this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
+		// this.subtitleElement.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+		// this.subtitleElement.style.transition = "opacity 0.1s ease-in-out";
 		this.subtitleElement.style.opacity = "1";
 		this.typeText(text);
 		this.characterElement.textContent = characterName;
+		this.characterElement.style.color = characterName === "Clémentine:" ? "#FF9500" : "#00596F";
 		this.audioManager.playAudio(audioSrc);
 	}
 
@@ -58,7 +59,7 @@ export default class SubtitleManager extends EventEmitter {
 
 	hideSubtitle() {
 		if (!this.subtitleElement) return;
-		this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
+		// this.subtitleElement.style.transition = "opacity 0.5s ease-in-out";
 		this.subtitleElement.style.opacity = "0";
 	}
 
@@ -66,7 +67,7 @@ export default class SubtitleManager extends EventEmitter {
 	async displayDialog(dialogData: DialogInteraction, relatedStep?: DialogStep) {
 		const entries = Object.entries(dialogData);
 		if (entries.length === 0) return;
-		this.trigger("dialogStarted", []);
+		this.trigger("dialogStarted");
 
 		for (const [_key, item] of entries) {
 			this.showSubtitle(item.dialog, item.speaker, item.audio);
@@ -80,7 +81,7 @@ export default class SubtitleManager extends EventEmitter {
 		}
 		// console.log("relatedStep", relatedStep);
 		this.hideSubtitle();
-		this.trigger("dialogFinished", []);
+		this.trigger("dialogFinished");
 	}
 
 	// Changement dialogue au clic
