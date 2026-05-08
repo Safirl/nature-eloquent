@@ -58,7 +58,7 @@ const sources: Source[] = [
 	{
 		name: "layoutModel",
 		type: "gltfModel",
-		path: "models/layout/Layout.glb",
+		path: "models/layout/layout.glb",
 	},
 	{
 		name: "forestModel",
@@ -290,6 +290,25 @@ const sources: Source[] = [
 	},
 
 	/***********/
+
+
+
+	/**
+	 * GRASS
+	 */
+
+
+	{
+		name: "grass_model_lods",
+		type: "gltfModel",
+		path: "models/grass/grass.glb",
+	},
+	{
+		name: "grass_texture",
+		type: "texture",
+		path: "textures/grass/grass.jpeg",
+	},
+
 ];
 
 export default sources;
