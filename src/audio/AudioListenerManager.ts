@@ -19,32 +19,32 @@ export default class AudioListenerManager {
         this.allAudio = [];
 
         // Si on veut ajouter des sons disposés dans la scène 3D
-        this.soundElementNature = [{
-            name: "bee",
-            src: "/audio/welcome.mp3",
-            volume: 0.5,
-            position: new THREE.Vector3(0, 0, 0)
-        }, {
-            name: "bird",
-            src: "/audio/welcome.mp3",
-            volume: 0.5,
-            position: new THREE.Vector3(5, 0, -0)
-        }, {
-            name: "water",
-            src: "/audio/welcome.mp3",
-            volume: 0.5,
-            position: new THREE.Vector3(10, 0, 0)
-        }
-        ];
+        // this.soundElementNature = [{
+        //     name: "bee",
+        //     src: "/audio/welcome.mp3",
+        //     volume: 0.5,
+        //     position: new THREE.Vector3(0, 0, 0)
+        // }, {
+        //     name: "bird",
+        //     src: "/audio/welcome.mp3",
+        //     volume: 0.5,
+        //     position: new THREE.Vector3(5, 0, -0)
+        // }, {
+        //     name: "water",
+        //     src: "/audio/welcome.mp3",
+        //     volume: 0.5,
+        //     position: new THREE.Vector3(10, 0, 0)
+        // }
+        // ];
 
         this.init();
     }
 
     init() {
-        this.playAllSoundElementNature();
-        this.addDebugControl(this.allAudio[0].audio as THREE.PositionalAudio);
-        this.addDebugControl(this.allAudio[1].audio as THREE.PositionalAudio);
-        this.addDebugControl(this.allAudio[2].audio as THREE.PositionalAudio);
+        // this.playAllSoundElementNature();
+        // this.addDebugControl(this.allAudio[0].audio as THREE.PositionalAudio);
+        // this.addDebugControl(this.allAudio[1].audio as THREE.PositionalAudio);
+        // this.addDebugControl(this.allAudio[2].audio as THREE.PositionalAudio);
     }
 
     // Pour un son qu'on dépose dans l'espace
