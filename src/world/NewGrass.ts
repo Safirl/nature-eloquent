@@ -184,17 +184,15 @@ export default class Grass implements LifeTimeObject {
 
 
 	updateChunks(playerPos: THREE.Vector3) {
-		// Convert world position to chunk indices, accounting for terrain offset
-		const px = Math.floor((playerPos.x - this.geoMinX) / this.chunkSize);
-		const pz = Math.floor((playerPos.z - this.geoMinZ) / this.chunkSize);
-
-		const radius = 3;
+		const maxDist = 30;
 
 		for (const [key, mesh] of this.chunks) {
 			const [cx, cz] = key.split("_").map(Number);
-			const distX = Math.abs(cx - px);
-			const distZ = Math.abs(cz - pz);
-			mesh.visible = distX <= radius && distZ <= radius;
+			const chunkCenterX = this.geoMinX + (cx + 0.5) * this.chunkSize;
+			const chunkCenterZ = this.geoMinZ + (cz + 0.5) * this.chunkSize;
+			const dx = chunkCenterX - playerPos.x;
+			const dz = chunkCenterZ - playerPos.z;
+			mesh.visible = dx * dx + dz * dz <= maxDist * maxDist;
 		}
 	}
 
