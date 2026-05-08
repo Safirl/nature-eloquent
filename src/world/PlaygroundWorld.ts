@@ -19,6 +19,7 @@ export default class Playground extends World {
 	declare floor: Floor;
 	declare fox: Actor;
 	declare layout: Actor;
+	declare aster: Actor;
 	declare forestModel: Actor;
 	declare invisibleWallModel: Actor;
 
@@ -39,6 +40,14 @@ export default class Playground extends World {
 		);
 		// this.layout.model;
 		this.layout.setScale(1, 1, 1);
+		// this.aster = new Actor(
+		// 	"Bramble",
+		// 	this.resources.items.brambleModel as GLTF,
+		// 	true,
+		// 	false
+		// 	// this.resources.items.aster as GLTF
+		// );
+		// this.aster.setScale(10, 10, 10);
 
 		this.forestModel = new Actor(
 			"forestModel",
@@ -82,6 +91,9 @@ export default class Playground extends World {
 		}
 		if (this.environment) {
 			this.environment.update();
+		}
+		if (this.aster) {
+			this.aster.update();
 		}
 		// if (this.introductionSequence) this.introductionSequence.update();
 	}

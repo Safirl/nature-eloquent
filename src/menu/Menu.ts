@@ -90,7 +90,12 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 				console.warn("found invalid resource for: ", item.model);
 				continue;
 			}
-			const baseMesh = resource.scene.children[0] as THREE.Mesh;
+			let baseMesh;
+			if (item.isActor) {
+				baseMesh = resource;
+			} else {
+				baseMesh = resource.scene.children[0] as THREE.Mesh;
+			}
 			this.placement.register(item.id, baseMesh);
 		}
 	};

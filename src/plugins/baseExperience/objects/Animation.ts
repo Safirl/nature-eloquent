@@ -10,17 +10,16 @@ export class Animation {
 	declare actions: Action[];
 	declare currentAction: Action | undefined;
 
-	play(name: string) {
-		const newAction = this.actions.find(
-			(action) => action.name === name
-		)?.action;
+	play(name: string, oneShot: boolean) {
+		const newAction = this.actions.find((action) => action.name === name)?.action;
 		const oldAction = this.currentAction?.action;
-		if (!newAction)
-			throw new Error(
-				`Invalid action: no action found for name "${name}".`
-			);
+		if (!newAction) throw new Error(`Invalid action: no action found for name "${name}".`);
 
 		newAction.reset();
+		if (oneShot) {
+			newAction.setLoop(THREE.LoopOnce, 0);
+			newAction.clampWhenFinished = true;
+		}
 		newAction.play();
 
 		//Only crossFade if we are already playing an animation

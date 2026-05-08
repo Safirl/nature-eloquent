@@ -156,8 +156,8 @@ export default class Actor implements LifeTimeObject {
 				action: this.animation.mixer.clipAction(animation),
 			});
 		});
-		this.animation.currentAction = this.animation.actions[0];
-		this.animation.currentAction?.action.play();
+		// this.animation.currentAction = this.animation.actions[0];
+		// this.animation.currentAction?.action.play();
 	}
 
 	setDebugObject() {
@@ -167,7 +167,7 @@ export default class Actor implements LifeTimeObject {
 		this.animation.actions.forEach((action) => {
 			const actionName = action.name;
 			debugObject[actionName] = () => {
-				this.animation.play(actionName);
+				this.animation.play(actionName, true);
 			};
 			this.debugFolder.add(debugObject, actionName).name(`Play ${actionName}`);
 		});

@@ -37,7 +37,8 @@ export const stepDescription: DialogStep[] = [
 		id: 1,
 		objectsAdded: [
 			{
-				objectId: "dinosaur",
+				// objectId: "dinosaur",
+				objectId: "bramble",
 				// resourceName: "mushroomPaintedModel",
 			},
 		],

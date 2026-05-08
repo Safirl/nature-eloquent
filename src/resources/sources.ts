@@ -81,6 +81,11 @@ const sources: Source[] = [
 		path: "models/bramble/bramble.gltf",
 	},
 	{
+		name: "asterModel",
+		type: "gltfModel",
+		path: "models/aster/aster.glb",
+	},
+	{
 		name: "mushroomPaintedModel",
 		type: "gltfModel",
 		path: "models/champignon/1/champignon-painted.gltf",

@@ -4,6 +4,8 @@ import * as THREE from "three";
 import InstancedMeshManager from "./InstancedMeshManager";
 import InteractableInstancedMesh from "./InteractableInstancedMesh";
 import AudioListenerManager from "../audio/AudioListenerManager";
+import type { GLTF } from "three/examples/jsm/Addons.js";
+import ActorManager from "./ActorManager";
 
 /**
  * Placement — generic Three.js placement primitive.
@@ -16,7 +18,7 @@ import AudioListenerManager from "../audio/AudioListenerManager";
  */
 export default class Placement {
 	private experience: Experience;
-	private managers: Map<string, InstancedMeshManager> = new Map();
+	private managers: Map<string, InstancedMeshManager | ActorManager> = new Map();
 	private markerPosition: Vector3 | undefined;
 	private debugSphere: THREE.Mesh | undefined;
 	declare audioListenerManager: AudioListenerManager;
@@ -29,9 +31,14 @@ export default class Placement {
 		this.audioListenerManager = new AudioListenerManager();
 	}
 
-	register(id: string, baseMesh: THREE.Mesh) {
+	register(id: string, baseMesh: THREE.Mesh | GLTF) {
 		this.unregister(id);
-		const manager = new InstancedMeshManager(baseMesh);
+		let manager;
+		if (baseMesh instanceof THREE.Mesh) {
+			manager = new InstancedMeshManager(baseMesh);
+		} else {
+			manager = new ActorManager(baseMesh);
+		}
 		this.managers.set(id, manager);
 	}
 
@@ -69,6 +76,9 @@ export default class Placement {
 	}
 
 	update() {
+		this.managers.forEach((m) => {
+			m.update();
+		});
 		this.markerPosition = this.computeMarkerPosition();
 		if (!this.markerPosition) return;
 		if (this.debugSphere) {
@@ -85,13 +95,26 @@ export default class Placement {
 
 		const intersections = raycaster.intersectObjects(this.experience.scene.children, true);
 		if (intersections.length < 1) return undefined;
+		// if (intersections[0].object.name === "managed actor") {
+		// console.log(intersections[0].object.name);
+		// }
 		if (
-			intersections[0].object instanceof InteractableInstancedMesh &&
-			intersections[0].object.isInteractable === false
+			intersections[0].object instanceof InteractableInstancedMesh ||
+			this.getObjectParent(intersections[0].object).isInteractable
+			// && intersections[0].object.isInteractable === false
 		) {
 			return undefined;
 		}
 		return intersections[0].point;
+	}
+
+	getObjectParent(object: THREE.Object3D): THREE.Object3D {
+		const parent = object.parent;
+		if (!parent) return object;
+		if (parent instanceof THREE.Scene) return object;
+		else {
+			return this.getObjectParent(parent);
+		}
 	}
 
 	private setupDebug() {
