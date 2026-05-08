@@ -1,4 +1,4 @@
-import { EventEmitter, type LifeTimeObject } from "@plugins/baseExperience";
+import { EventEmitter, Experience, type LifeTimeObject } from "@plugins/baseExperience";
 import type Menu from "../menu";
 import { stepDescription } from "./sceneDescriptions";
 import type { DialogStep, ObjectCountCondition } from "./sceneDescriptions";
@@ -19,8 +19,11 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		this.menu.on("onObjectPlaced", this.onObjectPlaced);
 	}
 	init = () => {
+		const exp = Experience.instance;
+		if (!exp) return;
+
 		this.bindToDialogEvents();
-		this.addActiveStep(0);
+		this.addActiveStep(exp.debug.active ? 1 : 0);
 	};
 	update = () => {};
 	destroy = () => {};

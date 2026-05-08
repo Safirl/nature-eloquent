@@ -16,13 +16,24 @@ export default class Introduction implements LifeTimeObject {
 	declare private transitionForeground: HTMLDivElement;
 	declare private introductionContainer: HTMLDivElement;
 	constructor() {
+		const exp = Experience.instance;
+		if (!exp) return;
+		this.exp = exp as GameExperience;
+		/**
+		 * SKIP INTRO DEBUG
+		 */
+		if (exp.debug.active) {
+			this.initPlayerPosition();
+			exp.init();
+			return;
+		}
+		/**
+		 * SKIP INTRO DEBUG
+		 */
 		this.transitionForeground = document.getElementById(
 			"transition-foreground"
 		) as HTMLDivElement;
 		document.addEventListener("click", this.launchExperience);
-		const exp = Experience.instance;
-		if (!exp) return;
-		this.exp = exp as GameExperience;
 		this.exp.audioListenerManager.playAmbiantSound(
 			"/audio/ambiantSounds/EV_Impro_modal_PP_intro.mp3"
 		);
