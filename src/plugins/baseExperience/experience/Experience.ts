@@ -86,7 +86,9 @@ export default class Experience implements LifeTimeObject {
 		});
 		this.camera.init();
 		this.world.init();
-		this.areResourcesLoaded = true;
+		setTimeout(() => {
+			this.areResourcesLoaded = true;
+		}, 1500);
 	}
 
 	init = () => {};
