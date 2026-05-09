@@ -40,7 +40,9 @@ export default class Resources extends EventEmitter {
 		for (const source of this.sources) {
 			if (source.type === "gltfModel" && this.loaders.gltfLoader) {
 				const path = source.path as string;
+				console.log("to load", source.name)
 				this.loaders.gltfLoader.load(path, (file) => {
+					console.log("loaded", source.name)
 					this.sourceLoaded(source, file);
 				});
 			} else if (
