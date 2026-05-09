@@ -10,6 +10,7 @@ import RenderingLayers from "../common/RenderingLayers";
 import FogVariables from "../common/Fog";
 import InstancedMeshManager from "../interactions/InstancedMeshManager";
 import InteractableInstancedMesh from "../interactions/InteractableInstancedMesh";
+import NewGrass from "./NewGrass"
 
 export default class GameEnvironment extends Environment {
 	declare protected bloomDebugFolder: GUI;
@@ -20,7 +21,7 @@ export default class GameEnvironment extends Environment {
 	declare sky: Sky;
 	declare fog: THREE.Fog;
 	declare cloud: Cloud;
-	declare private grass: Grass;
+	declare private grass: NewGrass;
 	declare private pineTreesManager: InstancedMeshManager;
 
 	declare private sunMesh: THREE.Mesh;
@@ -38,7 +39,7 @@ export default class GameEnvironment extends Environment {
 		this.setFog();
 		this.setBloom();
 		// this.setForest();
-		// this.grass = new Grass();
+		this.grass = new NewGrass();
 		// this.cloud = new Cloud();
 		// const bg = this.createBackground();
 		// const sky = new THREE.Mesh(
