@@ -68,12 +68,27 @@ const sources: Source[] = [
 	{
 		name: "invisibleWallModel",
 		type: "gltfModel",
-		path: "models/layout/blockingForestModel.glb"
+		path: "models/layout/blockingForestModel.glb",
 	},
 	{
 		name: "mushroomModel",
 		type: "gltfModel",
 		path: "models/champignon/champginon.gltf",
+	},
+	{
+		name: "brambleModel",
+		type: "gltfModel",
+		path: "models/bramble/bramble.gltf",
+	},
+	{
+		name: "asterModel",
+		type: "gltfModel",
+		path: "models/aster/aster.glb",
+	},
+	{
+		name: "edelweissModel",
+		type: "gltfModel",
+		path: "models/edelweiss/Edelweiss.glb",
 	},
 	{
 		name: "mushroomPaintedModel",
@@ -253,7 +268,6 @@ const sources: Source[] = [
 		type: "texture",
 		path: "textures/stickers/bramble_shadow.png",
 	},
-
 
 	/**
 	 * PLACE HOLDER STICKERS (TO REMOVE)
