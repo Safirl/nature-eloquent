@@ -108,22 +108,22 @@ export default class Environment implements LifeTimeObject {
 			this.sunlightDebugFolder
 				.add(this.sunLight.position, "x")
 				.name("sunLightX")
-				.min(-5)
-				.max(5)
+				.min(-50)
+				.max(50)
 				.step(0.001);
 
 			this.sunlightDebugFolder
 				.add(this.sunLight.position, "y")
 				.name("sunLightY")
-				.min(-5)
-				.max(5)
+				.min(-50)
+				.max(50)
 				.step(0.001);
 
 			this.sunlightDebugFolder
 				.add(this.sunLight.position, "z")
 				.name("sunLightZ")
-				.min(-5)
-				.max(5)
+				.min(-50)
+				.max(50)
 				.step(0.001);
 		}
 	}

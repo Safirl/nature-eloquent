@@ -8,7 +8,7 @@ import * as THREE from "three";
 import GameEnvironment from "./GameEnvironment";
 import Menu from "../menu";
 import { add } from "three/tsl";
-import Introduction from "../introduction/Introduction";
+import Introduction from "../sequences/Introduction";
 import type GameExperience from "../GameExperience";
 
 export default class Playground extends World {
@@ -60,17 +60,17 @@ export default class Playground extends World {
 		this.invisibleWallModel = new Actor(
 			"invisibleWallModel",
 			this.resources.items.invisibleWallModel as GLTF,
-			true,
+			false,
 			false,
 			this.resources.items.invisibleWallModel as GLTF
 		);
 
-		this.invisibleWallModel.model.traverse((child) => {
-			if (child instanceof THREE.Mesh) {
-				child.material.transparent = true;
-				child.material.opacity = 0;
-			}
-		});
+		// this.invisibleWallModel.model.traverse((child) => {
+		// 	// if (child instanceof THREE.Mesh) {
+		// 	// 	child.material.transparent = true;
+		// 	// 	child.material.opacity = 0;
+		// 	// }
+		// });
 
 		// Add colisions
 		const collisionManager = Experience.instance?.collisionManager;

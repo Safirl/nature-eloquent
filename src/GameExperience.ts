@@ -3,7 +3,7 @@ import SceneManager from "./scene/SceneManager";
 import SubtitleManager from "./resources/subtitle/SubtitleManager";
 import TriggerManager from "./trigger/TriggerManager";
 import AudioListenerManager from "./audio/AudioListenerManager";
-import Introduction from "./introduction/Introduction";
+import Introduction from "./sequences/Introduction";
 import Menu from "./menu";
 import AudioManager from "./audio/Audio2DManager";
 

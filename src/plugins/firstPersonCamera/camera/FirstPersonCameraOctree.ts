@@ -68,7 +68,7 @@ export default class FirstPersonCameraOctree extends Camera {
 			70,
 			this.sizes.width / this.sizes.height,
 			0.1,
-			1000
+			100
 		);
 		this.instance.rotation.order = "YXZ";
 		super.setInstance();
@@ -222,10 +222,7 @@ export default class FirstPersonCameraOctree extends Camera {
 
 		this.instance.position.copy(this.playerCollider.end);
 
-		this.playerBox.setFromPoints([
-			this.playerCollider.start,
-			this.playerCollider.end
-		]);
+		this.playerBox.setFromPoints([this.playerCollider.start, this.playerCollider.end]);
 	}
 
 	update(): void {
@@ -265,6 +262,15 @@ export default class FirstPersonCameraOctree extends Camera {
 			return;
 		}
 		super.setDebugObject();
+
+		this.debugFolder
+			.add(this.instance, "far")
+			.min(0)
+			.max(200)
+			.step(0.1)
+			.onChange(() => {
+				this.instance.updateProjectionMatrix();
+			});
 
 		const movementsFolder = this.debugFolder.addFolder("movements");
 
