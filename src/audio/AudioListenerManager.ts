@@ -5,7 +5,7 @@ export default class AudioListenerManager {
     private declare experience: Experience;
     declare listener: THREE.AudioListener;
     declare allAudio: { audioSrc: string; audio: THREE.Audio | THREE.PositionalAudio }[];
-    declare soundElementNature: { name: string; src: string; volume: number; position: THREE.Vector3 }[]
+    declare soundElementNature: { name: string; src: string; volume: number; position: THREE.Vector3, refDistance?: number }[]
 
     constructor() {
         if (!Experience.instance)
@@ -19,23 +19,43 @@ export default class AudioListenerManager {
         this.allAudio = [];
 
         // Si on veut ajouter des sons disposés dans la scène 3D
-        // this.soundElementNature = [{
-        //     name: "bee",
-        //     src: "/audio/welcome.mp3",
-        //     volume: 0.5,
-        //     position: new THREE.Vector3(0, 0, 0)
-        // }, {
-        //     name: "bird",
-        //     src: "/audio/welcome.mp3",
-        //     volume: 0.5,
-        //     position: new THREE.Vector3(5, 0, -0)
-        // }, {
-        //     name: "water",
-        //     src: "/audio/welcome.mp3",
-        //     volume: 0.5,
-        //     position: new THREE.Vector3(10, 0, 0)
-        // }
-        // ];
+        this.soundElementNature = [
+            {
+                name: "grenouille",
+                src: "/audio/ambientSounds/grenouille_01.mp3",
+                volume: 0.5,
+                position: new THREE.Vector3(10, 0, 1),
+                refDistance: 1
+            },
+            {
+                name: "bird02",
+                src: "/audio/ambientSounds/bird_02.mp3",
+                volume: 0.5,
+                position: new THREE.Vector3(10, 5, -6),
+                refDistance: 1
+            },
+            {
+                name: "bird03",
+                src: "/audio/ambientSounds/bird_03.mp3",
+                volume: 0.5,
+                position: new THREE.Vector3(15, 3, -15),
+                refDistance: 1
+            },
+            // ,
+            // {
+            //     name: "bird",
+            //     src: "/audio/welcome.mp3",
+            //     volume: 0.5,
+            //     position: new THREE.Vector3(5, 0, -0)
+            // }
+            // ,
+            // {
+            //     name: "water",
+            //     src: "/audio/welcome.mp3",
+            //     volume: 0.5,
+            //     position: new THREE.Vector3(10, 0, 0)
+            // }
+        ];
 
         this.init();
     }
@@ -48,12 +68,12 @@ export default class AudioListenerManager {
     }
 
     // Pour un son qu'on dépose dans l'espace
-    playSfx(audioSrc: string, loop: boolean = false, volume: number = 1, startDelay: number = 0) {
+    playSfx(audioSrc: string, loop: boolean = false, volume: number = 1, startDelay: number = 0, refDistance: number = 1) {
         const sound = new THREE.PositionalAudio(this.listener);
         const loader = new THREE.AudioLoader();
         loader.load(audioSrc, (buffer) => {
             sound.setLoop(loop);
-            sound.setRefDistance(2);
+            sound.setRefDistance(refDistance);
             sound.setBuffer(buffer);
             sound.setVolume(volume);
             if (startDelay > 0) {
@@ -89,7 +109,6 @@ export default class AudioListenerManager {
 
     async easingAudio(audio: THREE.Audio | THREE.PositionalAudio, duration: number = 2000, fadeIn: boolean = false, targetVolume: number = 1) {
         const steps = 20;
-
         if (fadeIn) {
             audio.setVolume(0);
             for (let i = 0; i <= steps; i++) {
@@ -108,7 +127,7 @@ export default class AudioListenerManager {
     // Ajouter des éléments sonores fixes dans la scène
     playAllSoundElementNature() {
         this.soundElementNature.forEach((item) => {
-            const sound = this.playSfx(item.src, true, item.volume);
+            const sound = this.playSfx(item.src, true, item.volume, 0, item.refDistance ?? 1);
             sound.position.copy(item.position);
             this.addDebugControl(sound);
         });
@@ -124,7 +143,5 @@ export default class AudioListenerManager {
         );
         sphere.position.copy(sound.position);
         this.experience.scene.add(sphere);
-
-
     }
 }

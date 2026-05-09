@@ -143,9 +143,6 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 				this.audio2DManager.stopAudio(audioSrc, true);
 			});
 		}
-
-
-
 		this.activeSteps.push(newActiveStep);
 		this.trigger("onActiveStepAdded", [newActiveStep]);
 	};
@@ -154,8 +151,9 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		step.sceneAudio?.forEach((audio) => {
 			if (audio.type === "ambient") {
 				this.audio2DManager.playAmbient(audio.src, audio.volume);
-			} else if (audio.type === "sfx") {
-				this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0);
+			}
+			else if (audio.type === "sfx") {
+				this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0, true);
 			}
 		});
 	}
