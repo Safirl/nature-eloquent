@@ -2,17 +2,6 @@ import { Experience, type LifeTimeObject } from "@plugins/baseExperience";
 import type GUI from "lil-gui";
 import * as THREE from "three";
 import { MeshSurfaceSampler } from "three/addons/math/MeshSurfaceSampler.js";
-
-//@ts-ignore
-import grassFragment from "@shaders/grass/fragment.glsl";
-//@ts-ignore
-import grassVertex from "@shaders/grass/vertex.glsl";
-//@ts-ignore
-import grassVertexDeclarations from "@shaders/grass/vertexDeclarations.glsl";
-//@ts-ignore
-import grassFragmentDeclarations from "@shaders/grass/fragmentDeclarations.glsl";
-//@ts-ignore
-import grassVertexBeginNormal from "@shaders/grass/grassBeginNormalVertex.glsl";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 
 export default class Grass implements LifeTimeObject {
@@ -62,7 +51,7 @@ export default class Grass implements LifeTimeObject {
 		uGrassMapTexture: { value: new THREE.Texture() },
 		uGrassAlphaMap: { value: new THREE.Texture() },
 		uDarkFactor: { value: new THREE.Color(0xffffff) },
-		uHeight: { value: 0.3 },
+		uHeight: { value: 0.03 },
 		uHeightRandomness: { value: 1 },
 	};
 
@@ -90,11 +79,119 @@ export default class Grass implements LifeTimeObject {
 	}
 
 	setMaterial() {
-		this.grassMaterial = new THREE.MeshBasicMaterial({
-			color: 0xff0000,
-			side: THREE.DoubleSide
-		})
+		const grassTexture = this.experience.resources.items.grass_texture as THREE.Texture;
+		const noiseTexture = this.experience.resources.items.pelrin_noise as THREE.Texture;
 
+		this.grassMaterial = new THREE.MeshLambertMaterial({
+			side: THREE.DoubleSide,
+			transparent: true,
+			alphaTest: 0.1,
+		});
+
+		this.grassMaterial.onBeforeCompile = (shader: any) => {
+			shader.uniforms.uTime = this.uniforms.uTime;
+			shader.uniforms.uWindStrength = this.uniforms.uWindStrength;
+			shader.uniforms.uWindFrequency = this.uniforms.uWindFrequency;
+			shader.uniforms.uWindScale = this.uniforms.uWindScale;
+			shader.uniforms.uGrassAlphaTexture = { value: grassTexture };
+			shader.uniforms.uNoiseTexture = { value: noiseTexture };
+			shader.uniforms.uNoiseScale = { value: 1.5 };
+			shader.uniforms.uBaseColor = {
+				value: new THREE.Color("#313f1b",),
+			};
+			shader.uniforms.uTipColor1 = {
+				// value: new THREE.Color("#9bd38d"), Too light 
+				value: new THREE.Color("#2a7a48"),
+			};
+			shader.uniforms.uTipColor2 = {
+				value: new THREE.Color("#1f352a"),
+			};
+
+			shader.vertexShader = shader.vertexShader.replace(
+				`#include <common>`,
+				`#include <common>
+				uniform float uTime;
+				uniform float uWindStrength;
+				uniform float uWindFrequency;
+				uniform float uWindScale;
+				uniform sampler2D uNoiseTexture;
+				uniform float uNoiseScale;
+
+				varying vec2 vGrassUv;
+      			varying vec3 vColor;
+      			varying vec2 vGlobalUV;
+      			varying vec2 vUv;
+      			varying vec2 vWindColor;
+				`
+			);
+
+			// Wind displacement using per-instance world position for phase variation
+			shader.vertexShader = shader.vertexShader.replace(
+				`	#include <fog_vertex>`,
+				`	#include <fog_vertex>
+
+				vGrassUv = uv;
+
+
+   				vec2 uWindDirection = vec2(1.0,1.0);
+        		float uWindAmp = 0.1;
+        		float uWindFreq = 50.;
+        		float uSpeed = 1.0;
+        		float uNoiseFactor = 5.50;
+        		float uNoiseSpeed = 0.001;
+
+        		vec2 windDirection = normalize(uWindDirection); // Normalize the wind direction
+        		vec4 modelPosition = modelMatrix * instanceMatrix * vec4(position, 1.0);
+
+        		float terrainSize = 100.;
+        		vGlobalUV = (terrainSize-vec2(modelPosition.xz))/terrainSize;
+
+        		vec4 noise = texture2D(uNoiseTexture,vGlobalUV+uTime*uNoiseSpeed);
+
+        		float sinWave = sin(uWindFreq*dot(windDirection, vGlobalUV) + noise.g*uNoiseFactor + uTime * uSpeed) * uWindAmp * (1.-uv.y);
+
+        		float xDisp = sinWave;
+        		float zDisp = sinWave;
+        		modelPosition.x += xDisp;
+        		modelPosition.z += zDisp;
+
+        		// use perlinNoise to vary the terrainHeight of the grass
+        		modelPosition.y += exp(texture2D(uNoiseTexture,vGlobalUV * uNoiseScale).r) * 0.05 * (1.-uv.y);
+
+        		vec4 viewPosition = viewMatrix * modelPosition;
+        		vec4 projectedPosition = projectionMatrix * viewPosition;
+        		gl_Position = projectedPosition;
+`);
+
+			shader.fragmentShader = shader.fragmentShader.replace(
+				`#include <common>`,
+				`#include <common>
+				uniform sampler2D uGrassAlphaTexture;
+				uniform vec3 uBaseColor;
+				uniform vec3 uTipColor1;
+				uniform vec3 uTipColor2;
+				uniform sampler2D uNoiseTexture;
+				uniform float uNoiseScale;
+
+				varying vec2 vGrassUv;
+				varying vec2 vGlobalUV;
+				`
+			);
+
+			shader.fragmentShader = shader.fragmentShader.replace(
+				`#include <map_fragment>`,
+				`
+				
+				vec4 grassVariation = texture2D(uNoiseTexture, vGlobalUV * uNoiseScale);
+        		vec3 tipColor = mix(uTipColor1,uTipColor2,grassVariation.r);
+				
+				vec4 grassAlpha = texture2D(uGrassAlphaTexture, vec2(vGrassUv.x, 1.0 - vGrassUv.y));
+				if (grassAlpha.r < 0.1) discard;
+				
+				vec3 grassColor = mix(uBaseColor, tipColor, vGrassUv.y);
+				diffuseColor = vec4(grassColor, 1.0);`
+			);
+		};
 	}
 
 	createChunks(grassSurface: THREE.Mesh) {
@@ -126,19 +223,14 @@ export default class Grass implements LifeTimeObject {
 		const key = `${chunkX}_${chunkZ}`;
 		const grassDensity = 70;
 
-		const material = new THREE.MeshBasicMaterial({
-			color: new THREE.Color(Math.random(), Math.random(), Math.random()),
-			side: THREE.DoubleSide,
-		});
-
 		const mesh = new THREE.InstancedMesh(
 			this.grassGeometry,
-			material,
+			this.grassMaterial,
 			grassDensity * grassDensity
 		);
 
 		const quaternion = new THREE.Quaternion();
-		const scale = new THREE.Vector3(1, 1, 1);
+		const scale = new THREE.Vector3(4, 4, 4);
 		const matrix = new THREE.Matrix4();
 		const yAxis = new THREE.Vector3(0, 1, 0);
 
@@ -210,6 +302,7 @@ export default class Grass implements LifeTimeObject {
 	update = () => {
 		if (!Experience.instance) return;
 
+		this.uniforms.uTime.value = this.experience.time.elapsed / 1000;
 		const playerPos = this.experience.camera.instance.position;
 		this.updateChunks(playerPos);
 	};

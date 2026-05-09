@@ -308,6 +308,11 @@ const sources: Source[] = [
 		type: "texture",
 		path: "textures/grass/grass.jpeg",
 	},
+	{
+		name: "pelrin_noise",
+		type: "texture",
+		path: "textures/perlinnoise.webp",
+	},
 
 ];
 
