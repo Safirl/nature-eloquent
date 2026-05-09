@@ -172,7 +172,7 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 2500, nextStepId: undefined },
 		dialogId: "forestIntro",
-		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", volume: 0.2, loop: true }, { type: "sfx", src: "/audio/ambientSounds/forestAmbient.mp3", volume: 0.1, loop: false, startDelay: 0 }],
+		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", volume: 0.08, loop: true }, { type: "sfx", src: "/audio/ambientSounds/forestAmbient.mp3", volume: 0.07, loop: false, startDelay: 0 }],
 	},
 
 	//Autre triggerbox --> L'utilisateur reçoit les fleurs quand il rentre dans la clairière.
@@ -306,7 +306,7 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onStormStarted",
 		dialogId: "storm",
-		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.5 }, { type: "sfx", src: "/audio/soundEffects/orageWind.mp3", volume: 0.8, loop: true, startDelay: 800 }, { type: "sfx", src: "/audio/soundEffects/lightingOrage.mp3", volume: 1, loop: false, startDelay: 800 }],
+		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.1 }, { type: "sfx", src: "/audio/soundEffects/orageWind.mp3", volume: 0.8, loop: true, startDelay: 800 }, { type: "sfx", src: "/audio/soundEffects/lightingOrage.mp3", volume: 1, loop: false, startDelay: 800 }],
 	},
 
 	//triggerbox entrée seconde clairière
