@@ -214,8 +214,8 @@ const itemsList: MenuItemType[] = [
 		id: "deadwood",
 		name: "Bois mort",
 		model: "mushroomPaintedModel",
-		vignet: "mushroom",
-		shadow: "mushroom",
+		vignet: "dead_wood",
+		shadow: "dead_wood_shadow",
 		sound: [{ src: "/audio/soundEffects/deadwood_01.mp3", volume: 0.8 }, { src: "/audio/soundEffects/deadwood_02.mp3", volume: 0.8 }, { src: "/audio/soundEffects/deadwood_03.mp3", volume: 0.6 }],
 	},
 ];

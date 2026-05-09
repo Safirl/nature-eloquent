@@ -268,6 +268,16 @@ const sources: Source[] = [
 		type: "texture",
 		path: "textures/stickers/bramble_shadow.png",
 	},
+	{
+		name: "dead_wood_shadow",
+		type: "texture",
+		path: "textures/stickers/dead_wood_shadow.png",
+	},
+	{
+		name: "dead_wood",
+		type: "texture",
+		path: "textures/stickers/dead_wood.png",
+	},
 
 	/**
 	 * PLACE HOLDER STICKERS (TO REMOVE)
