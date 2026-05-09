@@ -10,7 +10,8 @@ import RenderingLayers from "../common/RenderingLayers";
 import FogVariables from "../common/Fog";
 import InstancedMeshManager from "../interactions/InstancedMeshManager";
 import InteractableInstancedMesh from "../interactions/InteractableInstancedMesh";
-import NewGrass from "./NewGrass"
+import NewGrass from "./NewGrass";
+import AtmosphereSwitcher from "./AtmosphereSwitcher";
 
 export default class GameEnvironment extends Environment {
 	declare protected bloomDebugFolder: GUI;
@@ -24,10 +25,12 @@ export default class GameEnvironment extends Environment {
 	declare private grass: NewGrass;
 	declare private pineTreesManager: InstancedMeshManager;
 
-	declare private sunMesh: THREE.Mesh;
+	declare public sunMesh: THREE.Mesh;
 	declare private selectiveBloom: SelectiveBloom;
 	declare private bloomPass: UnrealBloomPass;
 	declare public renderScene: RenderPass;
+
+	declare public atmosphereSwitcher: AtmosphereSwitcher;
 
 	constructor(
 		lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined,
@@ -47,6 +50,7 @@ export default class GameEnvironment extends Environment {
 		//     new THREE.MeshBasicMaterial( { map: bg, side: THREE.BackSide } )
 		// );
 		// this.scene.add( sky );
+		this.atmosphereSwitcher = new AtmosphereSwitcher(this);
 	}
 
 	setFog() {
@@ -59,7 +63,7 @@ export default class GameEnvironment extends Environment {
 			this.fogDebugFolder = this.debugFolder.addFolder("🌫️ fog");
 			this.fogDebugFolder.open(false);
 			this.fogDebugFolder.add(this.fog, "near").name("fog near").min(0).max(100).step(0.1);
-
+			this.fogDebugFolder.addColor(this.fog, "color").name("fog color");
 			this.fogDebugFolder.add(this.fog, "far").name("fog far").min(0).max(1000).step(0.1);
 		}
 	}
@@ -80,7 +84,6 @@ export default class GameEnvironment extends Environment {
 
 		this.sunLight = new THREE.DirectionalLight("#ffffff", 3);
 		this.sunLight.castShadow = true;
-		this.sunLight.shadow.camera.far = 25;
 		this.sunLight.shadow.mapSize.set(2048, 2048);
 		this.sunLight.shadow.radius = 1;
 		this.sunLight.shadow.normalBias = 0.05;
@@ -94,7 +97,7 @@ export default class GameEnvironment extends Environment {
 		// this.sunLight.castShadow = false;
 
 		this.sunLight.shadow.camera.near = 1;
-		this.sunLight.shadow.camera.far = 100;
+		this.sunLight.shadow.camera.far = 1000;
 		this.sunLight.shadow.camera.top = 60;
 		this.sunLight.shadow.camera.right = 60;
 		this.sunLight.shadow.camera.left = -60;
@@ -102,10 +105,6 @@ export default class GameEnvironment extends Environment {
 		this.sunLight.target = this.camera;
 
 		this.setSunPlane();
-
-		/**
-		 * Add debugger
-		 */
 	}
 
 	setForest() {
@@ -126,6 +125,38 @@ export default class GameEnvironment extends Environment {
 	setDebugObject(): void {
 		super.setDebugObject();
 		if (this.debug.active) {
+			this.sunlightDebugFolder
+				.add(this.sunLight, "intensity")
+				.name("sunLightIntensity")
+				.min(0)
+				.max(10)
+				.step(0.001);
+
+			this.sunlightDebugFolder.addColor(this.sunLight, "color").onChange(() => {
+				//@ts-ignore
+				this.sunMesh.material.emissive = this.sunLight.color;
+			});
+
+			this.sunlightDebugFolder
+				.add(this.sunlightOffset, "x")
+				.name("sunLightX")
+				.min(-100)
+				.max(100)
+				.step(0.001);
+
+			this.sunlightDebugFolder
+				.add(this.sunlightOffset, "y")
+				.name("sunLightY")
+				.min(-100)
+				.max(100)
+				.step(0.001);
+
+			this.sunlightDebugFolder
+				.add(this.sunlightOffset, "z")
+				.name("sunLightZ")
+				.min(-100)
+				.max(100)
+				.step(0.001);
 			this.sunlightDebugFolder
 				.add(this.sunLight.shadow.camera, "near")
 				.name("sunlight shadow near")
@@ -177,8 +208,8 @@ export default class GameEnvironment extends Environment {
 		this.sunMesh = new THREE.Mesh(
 			new THREE.CircleGeometry(),
 			new THREE.MeshStandardMaterial({
-				emissive: new THREE.Color(0xffffff),
-				emissiveIntensity: 6,
+				emissive: this.sunLight.color,
+				emissiveIntensity: 20,
 			})
 		);
 		this.sunMesh.position.set(

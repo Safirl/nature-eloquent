@@ -1,8 +1,4 @@
-import {
-	Debug,
-	Experience,
-	type LifeTimeObject,
-} from "@plugins/baseExperience";
+import { Debug, Experience, type LifeTimeObject } from "@plugins/baseExperience";
 import type GUI from "lil-gui";
 import * as THREE from "three";
 //@ts-ignore
@@ -30,15 +26,15 @@ export default class Sky implements LifeTimeObject {
 	private gradients: Gradient[] = [
 		{
 			index: 0,
-			0: "#4499B0",
+			0: "#6BCCE6",
 			1: "#9CC0D0",
-			2: "#ABC3B6",
+			2: "#DCE4E6",
 		},
 		{
 			index: 1,
-			0: "#689599",
-			1: "#C8ECC8",
-			2: "#EAFBEA",
+			0: "#6BA4E6",
+			1: "#D0B49C",
+			2: "#ECBFBF",
 		},
 		{
 			index: 2,
@@ -105,26 +101,17 @@ export default class Sky implements LifeTimeObject {
 			side: THREE.BackSide,
 			uniforms: {
 				color0: {
-					value: new THREE.Color(
-						this.gradients[this.currentGradientIndex][0]
-					),
+					value: new THREE.Color(this.gradients[this.currentGradientIndex][0]),
 				},
 				color1: {
-					value: new THREE.Color(
-						this.gradients[this.currentGradientIndex][1]
-					),
+					value: new THREE.Color(this.gradients[this.currentGradientIndex][1]),
 				},
 				color2: {
-					value: new THREE.Color(
-						this.gradients[this.currentGradientIndex][2]
-					),
+					value: new THREE.Color(this.gradients[this.currentGradientIndex][2]),
 				},
 			},
 		});
-		this.skyMesh = new THREE.Mesh(
-			new THREE.IcosahedronGeometry(800, 3),
-			this.skyBoxMaterial
-		);
+		this.skyMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(200, 3), this.skyBoxMaterial);
 		this.scene.add(this.skyMesh);
 	}
 
@@ -132,16 +119,11 @@ export default class Sky implements LifeTimeObject {
 	destroy = () => {};
 	update = () => {};
 
-	switchToNewSky(index: number) {
+	switchToNewSky(index: number, duration: number) {
 		const newGradient = this.getGradient(index);
-	}
-
-	switchToNextSky() {
-		this.currentGradientIndex =
-			(this.currentGradientIndex + 1) % this.gradients.length;
-		const newGradient = this.getGradient(this.currentGradientIndex);
-		console.log("new gradient", newGradient);
 		if (!newGradient) return;
+		console.log("new gradient", newGradient);
+		this.currentGradientIndex = index;
 
 		[0, 1, 2].forEach((i) => {
 			//@ts-ignore
@@ -150,10 +132,15 @@ export default class Sky implements LifeTimeObject {
 				r: c.r,
 				g: c.g,
 				b: c.b,
-				duration: 2,
+				duration: duration,
 				ease: "sine.inOut",
 			});
 		});
+	}
+
+	switchToNextSky() {
+		this.currentGradientIndex = (this.currentGradientIndex + 1) % this.gradients.length;
+		this.switchToNewSky(this.currentGradientIndex, 2);
 	}
 
 	getGradient(index: number): Gradient | undefined {
@@ -163,8 +150,6 @@ export default class Sky implements LifeTimeObject {
 	setDebugObject() {
 		if (!this.debug.active) return;
 
-		this.debugFolder
-			.add(this, "switchToNextSky")
-			.name("Switch to next sky");
+		this.debugFolder.add(this, "switchToNextSky").name("Switch to next sky");
 	}
 }

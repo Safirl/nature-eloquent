@@ -68,7 +68,7 @@ export default class FirstPersonCameraOctree extends Camera {
 			70,
 			this.sizes.width / this.sizes.height,
 			0.1,
-			100
+			300
 		);
 		this.instance.rotation.order = "YXZ";
 		super.setInstance();
