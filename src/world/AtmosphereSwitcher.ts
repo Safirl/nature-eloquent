@@ -47,9 +47,9 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 		},
 		//storm
 		{
-			sunIntensity: 0.225,
+			sunIntensity: 0,
 			sunPosition: new THREE.Vector3(10, 15, -24),
-			fogColor: "#0F313B",
+			fogColor: "#030a0c",
 			sunColor: "#94BFC4",
 			skyIndex: 7,
 			envMapIntensity: 0.04,
@@ -77,7 +77,7 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 		if (!atmosphere) throw new Error(`No atmosphere found with index: ${index}`);
 
 		//sun
-		const newFOgColor = new THREE.Color(atmosphere.sunColor);
+		const newFOgColor = new THREE.Color(atmosphere.fogColor);
 		gsap.to(this.fog.color, {
 			r: newFOgColor.r,
 			g: newFOgColor.g,
