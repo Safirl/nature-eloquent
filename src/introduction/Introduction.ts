@@ -35,7 +35,7 @@ export default class Introduction implements LifeTimeObject {
 		) as HTMLDivElement;
 		document.addEventListener("click", this.launchExperience);
 		this.exp.audio2DManager.playAmbient(
-			"/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3"
+			"/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", 0.5
 		);
 		const camera = exp.camera as FirstPersonCameraOctree;
 		if (!camera) return;
@@ -95,7 +95,7 @@ export default class Introduction implements LifeTimeObject {
 		this.transitionForeground.style.display = "inherit";
 		this.transitionForeground.innerHTML = "";
 		this.exp.audio2DManager.stopAudio(
-			"/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3"
+			"/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", true
 		);
 		gsap.to(this.transitionForeground.style, {
 			opacity: 1,
