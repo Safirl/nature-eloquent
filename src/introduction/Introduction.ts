@@ -34,8 +34,8 @@ export default class Introduction implements LifeTimeObject {
 			"transition-foreground"
 		) as HTMLDivElement;
 		document.addEventListener("click", this.launchExperience);
-		this.exp.audioListenerManager.playAmbiantSound(
-			"/audio/ambiantSounds/EV_Impro_modal_PP_intro.mp3"
+		this.exp.audio2DManager.playAmbient(
+			"/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", 0.5
 		);
 		const camera = exp.camera as FirstPersonCameraOctree;
 		if (!camera) return;
@@ -94,8 +94,8 @@ export default class Introduction implements LifeTimeObject {
 		document.removeEventListener("click", this.launchExperience);
 		this.transitionForeground.style.display = "inherit";
 		this.transitionForeground.innerHTML = "";
-		this.exp.audioListenerManager.stopSfxLoop(
-			"/audio/ambiantSounds/EV_Impro_modal_PP_intro.mp3"
+		this.exp.audio2DManager.stopAudio(
+			"/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", true
 		);
 		gsap.to(this.transitionForeground.style, {
 			opacity: 1,
@@ -139,9 +139,9 @@ export default class Introduction implements LifeTimeObject {
 
 		camera.instance.rotation.set(-0.576, 8.11, 0);
 	}
-	init = () => {};
+	init = () => { };
 	update = () => {
 		if (this.grass) this.grass.update();
 	};
-	destroy = () => {};
+	destroy = () => { };
 }

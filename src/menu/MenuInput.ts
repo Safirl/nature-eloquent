@@ -1,6 +1,8 @@
 import { EventEmitter, Experience, type InputEventArgs } from "@plugins/baseExperience";
 import { Vector2 } from "three";
 import type MenuState from "./MenuState";
+import type AudioManager from "../audio/Audio2DManager";
+import type GameExperience from "../GameExperience";
 
 /**
  * MenuInput — input listening layer for the menu.
@@ -21,6 +23,8 @@ export default class MenuInput extends EventEmitter {
 	private mousePosition = new Vector2();
 	private lastPressedKeyIndex: number | null = null;
 
+	declare audio2DManager: AudioManager;
+
 	constructor(state: MenuState, canvas: HTMLCanvasElement) {
 		super();
 		this.state = state;
@@ -30,6 +34,9 @@ export default class MenuInput extends EventEmitter {
 		this.canvas.addEventListener("mouseup", this.onMouseUp);
 
 		this.state.on("currentItemChanged.input", this.onCurrentItemChanged);
+
+		this.audio2DManager = (Experience.instance as GameExperience).audio2DManager;
+
 		this.bindInputs();
 	}
 
@@ -57,6 +64,8 @@ export default class MenuInput extends EventEmitter {
 		const index = i - 1;
 		const item = this.state.getItemList()[index];
 		if (!item) return;
+
+		this.audio2DManager.playAudio("/audio/soundEffects/peelSticker_02.mp3", false, 1);
 
 		if (this.lastPressedKeyIndex === index) {
 			this.state.clearCurrentItem();

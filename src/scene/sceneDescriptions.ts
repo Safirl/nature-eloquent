@@ -9,6 +9,9 @@ export type DialogStep = {
 	//Wait for a delay if there are no completionCondition
 	completionConditions: ObjectCountCondition[] | { delay: number; nextStepId?: number };
 	dialogId?: string;
+	sounds?: { name: string; src: string }[];
+	sceneAudio?: { type?: "ambient" | "sfx" | "onCompleted", src: string; volume: number, loop?: boolean, startDelay?: number }[];
+	removeAudio?: string[];
 	cleanSteps?: boolean;
 	completionCallback?: string;
 };
@@ -22,7 +25,6 @@ export type ObjectCountCondition = {
 export function instanceOfObjectCountCondition(object: any): object is ObjectCountCondition {
 	return "objectId" in object;
 }
-
 export const stepDescription: DialogStep[] = [
 	//intro
 	{
@@ -30,6 +32,7 @@ export const stepDescription: DialogStep[] = [
 		id: 0,
 		completionConditions: { delay: 1500, nextStepId: 1 },
 		dialogId: "introduction",
+		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 0 }],
 	},
 	//reçoit le dinosaure : pas de dialogues
 	{
@@ -43,6 +46,7 @@ export const stepDescription: DialogStep[] = [
 			},
 		],
 		completionConditions: [{ objectId: "dinosaur", count: 1, nextStepId: 2 }],
+
 		// dialogId: "dinosaure_0",
 	},
 	//a posé un premier dinosaure --> dialogue
@@ -72,6 +76,7 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 2500, nextStepId: 4 },
 		dialogId: "dinosaure_1",
+		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 0 }],
 	},
 	//Dialogue fini --> reçoit la post card, pas de dialogue
 	{
@@ -98,6 +103,7 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 1500, nextStepId: 6 },
 		dialogId: "classroom",
+		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 0 }],
 	},
 	// Reçoit l'herbarium --> Dialogue d'objet reçu
 	{
@@ -132,10 +138,10 @@ export const stepDescription: DialogStep[] = [
 		// objectsRemoved: ["grassClump", "vine"],
 		objectsAdded: [
 			{
-				objectId: "rose",
+				objectId: "neroli",
 			},
 		],
-		completionConditions: [{ objectId: "rose", count: 5, nextStepId: 9 }],
+		completionConditions: [{ objectId: "neroli", count: 5, nextStepId: 9 }],
 		dialogId: "herbarium_2",
 	},
 	// a posé les dernier objets --> Dialogue puis suite automatique
@@ -144,13 +150,14 @@ export const stepDescription: DialogStep[] = [
 		id: 9,
 		// objectsAdded: [
 		// 	{
-		// 		objectId: "rose",
+		// 		objectId: "neroli",
 		// 	},
 		// ],
 		// pas de next step, la suivante est trigger par une triggerbox
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		dialogId: "herbarium_3",
 		completionCallback: "onIntroCompleted",
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/openDoor_01.mp3", volume: 1, loop: false, startDelay: 2000 }]
 	},
 	//Déclenché par la triggerbox
 	{
@@ -165,14 +172,14 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 2500, nextStepId: undefined },
 		dialogId: "forestIntro",
+		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", volume: 0.08, loop: true }, { type: "sfx", src: "/audio/ambientSounds/forestAmbient.mp3", volume: 0.07, loop: false, startDelay: 0 }],
 	},
 
 	//Autre triggerbox --> L'utilisateur reçoit les fleurs quand il rentre dans la clairière.
-
 	{
 		name: "flower",
 		id: 11,
-		objectsRemoved: ["grassClump", "vine", "rose"],
+		objectsRemoved: ["grassClump", "vine", "neroli"],
 		objectsAdded: [
 			{
 				objectId: "edeilweiss",
@@ -272,6 +279,24 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: [{ objectId: "butterfly", count: 5, nextStepId: undefined }],
 		completionCallback: "onButterflyPlaced",
 	},
+	// Je rajoute une "scène" en plus pour jouer l'éclair juste avant le blabla du "tu avais du l'orage?"
+	// code qui peut mieux être fait 
+	{
+		name: "lighting",
+		id: 99,
+		completionConditions: { delay: 4000, nextStepId: 18 },
+		completionCallback: "onLighting",
+		sceneAudio: [
+			{
+				type: "sfx",
+				src: "/audio/soundEffects/oneLighting.mp3",
+				volume: 1,
+				loop: false,
+				startDelay: 1500
+			}
+		],
+		dialogId: "void",
+	},
 
 	//triggerbox dans les chemins dans la forêt
 	{
@@ -281,6 +306,7 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onStormStarted",
 		dialogId: "storm",
+		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.1 }, { type: "sfx", src: "/audio/soundEffects/orageWind.mp3", volume: 0.8, loop: true, startDelay: 800 }, { type: "sfx", src: "/audio/soundEffects/lightingOrage.mp3", volume: 1, loop: false, startDelay: 800 }],
 	},
 
 	//triggerbox entrée seconde clairière
@@ -299,7 +325,8 @@ export const stepDescription: DialogStep[] = [
 			{ objectId: "bramble", count: 5, nextStepId: 20 },
 			{ objectId: "toxicMushroom", count: 5, nextStepId: 21 },
 		],
-		// dialogId: "storm",
+		dialogId: "storm",
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/slowBreathStress.mp3", volume: 0.7, loop: true }],
 	},
 
 	//Quand les ronces ont été posées
@@ -313,7 +340,6 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "poisonousMushroom",
 		id: 21,
-		objectsRemoved: ["toxicMushroom"],
 		completionConditions: [{ objectId: "toxicMushroom", count: 10, nextStepId: 23 }],
 		dialogId: "poisonousMushroom",
 	},
@@ -321,9 +347,10 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "bramble1",
 		id: 22,
-		objectsRemoved: ["bramble"],
 		completionConditions: [{ objectId: "bramble", count: 10, nextStepId: 23 }],
 		dialogId: "bramble_1",
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/fastBreathStress.mp3", volume: 0.7, loop: true }],
+		removeAudio: ["/audio/soundEffects/slowBreathStress.mp3"],
 	},
 
 	//Dead wood
@@ -336,7 +363,7 @@ export const stepDescription: DialogStep[] = [
 				objectId: "deadwood",
 			},
 		],
-		completionConditions: [{ objectId: "deadwood", count: 5, nextStepId: undefined }],
+		completionConditions: [{ objectId: "deadwood", count: 5, nextStepId: 24 }],
 		completionCallback: "onDeadwoodPlaced",
 	},
 
@@ -346,5 +373,7 @@ export const stepDescription: DialogStep[] = [
 		id: 24,
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onGameEnded",
+		dialogId: "fire",
+		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/fire_01.mp3", volume: 1, loop: true, startDelay: 0 }],
 	},
 ];

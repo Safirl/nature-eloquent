@@ -5,35 +5,28 @@ import TriggerManager from "./trigger/TriggerManager";
 import AudioListenerManager from "./audio/AudioListenerManager";
 import Introduction from "./introduction/Introduction";
 import Menu from "./menu";
+import AudioManager from "./audio/Audio2DManager";
 
 export default class GameExperience extends Experience {
 	declare public sceneManager: SceneManager;
 	declare public audioListenerManager: AudioListenerManager;
-	// declare public subtitleManager: SubtitleManager;
 	declare replaceAmbiantSoundBtn: HTMLDivElement;
 	declare audioManager: AudioListenerManager;
+	declare audio2DManager: AudioManager;
 	declare private introductionSequence: Introduction;
 	declare public menu: Menu;
 	declare triggerManager: TriggerManager;
-
 	constructor(canvas: HTMLCanvasElement, sources: Source[], camera: Camera, world: World) {
 		super(canvas, sources, camera, world);
-		this.replaceAmbiantSoundBtn = document.getElementById(
-			"replace-ambient-sound"
-		) as HTMLDivElement;
 
-		//this.subtitleManager = new SubtitleManager();
-		//this.sceneManager = new SceneManager();
-
-		// this.replaceAmbiantSoundBtn.addEventListener("click", () => {
-		// 	this.audioListenerManager.replaceAmbiantSound(this.audioListenerManager.allAudio[0].audioSrc, "/audio/ambiantSounds/Impro_modal_PP_non_functionnal_and_colors.mp3");
-		// })
 	}
 
 	onResourcesLoaded(): void {
 		super.onResourcesLoaded();
 		this.audioListenerManager = new AudioListenerManager();
+		this.audio2DManager = new AudioManager();
 		this.introductionSequence = new Introduction();
+
 
 		// this.subtitleManager.init();
 		// this.sceneManager.init();

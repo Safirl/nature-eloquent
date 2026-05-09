@@ -3,6 +3,7 @@ import Camera from "@plugins/baseExperience/experience/Camera";
 import { type InputEventArgs } from "@plugins/baseExperience/inputs/inputInterfaces";
 import * as THREE from "three";
 import { Capsule } from "three/examples/jsm/Addons.js";
+import GameExperience from "../../../GameExperience";
 
 export default class FirstPersonCameraOctree extends Camera {
 	declare moveForward: boolean;
@@ -24,6 +25,9 @@ export default class FirstPersonCameraOctree extends Camera {
 	declare delta: number;
 	declare maxPitch: number;
 	public enable = true;
+
+	declare gameExperience: GameExperience;
+	declare isPlayingFootstep: boolean;
 
 	constructor(height = 1.2, speed = 40, mass = 50, friction = 10) {
 		super();
@@ -54,6 +58,8 @@ export default class FirstPersonCameraOctree extends Camera {
 			0.35
 		);
 		this.playerBox = new THREE.Box3();
+		// Test bug player
+		// this.playerCollider.translate(new THREE.Vector3(0, 10, 0));
 	}
 
 	// Création de la camra
@@ -93,9 +99,11 @@ export default class FirstPersonCameraOctree extends Camera {
 
 	bindInputs() {
 		if (Experience.instance) {
+			this.gameExperience = GameExperience.instance as GameExperience;
 			Experience.instance.inputSystem.on("forward", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveForward = true;
+					this.playFootStepAudio()
 				} else if (args.type === "released") {
 					this.moveForward = false;
 				}
@@ -103,6 +111,7 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("backward", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveBackward = true;
+					this.playFootStepAudio()
 				} else if (args.type === "released") {
 					this.moveBackward = false;
 				}
@@ -110,6 +119,7 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("left", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveLeft = true;
+					this.playFootStepAudio()
 				} else if (args.type === "released") {
 					this.moveLeft = false;
 				}
@@ -117,6 +127,7 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("right", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveRight = true;
+					this.playFootStepAudio()
 				} else if (args.type === "released") {
 					this.moveRight = false;
 				}
@@ -129,6 +140,13 @@ export default class FirstPersonCameraOctree extends Camera {
 		} else {
 			throw new Error("Experience instance is not defined");
 		}
+	}
+
+	async playFootStepAudio() {
+		if (this.isPlayingFootstep) return;
+		this.isPlayingFootstep = true;
+		await this.gameExperience.audio2DManager.playFootStepAudio("/audio/soundEffects/grassWalk.mp3", 0.4);
+		this.isPlayingFootstep = false;
 	}
 
 	// Direction de la caméra sur plan horizontal
@@ -160,6 +178,9 @@ export default class FirstPersonCameraOctree extends Camera {
 	private updatePlayerCollisions(): void {
 		const collisionManager = this.experience.collisionManager;
 		if (!collisionManager) throw new Error("Experience instance is not defined");
+
+		// position du joueur pour trigger
+		// console.log("player position:", this.playerCollider.end);
 
 		const result = collisionManager.worldOctree.capsuleIntersect(this.playerCollider);
 		this.canJump = false;

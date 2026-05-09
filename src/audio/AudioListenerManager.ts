@@ -5,6 +5,7 @@ export default class AudioListenerManager {
     private declare experience: Experience;
     declare listener: THREE.AudioListener;
     declare allAudio: { audioSrc: string; audio: THREE.Audio | THREE.PositionalAudio }[];
+    declare soundElementNature: { name: string; src: string; volume: number; position: THREE.Vector3, refDistance?: number }[]
 
     constructor() {
         if (!Experience.instance)
@@ -16,70 +17,87 @@ export default class AudioListenerManager {
         this.listener = new THREE.AudioListener();
         this.experience.camera.instance.add(this.listener);
         this.allAudio = [];
+
+        // Si on veut ajouter des sons disposés dans la scène 3D
+        this.soundElementNature = [
+            {
+                name: "grenouille",
+                src: "/audio/ambientSounds/grenouille_01.mp3",
+                volume: 0.5,
+                position: new THREE.Vector3(10, 0, 1),
+                refDistance: 1
+            },
+            {
+                name: "bird02",
+                src: "/audio/ambientSounds/bird_02.mp3",
+                volume: 0.5,
+                position: new THREE.Vector3(10, 5, -6),
+                refDistance: 1
+            },
+            {
+                name: "bird03",
+                src: "/audio/ambientSounds/bird_03.mp3",
+                volume: 0.5,
+                position: new THREE.Vector3(15, 3, -15),
+                refDistance: 1
+            },
+            // ,
+            // {
+            //     name: "bird",
+            //     src: "/audio/welcome.mp3",
+            //     volume: 0.5,
+            //     position: new THREE.Vector3(5, 0, -0)
+            // }
+            // ,
+            // {
+            //     name: "water",
+            //     src: "/audio/welcome.mp3",
+            //     volume: 0.5,
+            //     position: new THREE.Vector3(10, 0, 0)
+            // }
+        ];
+
+        this.init();
     }
 
-    init() { }
-
-    // Pour le son globale d'ambiance
-    playAmbiantSound(audioSrc: string) {
-        const sound = new THREE.Audio(this.listener);
-        const loader = new THREE.AudioLoader();
-        loader.load(audioSrc, (buffer) => {
-            sound.setBuffer(buffer);
-            sound.setVolume(1);
-            sound.setLoop(true);
-            sound.play();
-        });
-        this.experience.scene.add(sound);
-        this.allAudio.push({ audioSrc, audio: sound });
-        return sound;
-    }
-
-    // Pour passer de la musique du début à une autre avec un fondu d'audio
-    async replaceAmbiantSound(oldAudioSrc: string, newAudioSrc: string) {
-        const found = this.allAudio.find((a) => a.audioSrc === oldAudioSrc);
-
-        if (found) {
-            const initialVolume = found.audio.getVolume();
-            const fadeOutSteps = 20;
-
-            for (let currentStep = 1; currentStep <= fadeOutSteps; currentStep++) {
-                const newVolume = initialVolume * (1 - currentStep / fadeOutSteps);
-                found.audio.setVolume(newVolume);
-                await this.delayAfterNextAmbiantSound(5);
-            }
-
-            found.audio.stop();
-            this.experience.scene.remove(found.audio);
-            this.allAudio = this.allAudio.filter((a) => a.audioSrc !== oldAudioSrc);
-
-        }
-
-        this.playAmbiantSound(newAudioSrc);
-    }
-
-    delayAfterNextAmbiantSound(duration: number = 100) {
-        return new Promise((resolve) => setTimeout(resolve, duration));
+    init() {
+        // this.playAllSoundElementNature();
+        // this.addDebugControl(this.allAudio[0].audio as THREE.PositionalAudio);
+        // this.addDebugControl(this.allAudio[1].audio as THREE.PositionalAudio);
+        // this.addDebugControl(this.allAudio[2].audio as THREE.PositionalAudio);
     }
 
     // Pour un son qu'on dépose dans l'espace
-    playSfx(audioSrc: string, loop: boolean = false) {
+    playSfx(audioSrc: string, loop: boolean = false, volume: number = 1, startDelay: number = 0, refDistance: number = 1) {
         const sound = new THREE.PositionalAudio(this.listener);
         const loader = new THREE.AudioLoader();
         loader.load(audioSrc, (buffer) => {
             sound.setLoop(loop);
-            sound.setRefDistance(3);
+            sound.setRefDistance(refDistance);
             sound.setBuffer(buffer);
-            sound.setVolume(3);
-            sound.play();
+            sound.setVolume(volume);
+            if (startDelay > 0) {
+                setTimeout(() => {
+                    sound.play();
+                }, startDelay);
+            } else {
+                sound.play();
+            }
         });
         this.experience.scene.add(sound);
         this.allAudio.push({ audioSrc, audio: sound });
         return sound;
     }
 
-    // Pour stoper un sound effect s'il est loopé
-    stopSfxLoop(audioSrc: string) {
+    // Si on veut un son aléatoire parmi une liste
+    playRandomSrc(audioSrcArray: { src: string, volume?: number }[]) {
+        const randomIndex = Math.floor(Math.random() * audioSrcArray.length);
+        const { src, volume } = audioSrcArray[randomIndex];
+        return { src, volume };
+    }
+
+    // Pour stoper un sound effect
+    stopSfx(audioSrc: string) {
         const found = this.allAudio.find((a) => a.audioSrc === audioSrc);
 
         if (found) {
@@ -87,5 +105,43 @@ export default class AudioListenerManager {
             this.experience.scene.remove(found.audio);
             this.allAudio = this.allAudio.filter((a) => a.audioSrc !== audioSrc);
         }
+    }
+
+    async easingAudio(audio: THREE.Audio | THREE.PositionalAudio, duration: number = 2000, fadeIn: boolean = false, targetVolume: number = 1) {
+        const steps = 20;
+        if (fadeIn) {
+            audio.setVolume(0);
+            for (let i = 0; i <= steps; i++) {
+                audio.setVolume((i / steps) * targetVolume);
+                await new Promise((resolve) => setTimeout(resolve, duration / steps));
+            }
+        } else {
+            const initialVolume = audio.getVolume();
+            for (let i = 0; i <= steps; i++) {
+                audio.setVolume(initialVolume * (1 - i / steps));
+                await new Promise((resolve) => setTimeout(resolve, duration / steps));
+            }
+        }
+    }
+
+    // Ajouter des éléments sonores fixes dans la scène
+    playAllSoundElementNature() {
+        this.soundElementNature.forEach((item) => {
+            const sound = this.playSfx(item.src, true, item.volume, 0, item.refDistance ?? 1);
+            sound.position.copy(item.position);
+            this.addDebugControl(sound);
+        });
+    }
+
+    addDebugControl(sound: THREE.PositionalAudio) {
+        if (!this.experience.debug.active) return;
+        if (!this.experience.debug.ui) return;
+
+        const sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(0.2),
+            new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true })
+        );
+        sphere.position.copy(sound.position);
+        this.experience.scene.add(sphere);
     }
 }

@@ -2,6 +2,9 @@ import { EventEmitter, Experience, type LifeTimeObject } from "@plugins/baseExpe
 import type Menu from "../menu";
 import { stepDescription } from "./sceneDescriptions";
 import type { DialogStep, ObjectCountCondition } from "./sceneDescriptions";
+import AudioManager from "../audio/Audio2DManager";
+import AudioListenerManager from "../audio/AudioListenerManager";
+import * as THREE from "three";
 
 export default class SceneManager extends EventEmitter implements LifeTimeObject {
 	// private currentSceneId: number = 0;
@@ -11,12 +14,17 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 	private isDialogPlaying: boolean = false;
 
 	declare private menu: Menu;
+	declare audio2DManager: AudioManager;
+	declare audioListenerManager: AudioListenerManager;
+	declare sound: THREE.PositionalAudio;
 
 	constructor(menu: Menu) {
 		super();
 		this.activeSteps = [];
 		this.menu = menu;
 		this.menu.on("onObjectPlaced", this.onObjectPlaced);
+		this.audio2DManager = new AudioManager();
+		this.audioListenerManager = new AudioListenerManager();
 	}
 	init = () => {
 		const exp = Experience.instance;
@@ -25,8 +33,8 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		this.bindToDialogEvents();
 		this.addActiveStep(exp.debug.active ? 1 : 0);
 	};
-	update = () => {};
-	destroy = () => {};
+	update = () => { };
+	destroy = () => { };
 
 	bindToDialogEvents() {
 		this.menu.subtitle.on("dialogFinished.sceneManager", () => {
@@ -115,20 +123,44 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		newActiveStep = Object.assign(newActiveStep, staticStep);
 		if (!Array.isArray(newActiveStep.completionConditions)) {
 			if (!newActiveStep.dialogId) {
-				setTimeout(() => {
-					this.onStepTimeoutCompleted(newActiveStep);
-				}, newActiveStep.completionConditions.delay);
+				this.playOnCompletedAudio(newActiveStep);
+				setTimeout(() => this.onStepTimeoutCompleted(newActiveStep), newActiveStep.completionConditions.delay);
 			} else {
 				this.menu.subtitle.on("dialogFinished.condition", () => {
-					setTimeout(() => {
-						this.onStepTimeoutCompleted(newActiveStep);
-					}, newActiveStep.completionConditions.delay);
+					this.playOnCompletedAudio(newActiveStep);
+					setTimeout(() => this.onStepTimeoutCompleted(newActiveStep), newActiveStep.completionConditions.delay);
 				});
 			}
 		}
 		console.log("step:", newActiveStep);
 
+		// S'il y a des bruits d'ambiance dans la scène
+		this.playStepAudio(newActiveStep);
+
+		// Stoper le son qu'on ne souhaite plus entendre
+		if (newActiveStep.removeAudio) {
+			newActiveStep.removeAudio.forEach((audioSrc) => {
+				this.audio2DManager.stopAudio(audioSrc, true);
+			});
+		}
 		this.activeSteps.push(newActiveStep);
 		this.trigger("onActiveStepAdded", [newActiveStep]);
 	};
+
+	private playStepAudio(step: DialogStep) {
+		step.sceneAudio?.forEach((audio) => {
+			if (audio.type === "ambient") {
+				this.audio2DManager.playAmbient(audio.src, audio.volume);
+			}
+			else if (audio.type === "sfx") {
+				this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0, true);
+			}
+		});
+	}
+
+	private playOnCompletedAudio(step: DialogStep) {
+		step.sceneAudio?.filter(a => a.type === "onCompleted").forEach((audio) => {
+			this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0);
+		});
+	}
 }
