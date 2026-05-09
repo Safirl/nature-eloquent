@@ -179,6 +179,9 @@ export default class FirstPersonCameraOctree extends Camera {
 		const collisionManager = this.experience.collisionManager;
 		if (!collisionManager) throw new Error("Experience instance is not defined");
 
+		// position du joueur pour trigger
+		// console.log("player position:", this.playerCollider.end);
+
 		const result = collisionManager.worldOctree.capsuleIntersect(this.playerCollider);
 		this.canJump = false;
 

@@ -34,8 +34,13 @@ export default class TriggerManager extends EventEmitter {
         this.createTriggerZone({ x: 2, y: 2, z: 1 }, { width: 1, height: 3, depth: 2 }, () => this.sceneManager.addActiveStep(10));
         // Entrée de la première clairière
         this.createTriggerZone({ x: 9, y: 2, z: -61 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(11));
-        // Chemin ouvert ??
+        // Exit clairière
         this.createTriggerZone({ x: 44, y: 2, z: -59 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(16));
+        // orage chemin droite
+        this.createTriggerZone({ x: 79, y: 9, z: -44 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(99));
+
+        // orage chemin gauche
+        this.createTriggerZone({ x: 74, y: 8, z: -79 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(99));
 
         // Entrée de la deuxième clairière
         this.createTriggerZone({ x: 100, y: 11, z: -12 }, { width: 1, height: 5, depth: 2 }, () => this.sceneManager.addActiveStep(19));

@@ -276,7 +276,7 @@ export const stepDescription: DialogStep[] = [
 				objectId: "butterfly",
 			},
 		],
-		completionConditions: [{ objectId: "butterfly", count: 5, nextStepId: 99 }],
+		completionConditions: [{ objectId: "butterfly", count: 5, nextStepId: undefined }],
 		completionCallback: "onButterflyPlaced",
 	},
 	// Je rajoute une "scène" en plus pour jouer l'éclair juste avant le blabla du "tu avais du l'orage?"
