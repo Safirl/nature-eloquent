@@ -68,8 +68,8 @@ export default class Sky implements LifeTimeObject {
 		},
 		{
 			index: 7,
-			0: "#041C1F",
-			1: "#0C2B38",
+			0: "#010506",
+			1: "#0A2029",
 			2: "#0F313B",
 		},
 	];

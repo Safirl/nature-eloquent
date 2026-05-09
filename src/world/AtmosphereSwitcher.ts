@@ -31,8 +31,8 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 		{
 			sunIntensity: 3,
 			sunPosition: new THREE.Vector3(-17 * 0.75, 50 * 0.75, 24 * 0.75),
-			fogColor: "#fff",
-			sunColor: FogVariables.color,
+			fogColor: FogVariables.color,
+			sunColor: "#fff",
 			skyIndex: 0,
 			envMapIntensity: 0.8,
 		},
@@ -40,10 +40,19 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 		{
 			sunIntensity: 2.5,
 			sunPosition: new THREE.Vector3(-46 * 2, 20 * 2, 15 * 2),
-			fogColor: "f19e00",
+			fogColor: "#010506",
 			sunColor: "#f19e00",
 			skyIndex: 1,
 			envMapIntensity: 0.3,
+		},
+		//storm
+		{
+			sunIntensity: 0.225,
+			sunPosition: new THREE.Vector3(10, 15, -24),
+			fogColor: "#0F313B",
+			sunColor: "#94BFC4",
+			skyIndex: 7,
+			envMapIntensity: 0.04,
 		},
 	];
 	constructor(environment: GameEnvironment) {
@@ -68,11 +77,19 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 		if (!atmosphere) throw new Error(`No atmosphere found with index: ${index}`);
 
 		//sun
-		// gsap.to(this.sun, {
-		// 	intensity: atmosphere.sunIntensity,
-		// 	duration: this.duration,
-		// 	ease: "power2.inOut",
-		// });
+		const newFOgColor = new THREE.Color(atmosphere.sunColor);
+		gsap.to(this.fog.color, {
+			r: newFOgColor.r,
+			g: newFOgColor.g,
+			b: newFOgColor.b,
+			duration: this.duration,
+			ease: "power2.inOut",
+		});
+		gsap.to(this.sun, {
+			intensity: atmosphere.sunIntensity,
+			duration: this.duration,
+			ease: "power2.inOut",
+		});
 		const newSunColor = new THREE.Color(atmosphere.sunColor);
 		gsap.to(this.sun.color, {
 			r: newSunColor.r,
