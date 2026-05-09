@@ -4,6 +4,41 @@
 			"audio": "/audio/introduction/intro-0.mp3",
 			"dialog": "Coucou, bien dormi ?",
 			"speaker": "Petit Pois:"
+		},
+		"dialog_1": {
+			"audio": "/audio/introduction/intro-1.mp3",
+			"dialog": "Ouais... La chambre d'ami de tes parents est super confortable.",
+			"speaker": "Clémentine:"
+		},
+		"dialog_2": {
+			"audio": "/audio/introduction/intro-2.mp3",
+			"dialog": "Alors on va vraiment prendre tous ces cartons ?",
+			"speaker": "Clémentine:"
+		},
+		"dialog_3": {
+			"audio": "/audio/introduction/intro-3.mp3",
+			"dialog": "Et oui, tout est là je crois... J'ai demandé à ma mère de m'aider à les trier hier.",
+			"speaker": "Petit Pois:"
+		},
+		"dialog_4": {
+			"audio": "/audio/introduction/intro-4.mp3",
+			"dialog": "On a vraiment besoin de tout ?",
+			"speaker": "Clémentine:"
+		},
+		"dialog_5": {
+			"audio": "/audio/introduction/intro-5.mp3",
+			"dialog": "C'était important pour moi. Et puis... on va bientôt pouvoir réutiliser certains de mes vieux vêtements !",
+			"speaker": "Petit Pois:"
+		},
+		"dialog_6": {
+			"audio": "/audio/introduction/intro-6.mp3",
+			"dialog": "Je suis pas sûr qu'il rentre dans du 14 ans par contre !",
+			"speaker": "Clémentine:"
+		},
+		"dialog_7": {
+			"audio": "/audio/introduction/intro-7.mp3",
+			"dialog": "Alors, qu'est-ce qu'on a là ? ",
+			"speaker": "Clémentine:"
 		}
 	},
 	"dinosaure_0": {
