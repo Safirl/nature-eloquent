@@ -23,6 +23,7 @@ export default class Experience implements LifeTimeObject {
 	declare debug: Debug;
 	declare inputSystem: InputSystem;
 	declare collisionManager: CollisionManager;
+	public areResourcesLoaded: boolean = false;
 	declare private stats: Stats;
 
 	static instance: Experience | null = null;
@@ -85,6 +86,7 @@ export default class Experience implements LifeTimeObject {
 		});
 		this.camera.init();
 		this.world.init();
+		this.areResourcesLoaded = true;
 	}
 
 	init = () => {};

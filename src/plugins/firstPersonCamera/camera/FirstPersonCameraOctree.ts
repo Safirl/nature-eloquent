@@ -212,6 +212,7 @@ export default class FirstPersonCameraOctree extends Camera {
 		if (!Experience.instance) {
 			return;
 		}
+		if (!this.experience.areResourcesLoaded) return;
 		// if (document.pointerLockElement !== Experience.instance.canvas) return;
 
 		const delta = Experience.instance.time.delta / 1000;
