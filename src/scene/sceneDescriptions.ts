@@ -145,10 +145,10 @@ export const stepDescription: DialogStep[] = [
 		// objectsRemoved: ["postcard"],
 		objectsAdded: [
 			{
-				objectId: "vine",
+				objectId: "ivy_leaf",
 			},
 		],
-		completionConditions: [{ objectId: "vine", count: 5, nextStepId: 7 }],
+		completionConditions: [{ objectId: "ivy_leaf", count: 5, nextStepId: 7 }],
 		dialogId: "herbarium_0",
 	},
 	// a posé 5 objets --> dialogue suivant
@@ -171,10 +171,10 @@ export const stepDescription: DialogStep[] = [
 		// objectsRemoved: ["grassClump", "vine"],
 		objectsAdded: [
 			{
-				objectId: "neroli",
+				objectId: "fern",
 			},
 		],
-		completionConditions: [{ objectId: "neroli", count: 5, nextStepId: 9 }],
+		completionConditions: [{ objectId: "fern", count: 5, nextStepId: 9 }],
 		dialogId: "herbarium_2",
 	},
 	// a posé les dernier objets --> Dialogue puis suite automatique
@@ -235,7 +235,7 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "flower",
 		id: 11,
-		objectsRemoved: ["grassClump", "vine", "neroli"],
+		objectsRemoved: ["grassClump", "ivy_leaf", "fern"],
 		objectsAdded: [
 			{
 				objectId: "edeilweiss",
@@ -319,22 +319,22 @@ export const stepDescription: DialogStep[] = [
 		name: "clearingExit",
 		id: 16,
 		objectsRemoved: ["giantClemFlower", "giant_buttercup"],
-		completionConditions: { delay: 1500, nextStepId: 17 },
+		completionConditions: { delay: 1500, nextStepId: undefined },
 		dialogId: "clearingExit",
 	},
 
 	//Il peut placer des papillons
-	{
-		name: "butterfly",
-		id: 17,
-		objectsAdded: [
-			{
-				objectId: "butterfly",
-			},
-		],
-		completionConditions: [{ objectId: "butterfly", count: 5, nextStepId: undefined }],
-		completionCallback: "onButterflyPlaced",
-	},
+	// {
+	// 	name: "butterfly",
+	// 	id: 17,
+	// 	objectsAdded: [
+	// 		{
+	// 			objectId: "butterfly",
+	// 		},
+	// 	],
+	// 	completionConditions: [{ objectId: "butterfly", count: 5, nextStepId: undefined }],
+	// 	completionCallback: "onButterflyPlaced",
+	// },
 	// Je rajoute une "scène" en plus pour jouer l'éclair juste avant le blabla du "tu avais du l'orage?"
 	// code qui peut mieux être fait
 	{
@@ -423,14 +423,14 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "poisonousMushroom",
 		id: 21,
-		completionConditions: [{ objectId: "toxicMushroom", count: 10, nextStepId: 23 }],
+		completionConditions: [{ objectId: "toxicMushroom", count: 10, nextStepId: 24 }],
 		dialogId: "poisonousMushroom",
 	},
 
 	{
 		name: "bramble1",
 		id: 22,
-		completionConditions: [{ objectId: "bramble", count: 10, nextStepId: 23 }],
+		completionConditions: [{ objectId: "bramble", count: 10, nextStepId: 24 }],
 		dialogId: "bramble_1",
 		sceneAudio: [
 			{
@@ -443,24 +443,25 @@ export const stepDescription: DialogStep[] = [
 		removeAudio: ["/audio/soundEffects/slowBreathStress.mp3"],
 	},
 
-	//Dead wood
-	{
-		name: "deadwood",
-		id: 23,
-		objectsRemoved: ["bramble", "toxicMushroom"],
-		objectsAdded: [
-			{
-				objectId: "deadwood",
-			},
-		],
-		completionConditions: [{ objectId: "deadwood", count: 5, nextStepId: 24 }],
-		completionCallback: "onDeadwoodPlaced",
-	},
+	// //Dead wood
+	// {
+	// 	name: "deadwood",
+	// 	id: 23,
+	// 	objectsRemoved: ["bramble", "toxicMushroom"],
+	// 	objectsAdded: [
+	// 		{
+	// 			objectId: "deadwood",
+	// 		},
+	// 	],
+	// 	completionConditions: [{ objectId: "deadwood", count: 5, nextStepId: 24 }],
+	// 	completionCallback: "onDeadwoodPlaced",
+	// },
 
 	//Fire
 	{
 		name: "fire",
 		id: 24,
+		objectsRemoved: ["bramble", "toxicMushroom"],
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onGameEnded",
 		dialogId: "fire",

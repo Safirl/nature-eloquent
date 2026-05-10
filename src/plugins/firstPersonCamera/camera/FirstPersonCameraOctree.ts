@@ -28,6 +28,7 @@ export default class FirstPersonCameraOctree extends Camera {
 
 	declare gameExperience: GameExperience;
 	declare isPlayingFootstep: boolean;
+	public jumpForce: number = 8;
 
 	constructor(height = 1.2, speed = 40, mass = 50, friction = 10) {
 		super();
@@ -103,7 +104,7 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("forward", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveForward = true;
-					this.playFootStepAudio()
+					this.playFootStepAudio();
 				} else if (args.type === "released") {
 					this.moveForward = false;
 				}
@@ -111,7 +112,7 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("backward", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveBackward = true;
-					this.playFootStepAudio()
+					this.playFootStepAudio();
 				} else if (args.type === "released") {
 					this.moveBackward = false;
 				}
@@ -119,7 +120,7 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("left", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveLeft = true;
-					this.playFootStepAudio()
+					this.playFootStepAudio();
 				} else if (args.type === "released") {
 					this.moveLeft = false;
 				}
@@ -127,14 +128,14 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("right", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveRight = true;
-					this.playFootStepAudio()
+					this.playFootStepAudio();
 				} else if (args.type === "released") {
 					this.moveRight = false;
 				}
 			});
 			Experience.instance.inputSystem.on("jump", (args: InputEventArgs) => {
 				if (args.type === "pressed" && this.canJump) {
-					this.velocity.y = 15;
+					this.velocity.y = this.jumpForce;
 				}
 			});
 		} else {
@@ -145,7 +146,10 @@ export default class FirstPersonCameraOctree extends Camera {
 	async playFootStepAudio() {
 		if (this.isPlayingFootstep) return;
 		this.isPlayingFootstep = true;
-		await this.gameExperience.audio2DManager.playFootStepAudio("/audio/soundEffects/grassWalk.mp3", 0.4);
+		await this.gameExperience.audio2DManager.playFootStepAudio(
+			"/audio/soundEffects/grassWalk.mp3",
+			0.4
+		);
 		this.isPlayingFootstep = false;
 	}
 

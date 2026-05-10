@@ -25,7 +25,9 @@ export default class ActorManager implements LifeTimeObject {
 		console.log("resource", this.resource);
 		const actor = new Actor("managed actor", this.resource, true, true);
 		actor.setPosition(position.x, position.y, position.z);
-		actor.animation.play(actor.animation.actions[0].name, true);
+		if (actor.animation && actor.animation.actions.length > 0) {
+			actor.animation.play(actor.animation.actions[0].name, true);
+		}
 		actor.model.isInteractable = true;
 		console.log(actor.model);
 		this.meshes.push(actor);
