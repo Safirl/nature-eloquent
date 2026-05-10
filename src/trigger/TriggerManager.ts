@@ -60,8 +60,8 @@ export default class TriggerManager extends EventEmitter {
         const material = new THREE.MeshBasicMaterial();
         material.transparent = true;
         material.opacity = 0;
-
         const triggerZone = new THREE.Mesh(geometry, material);
+        triggerZone.layers.set(2);
         triggerZone.position.set(position.x, position.y, position.z);
         this.experience.scene.add(triggerZone);
 

@@ -69,6 +69,7 @@ export default class Playground extends World {
 			if (child instanceof THREE.Mesh) {
 				child.material.transparent = true;
 				child.material.opacity = 0;
+				child.layers.set(2);
 			}
 		});
 
