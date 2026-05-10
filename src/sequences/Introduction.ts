@@ -1,5 +1,5 @@
 import { Experience, type LifeTimeObject } from "@plugins/baseExperience";
-import type { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
+import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import type Playground from "../world/PlaygroundWorld";
 import * as THREE from "three";
 import type GameEnvironment from "../world/GameEnvironment";
@@ -133,7 +133,7 @@ export default class Introduction implements LifeTimeObject {
 	};
 	initPlayerPosition() {
 		const camera = this.exp.camera as FirstPersonCameraOctree;
-		if (!camera) return;
+		if (!camera || !(camera instanceof FirstPersonCameraOctree)) return;
 		camera.teleportPlayer(new THREE.Vector3(-0.26, 1.19, 0.45));
 		camera.instance.position.set(-0.26, 1.19, 0.45);
 

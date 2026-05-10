@@ -10,7 +10,8 @@ import RenderingLayers from "../common/RenderingLayers";
 import FogVariables from "../common/Fog";
 import InstancedMeshManager from "../interactions/InstancedMeshManager";
 import InteractableInstancedMesh from "../interactions/InteractableInstancedMesh";
-import NewGrass from "./NewGrass"
+import NewGrass from "./NewGrass";
+import AtmosphereSwitcher from "./AtmosphereSwitcher";
 
 export default class GameEnvironment extends Environment {
 	declare protected bloomDebugFolder: GUI;
@@ -24,7 +25,7 @@ export default class GameEnvironment extends Environment {
 	declare private grass: NewGrass;
 	declare private pineTreesManager: InstancedMeshManager;
 
-	declare private sunMesh: THREE.Mesh;
+	declare public sunMesh: THREE.Mesh;
 	declare private selectiveBloom: SelectiveBloom;
 	declare private bloomPass: UnrealBloomPass;
 	declare public renderScene: RenderPass;
@@ -50,7 +51,7 @@ export default class GameEnvironment extends Environment {
 	}
 
 	setFog() {
-		this.fog = new THREE.Fog(FogVariables.color, 20, 225);
+		this.fog = new THREE.Fog(FogVariables.color, 20, 400);
 		this.scene.fog = this.fog;
 		/**
 		 * Add debugger
@@ -59,7 +60,7 @@ export default class GameEnvironment extends Environment {
 			this.fogDebugFolder = this.debugFolder.addFolder("🌫️ fog");
 			this.fogDebugFolder.open(false);
 			this.fogDebugFolder.add(this.fog, "near").name("fog near").min(0).max(100).step(0.1);
-
+			this.fogDebugFolder.addColor(this.fog, "color").name("fog color");
 			this.fogDebugFolder.add(this.fog, "far").name("fog far").min(0).max(1000).step(0.1);
 		}
 	}
@@ -80,31 +81,27 @@ export default class GameEnvironment extends Environment {
 
 		this.sunLight = new THREE.DirectionalLight("#ffffff", 3);
 		this.sunLight.castShadow = true;
-		this.sunLight.shadow.camera.far = 25;
-		this.sunLight.shadow.mapSize.set(2048 * 2, 2048 * 2);
-		this.sunLight.shadow.radius = 2.5;
+		this.sunLight.shadow.mapSize.set(2048, 2048);
+		this.sunLight.shadow.radius = 1;
 		this.sunLight.shadow.normalBias = 0.05;
-		this.sunlightOffset = new THREE.Vector3(-45, 8.2, 22.95);
+		this.sunlightOffset = new THREE.Vector3(-17 * 0.75, 50 * 0.75, 24 * 0.75);
 		this.sunLight.position.set(
-			this.sunlightOffset.x,
-			this.sunlightOffset.y,
-			this.sunlightOffset.z
+			this.getSunlightPosition().x,
+			this.getSunlightPosition().y,
+			this.getSunlightPosition().z
 		);
 		this.scene.add(this.sunLight);
+		// this.sunLight.castShadow = false;
 
 		this.sunLight.shadow.camera.near = 1;
-		this.sunLight.shadow.camera.far = 100;
-		this.sunLight.shadow.camera.top = 45;
-		this.sunLight.shadow.camera.right = 45;
-		this.sunLight.shadow.camera.left = -45;
-		this.sunLight.shadow.camera.bottom = -45;
+		this.sunLight.shadow.camera.far = 1000;
+		this.sunLight.shadow.camera.top = 60;
+		this.sunLight.shadow.camera.right = 60;
+		this.sunLight.shadow.camera.left = -60;
+		this.sunLight.shadow.camera.bottom = -60;
+		this.sunLight.target = this.camera;
 
 		this.setSunPlane();
-
-		/**
-		 * Add debugger
-		 */
-		// this.sunLight.target =  this.camera
 	}
 
 	setForest() {
@@ -114,10 +111,10 @@ export default class GameEnvironment extends Environment {
 			800,
 			false
 		);
-		const count = 10;
+		const count = 500;
 		for (let i = 0; i < count; i++) {
-			const randX = (Math.random() - 0.5) * i * 10;
-			const randZ = (Math.random() - 0.5) * i * 10;
+			const randX = (Math.random() - 0.5) * i * 5;
+			const randZ = (Math.random() - 0.5) * i * 5;
 			this.pineTreesManager.add(new THREE.Vector3(randX, 0, randZ));
 		}
 	}
@@ -125,6 +122,38 @@ export default class GameEnvironment extends Environment {
 	setDebugObject(): void {
 		super.setDebugObject();
 		if (this.debug.active) {
+			this.sunlightDebugFolder
+				.add(this.sunLight, "intensity")
+				.name("sunLightIntensity")
+				.min(0)
+				.max(10)
+				.step(0.001);
+
+			this.sunlightDebugFolder.addColor(this.sunLight, "color").onChange(() => {
+				//@ts-ignore
+				this.sunMesh.material.emissive = this.sunLight.color;
+			});
+
+			this.sunlightDebugFolder
+				.add(this.sunlightOffset, "x")
+				.name("sunLightX")
+				.min(-100)
+				.max(100)
+				.step(0.001);
+
+			this.sunlightDebugFolder
+				.add(this.sunlightOffset, "y")
+				.name("sunLightY")
+				.min(-100)
+				.max(100)
+				.step(0.001);
+
+			this.sunlightDebugFolder
+				.add(this.sunlightOffset, "z")
+				.name("sunLightZ")
+				.min(-100)
+				.max(100)
+				.step(0.001);
 			this.sunlightDebugFolder
 				.add(this.sunLight.shadow.camera, "near")
 				.name("sunlight shadow near")
@@ -161,6 +190,7 @@ export default class GameEnvironment extends Environment {
 
 	updateShadowMatrix = () => {
 		this.sunLight.shadow.camera.updateProjectionMatrix();
+		this.shadowHelper.update();
 	};
 
 	updateCameraShadowAmplitude(value: number) {
@@ -175,8 +205,8 @@ export default class GameEnvironment extends Environment {
 		this.sunMesh = new THREE.Mesh(
 			new THREE.CircleGeometry(),
 			new THREE.MeshStandardMaterial({
-				emissive: new THREE.Color(0xffffff),
-				emissiveIntensity: 6,
+				emissive: this.sunLight.color,
+				emissiveIntensity: 20,
 			})
 		);
 		this.sunMesh.position.set(
@@ -184,6 +214,7 @@ export default class GameEnvironment extends Environment {
 			this.sunLight.position.y,
 			this.sunLight.position.z
 		);
+		// this.sunMesh.scale.set(10, 10, 10);
 		this.sunMesh.lookAt(new THREE.Vector3());
 		this.sunLight.attach(this.sunMesh);
 	}
@@ -222,7 +253,7 @@ export default class GameEnvironment extends Environment {
 				.add(this.bloomPass, "threshold")
 				.name("Threshold")
 				.min(0)
-				.max(1)
+				.max(6)
 				.step(0.01);
 		}
 	}
@@ -231,5 +262,17 @@ export default class GameEnvironment extends Environment {
 		if (this.grass) {
 			this.grass.update();
 		}
+		if (this.sunLight) {
+			this.sunLight.position.set(
+				this.camera.position.x + this.sunlightOffset.x,
+				this.camera.position.y + this.sunlightOffset.y,
+				this.camera.position.z + this.sunlightOffset.z
+			);
+		}
+	}
+
+	getSunlightPosition() {
+		const cameraPosition = this.camera.position.add(this.sunlightOffset);
+		return cameraPosition;
 	}
 }

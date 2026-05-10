@@ -1,9 +1,9 @@
 import type MenuState from "./MenuState";
-import { Experience, type LifeTimeObject } from "@plugins/baseExperience";
+import { Experience } from "@plugins/baseExperience";
 import * as THREE from "three";
-import { plane, type GLTF } from "three/examples/jsm/Addons.js";
+import { type GLTF } from "three/examples/jsm/Addons.js";
 import gsap from "gsap";
-import type FirstPersonCameraOctree from "@plugins/firstPersonCamera/camera/FirstPersonCameraOctree";
+import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 
 /**
  * MenuView — DOM rendering for the menu.
@@ -114,6 +114,7 @@ export default class MenuView {
 		this.holder.quaternion.copy(camera.quaternion).multiply(this.baseRotation);
 
 		const controller = this.experience.camera as FirstPersonCameraOctree;
+		if (!(camera instanceof FirstPersonCameraOctree)) return;
 		const vel = controller.velocity;
 		const horizontalSpeed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
 		const targetIntensity = Math.min(horizontalSpeed / 8, 1);

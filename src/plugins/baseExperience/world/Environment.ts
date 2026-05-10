@@ -80,6 +80,14 @@ export default class Environment implements LifeTimeObject {
 		}
 		this.environmentMap.texture.colorSpace = THREE.SRGBColorSpace;
 
+		//materials are not all created so this needs to be updated manually
+		setTimeout(() => {
+			this.environmentMap.updateMaterials();
+		}, 200);
+	}
+
+	setEnvironmentMapIntensity(intensity: number) {
+		this.environmentMap.intensity = intensity;
 		this.environmentMap.updateMaterials();
 	}
 
@@ -97,34 +105,6 @@ export default class Environment implements LifeTimeObject {
 			this.shadowHelper = new THREE.CameraHelper(this.sunLight.shadow.camera);
 			this.shadowHelper.layers.set(2);
 			this.scene.add(this.shadowHelper);
-
-			this.sunlightDebugFolder
-				.add(this.sunLight, "intensity")
-				.name("sunLightIntensity")
-				.min(0)
-				.max(10)
-				.step(0.001);
-
-			this.sunlightDebugFolder
-				.add(this.sunLight.position, "x")
-				.name("sunLightX")
-				.min(-5)
-				.max(5)
-				.step(0.001);
-
-			this.sunlightDebugFolder
-				.add(this.sunLight.position, "y")
-				.name("sunLightY")
-				.min(-5)
-				.max(5)
-				.step(0.001);
-
-			this.sunlightDebugFolder
-				.add(this.sunLight.position, "z")
-				.name("sunLightZ")
-				.min(-5)
-				.max(5)
-				.step(0.001);
 		}
 	}
 }
