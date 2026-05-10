@@ -6,6 +6,8 @@ import AudioListenerManager from "./audio/AudioListenerManager";
 import Introduction from "./sequences/Introduction";
 import Menu from "./menu";
 import AudioManager from "./audio/Audio2DManager";
+import AtmosphereSwitcher from "./world/AtmosphereSwitcher";
+import type GameEnvironment from "./world/GameEnvironment";
 
 export default class GameExperience extends Experience {
 	declare public sceneManager: SceneManager;
@@ -16,9 +18,10 @@ export default class GameExperience extends Experience {
 	declare private introductionSequence: Introduction;
 	declare public menu: Menu;
 	declare triggerManager: TriggerManager;
+	declare public atmosphereSwitcher: AtmosphereSwitcher;
+
 	constructor(canvas: HTMLCanvasElement, sources: Source[], camera: Camera, world: World) {
 		super(canvas, sources, camera, world);
-
 	}
 
 	onResourcesLoaded(): void {
@@ -26,7 +29,6 @@ export default class GameExperience extends Experience {
 		this.audioListenerManager = new AudioListenerManager();
 		this.audio2DManager = new AudioManager();
 		this.introductionSequence = new Introduction();
-
 
 		// this.subtitleManager.init();
 		// this.sceneManager.init();
@@ -36,6 +38,7 @@ export default class GameExperience extends Experience {
 		this.menu = new Menu();
 		this.sceneManager = new SceneManager(this.menu);
 		this.triggerManager = new TriggerManager(this.menu);
+		this.atmosphereSwitcher = new AtmosphereSwitcher(this.world.environment as GameEnvironment);
 
 		this.menu.init();
 		this.sceneManager.init();

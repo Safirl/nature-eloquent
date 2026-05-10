@@ -30,8 +30,6 @@ export default class GameEnvironment extends Environment {
 	declare private bloomPass: UnrealBloomPass;
 	declare public renderScene: RenderPass;
 
-	declare public atmosphereSwitcher: AtmosphereSwitcher;
-
 	constructor(
 		lightingEnvironmentMap?: THREE.CubeTexture<unknown> | undefined,
 		useAsBackground?: boolean,
@@ -50,7 +48,6 @@ export default class GameEnvironment extends Environment {
 		//     new THREE.MeshBasicMaterial( { map: bg, side: THREE.BackSide } )
 		// );
 		// this.scene.add( sky );
-		this.atmosphereSwitcher = new AtmosphereSwitcher(this);
 	}
 
 	setFog() {

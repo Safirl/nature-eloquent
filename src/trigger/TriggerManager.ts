@@ -31,7 +31,7 @@ export default class TriggerManager extends EventEmitter {
 
 	init() {
 		// La porte de la chambre
-		this.createTriggerZone({ x: 2, y: 2, z: 1 }, { width: 1, height: 3, depth: 2 }, () =>
+		this.createTriggerZone({ x: 6, y: 1.9, z: 0 }, { width: 1, height: 3, depth: 2 }, () =>
 			this.sceneManager.addActiveStep(10)
 		);
 		// Entrée de la première clairière

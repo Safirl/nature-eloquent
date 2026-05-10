@@ -10,7 +10,13 @@ export type DialogStep = {
 	completionConditions: ObjectCountCondition[] | { delay: number; nextStepId?: number };
 	dialogId?: string;
 	sounds?: { name: string; src: string }[];
-	sceneAudio?: { type?: "ambient" | "sfx" | "onCompleted", src: string; volume: number, loop?: boolean, startDelay?: number }[];
+	sceneAudio?: {
+		type?: "ambient" | "sfx" | "onCompleted";
+		src: string;
+		volume: number;
+		loop?: boolean;
+		startDelay?: number;
+	}[];
 	removeAudio?: string[];
 	cleanSteps?: boolean;
 	completionCallback?: string;
@@ -32,7 +38,15 @@ export const stepDescription: DialogStep[] = [
 		id: 0,
 		completionConditions: { delay: 1500, nextStepId: 1 },
 		dialogId: "introduction",
-		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 0 }],
+		sceneAudio: [
+			{
+				type: "onCompleted",
+				src: "/audio/soundEffects/openBox_01.mp3",
+				volume: 1,
+				loop: false,
+				startDelay: 0,
+			},
+		],
 	},
 	//reçoit le dinosaure : pas de dialogues
 	{
@@ -40,8 +54,8 @@ export const stepDescription: DialogStep[] = [
 		id: 1,
 		objectsAdded: [
 			{
-				// objectId: "dinosaur",
-				objectId: "bramble",
+				objectId: "dinosaur",
+				// objectId: "bramble",
 				// resourceName: "mushroomPaintedModel",
 			},
 		],
@@ -76,7 +90,15 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 2500, nextStepId: 4 },
 		dialogId: "dinosaure_1",
-		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 0 }],
+		sceneAudio: [
+			{
+				type: "onCompleted",
+				src: "/audio/soundEffects/openBox_01.mp3",
+				volume: 1,
+				loop: false,
+				startDelay: 0,
+			},
+		],
 	},
 	//Dialogue fini --> reçoit la post card, pas de dialogue
 	{
@@ -103,7 +125,15 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 1500, nextStepId: 6 },
 		dialogId: "classroom",
-		sceneAudio: [{ type: "onCompleted", src: "/audio/soundEffects/openBox_01.mp3", volume: 1, loop: false, startDelay: 0 }],
+		sceneAudio: [
+			{
+				type: "onCompleted",
+				src: "/audio/soundEffects/openBox_01.mp3",
+				volume: 1,
+				loop: false,
+				startDelay: 0,
+			},
+		],
 	},
 	// Reçoit l'herbarium --> Dialogue d'objet reçu
 	{
@@ -157,7 +187,15 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		dialogId: "herbarium_3",
 		completionCallback: "onIntroCompleted",
-		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/openDoor_01.mp3", volume: 1, loop: false, startDelay: 2000 }]
+		sceneAudio: [
+			{
+				type: "sfx",
+				src: "/audio/soundEffects/openDoor_01.mp3",
+				volume: 1,
+				loop: false,
+				startDelay: 2000,
+			},
+		],
 	},
 	//Déclenché par la triggerbox
 	{
@@ -172,7 +210,21 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 2500, nextStepId: undefined },
 		dialogId: "forestIntro",
-		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", volume: 0.08, loop: true }, { type: "sfx", src: "/audio/ambientSounds/forestAmbient.mp3", volume: 0.07, loop: false, startDelay: 0 }],
+		sceneAudio: [
+			{
+				type: "ambient",
+				src: "/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3",
+				volume: 0.08,
+				loop: true,
+			},
+			{
+				type: "sfx",
+				src: "/audio/ambientSounds/forestAmbient.mp3",
+				volume: 0.07,
+				loop: false,
+				startDelay: 0,
+			},
+		],
 	},
 
 	//Autre triggerbox --> L'utilisateur reçoit les fleurs quand il rentre dans la clairière.
@@ -280,7 +332,7 @@ export const stepDescription: DialogStep[] = [
 		completionCallback: "onButterflyPlaced",
 	},
 	// Je rajoute une "scène" en plus pour jouer l'éclair juste avant le blabla du "tu avais du l'orage?"
-	// code qui peut mieux être fait 
+	// code qui peut mieux être fait
 	{
 		name: "lighting",
 		id: 99,
@@ -292,8 +344,8 @@ export const stepDescription: DialogStep[] = [
 				src: "/audio/soundEffects/oneLighting.mp3",
 				volume: 1,
 				loop: false,
-				startDelay: 1500
-			}
+				startDelay: 1500,
+			},
 		],
 		dialogId: "void",
 	},
@@ -306,7 +358,27 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onStormStarted",
 		dialogId: "storm",
-		sceneAudio: [{ type: "ambient", src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3", volume: 0.1 }, { type: "sfx", src: "/audio/soundEffects/orageWind.mp3", volume: 0.8, loop: true, startDelay: 800 }, { type: "sfx", src: "/audio/soundEffects/lightingOrage.mp3", volume: 1, loop: false, startDelay: 800 }],
+		sceneAudio: [
+			{
+				type: "ambient",
+				src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3",
+				volume: 0.1,
+			},
+			{
+				type: "sfx",
+				src: "/audio/soundEffects/orageWind.mp3",
+				volume: 0.8,
+				loop: true,
+				startDelay: 800,
+			},
+			{
+				type: "sfx",
+				src: "/audio/soundEffects/lightingOrage.mp3",
+				volume: 1,
+				loop: false,
+				startDelay: 800,
+			},
+		],
 	},
 
 	//triggerbox entrée seconde clairière
@@ -326,7 +398,14 @@ export const stepDescription: DialogStep[] = [
 			{ objectId: "toxicMushroom", count: 5, nextStepId: 21 },
 		],
 		dialogId: "storm",
-		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/slowBreathStress.mp3", volume: 0.7, loop: true }],
+		sceneAudio: [
+			{
+				type: "sfx",
+				src: "/audio/soundEffects/slowBreathStress.mp3",
+				volume: 0.7,
+				loop: true,
+			},
+		],
 	},
 
 	//Quand les ronces ont été posées
@@ -349,7 +428,14 @@ export const stepDescription: DialogStep[] = [
 		id: 22,
 		completionConditions: [{ objectId: "bramble", count: 10, nextStepId: 23 }],
 		dialogId: "bramble_1",
-		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/fastBreathStress.mp3", volume: 0.7, loop: true }],
+		sceneAudio: [
+			{
+				type: "sfx",
+				src: "/audio/soundEffects/fastBreathStress.mp3",
+				volume: 0.7,
+				loop: true,
+			},
+		],
 		removeAudio: ["/audio/soundEffects/slowBreathStress.mp3"],
 	},
 
@@ -374,6 +460,14 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onGameEnded",
 		dialogId: "fire",
-		sceneAudio: [{ type: "sfx", src: "/audio/soundEffects/fire_01.mp3", volume: 1, loop: true, startDelay: 0 }],
+		sceneAudio: [
+			{
+				type: "sfx",
+				src: "/audio/soundEffects/fire_01.mp3",
+				volume: 1,
+				loop: true,
+				startDelay: 0,
+			},
+		],
 	},
 ];

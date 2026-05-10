@@ -5,6 +5,9 @@ import type GameEnvironment from "./GameEnvironment";
 import gsap from "gsap";
 import type GUI from "lil-gui";
 import FogVariables from "../common/Fog";
+import { exp } from "three/src/nodes/TSL.js";
+import GameExperience from "../GameExperience";
+import type { DialogStep } from "../scene/sceneDescriptions";
 
 export default class AtmosphereSwitcher implements LifeTimeObject {
 	declare private experience: Experience;
@@ -45,7 +48,7 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			skyIndex: 1,
 			envMapIntensity: 0.3,
 		},
-		//storm
+		//night
 		{
 			sunIntensity: 0,
 			sunPosition: new THREE.Vector3(10, 15, -24),
@@ -59,20 +62,35 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 		if (!Experience.instance)
 			throw new Error("Experience is not valid : can't construct atmosphere switcher");
 		this.experience = Experience.instance;
+		if (!(this.experience instanceof GameExperience)) return;
 		this.environment = environment;
 		this.fog = this.environment.fog;
 		this.sun = this.environment.sunLight;
 		this.sky = this.environment.sky;
 		this.debug = this.experience.debug;
+
+		this.experience.sceneManager.on("onActiveStepAdded", this.onActiveStepAdded);
+
 		if (this.debug.active) {
 			this.debugFolder = this.debug.ui.addFolder("☁️ Atmosphere switcher");
 		}
 		this.setDebugObject();
 	}
+	onActiveStepAdded = (step: DialogStep) => {
+		if (step.id === 10) {
+			this.setAtmosphere(1, 30);
+		}
+		if (step.id === 16) {
+			this.setAtmosphere(2, 30);
+		}
+	};
 	init = () => {};
 	destroy = () => {};
 	update = () => {};
-	setAtmosphere(index: number) {
+	setAtmosphere(index: number, duration?: number) {
+		if (duration === undefined) {
+			duration = this.duration;
+		}
 		const atmosphere = this.atmospheres[index];
 		if (!atmosphere) throw new Error(`No atmosphere found with index: ${index}`);
 
@@ -82,12 +100,12 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			r: newFOgColor.r,
 			g: newFOgColor.g,
 			b: newFOgColor.b,
-			duration: this.duration,
+			duration: duration,
 			ease: "power2.inOut",
 		});
 		gsap.to(this.sun, {
 			intensity: atmosphere.sunIntensity,
-			duration: this.duration,
+			duration: duration,
 			ease: "power2.inOut",
 		});
 		const newSunColor = new THREE.Color(atmosphere.sunColor);
@@ -95,7 +113,7 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			r: newSunColor.r,
 			g: newSunColor.g,
 			b: newSunColor.b,
-			duration: this.duration,
+			duration: duration,
 			ease: "power2.inOut",
 			onUpdate: () => {
 				this.environment.sunMesh.material.emissive = this.sun.color;
@@ -105,16 +123,16 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			x: atmosphere.sunPosition.x,
 			y: atmosphere.sunPosition.y,
 			z: atmosphere.sunPosition.z,
-			duration: this.duration,
+			duration: duration,
 		});
 		gsap.to(this.environment.environmentMap, {
 			intensity: atmosphere.envMapIntensity,
 			onUpdate: () => {
 				this.environment.environmentMap.updateMaterials();
 			},
-			duration: this.duration,
+			duration: duration,
 		});
-		this.sky.switchToNewSky(atmosphere.skyIndex, this.duration);
+		this.sky.switchToNewSky(atmosphere.skyIndex, duration);
 	}
 
 	switchToNextAtmosphere() {
