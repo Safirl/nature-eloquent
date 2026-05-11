@@ -6,9 +6,6 @@ import { Actor } from "@plugins/baseExperience";
 import { World } from "@plugins/baseExperience";
 import * as THREE from "three";
 import GameEnvironment from "./GameEnvironment";
-import Menu from "../menu";
-import { add } from "three/tsl";
-import Introduction from "../sequences/Introduction";
 import type GameExperience from "../GameExperience";
 
 export default class Playground extends World {

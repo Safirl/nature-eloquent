@@ -92,7 +92,6 @@ export default class Sky implements LifeTimeObject {
 		}
 
 		this.setDebugObject();
-		const gradient = this.getGradient(time);
 
 		this.currentGradientIndex = 0;
 		this.skyBoxMaterial = new THREE.ShaderMaterial({
@@ -115,9 +114,9 @@ export default class Sky implements LifeTimeObject {
 		this.scene.add(this.skyMesh);
 	}
 
-	init = () => {};
-	destroy = () => {};
-	update = () => {};
+	init = () => { };
+	destroy = () => { };
+	update = () => { };
 
 	switchToNewSky(index: number, duration: number) {
 		const newGradient = this.getGradient(index);
