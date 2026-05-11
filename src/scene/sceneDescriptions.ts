@@ -192,7 +192,7 @@ export const stepDescription: DialogStep[] = [
 		completionCallback: "onIntroCompleted",
 		sceneAudio: [
 			{
-				type: "sfx",
+				type: "sfxSpatial",
 				src: "/audio/soundEffects/openDoor_01.mp3",
 				volume: 1,
 				loop: false,
