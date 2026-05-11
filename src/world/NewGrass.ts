@@ -68,7 +68,7 @@ export default class Grass implements LifeTimeObject {
 		this.setMaterial();
 
 
-		this.createChunks(((this.experience.resources.items.forestModel as any).scene.children.find((el: any) => el.name == "OK_TREE") as any) as any)
+		this.createChunks(((this.experience.resources.items.forestModel as any).scene.children.find((el: any) => el.name == "floor_m") as any) as any)
 
 	}
 

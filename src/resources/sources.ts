@@ -58,12 +58,12 @@ const sources: Source[] = [
 	{
 		name: "layoutModel",
 		type: "gltfModel",
-		path: "models/layout/_layout.glb",
+		path: "models/layout/path_layout.glb",
 	},
 	{
 		name: "forestModel",
 		type: "gltfModel",
-		path: "models/layout/forestModel_tree.glb",
+		path: "models/layout/forestModel.glb",
 	},
 	{
 		name: "invisibleWallModel",
