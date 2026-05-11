@@ -5,14 +5,17 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "edeilweiss",
 		name: "Edeilweiss",
-		model: "mushroomPaintedModel",
+		model: "edelweissModel",
 		vignet: "edeilweiss_flower",
 		shadow: "edeilweiss_flower_shadow",
 		isActor: true,
 		sound: [
 			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
-			{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 1.5 }, { src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 }, { src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 1.5 }],
-		animationSound: { src: "/audio/soundEffects/growthAnimation_01.mp3", volume: 1 }
+			{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 1.5 },
+			{ src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 },
+			{ src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 1.5 },
+		],
+		animationSound: { src: "/audio/soundEffects/growthAnimation_01.mp3", volume: 1 },
 	},
 	{
 		id: "buttercup",
@@ -20,6 +23,7 @@ const itemsList: MenuItemType[] = [
 		model: "asterModel",
 		vignet: "buttercup_flower",
 		shadow: "buttercup_flower_shadow",
+		isActor: true,
 		sound: [
 			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
 			{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 4 },
@@ -102,6 +106,7 @@ const itemsList: MenuItemType[] = [
 		name: "Papillon",
 		model: "mushroomPaintedModel",
 		vignet: "butterfly",
+		isActor: true,
 		shadow: "butterfly_shadow",
 		sound: [{ src: "/audio/soundEffects/butterfly_01.mp3", volume: 1.5, loop: false }],
 	},
@@ -110,6 +115,7 @@ const itemsList: MenuItemType[] = [
 		name: "Herbe",
 		model: "mushroomPaintedModel",
 		vignet: "grass",
+		isActor: true,
 		shadow: "grass_shadow",
 		sound: [
 			{ src: "/audio/soundEffects/grassClump_01.mp3", volume: 1 },
@@ -122,6 +128,7 @@ const itemsList: MenuItemType[] = [
 		name: "Feuille de lierre",
 		model: "mushroomPaintedModel",
 		vignet: "ivy_leaf",
+		isActor: true,
 		shadow: "ivy_leaf_shadow",
 		sound: [
 			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
@@ -135,6 +142,7 @@ const itemsList: MenuItemType[] = [
 		name: "Champignon",
 		model: "mushroomPaintedModel",
 		vignet: "mushroom",
+		isActor: true,
 		shadow: "mushroom_shadow",
 		sound: [
 			{ src: "/audio/soundEffects/mushroom_01.mp3", volume: 1 },
@@ -148,6 +156,7 @@ const itemsList: MenuItemType[] = [
 		name: "Feuilles de néroli",
 		model: "mushroomPaintedModel",
 		vignet: "neroli_leaves",
+		isActor: true,
 		shadow: "neroli_leaves_shadow",
 		sound: [
 			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
@@ -160,6 +169,7 @@ const itemsList: MenuItemType[] = [
 		id: "neroli",
 		name: "Néroli",
 		model: "mushroomPaintedModel",
+		isActor: true,
 		vignet: "neroli",
 		shadow: "neroli_shadow",
 		sound: [
@@ -174,6 +184,7 @@ const itemsList: MenuItemType[] = [
 		name: "Fougère",
 		model: "mushroomModel",
 		vignet: "fern",
+		isActor: true,
 		shadow: "fern_shadow",
 		sound: [
 			{ src: "/audio/soundEffects/fern_01.mp3", volume: 1 },
@@ -200,7 +211,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "dinosaur",
 		name: "Dinosaure",
-		model: "darkFlowerModel",
+		model: "tRexModel",
 		vignet: "dino",
 		shadow: "mushroom",
 		isActor: true,
@@ -215,6 +226,7 @@ const itemsList: MenuItemType[] = [
 		name: "Carte postale",
 		model: "mushroomModel",
 		vignet: "postcard",
+		isActor: true,
 		shadow: "mushroom",
 		sound: [
 			{ src: "/audio/soundEffects/postcard_01.mp3", volume: 1 },
@@ -233,24 +245,13 @@ const itemsList: MenuItemType[] = [
 	// 		{ src: "/audio/soundEffects/vine_03.mp3", volume: 2 },
 	// 	],
 	// },
-	{
-		id: "grassClump",
-		name: "Touffe d'herbe",
-		model: "mushroomModel",
-		vignet: "mushroom",
-		shadow: "mushroom",
-		sound: [
-			{ src: "/audio/soundEffects/grassClump_01.mp3", volume: 1 },
-			{ src: "/audio/soundEffects/grassClump_02.mp3", volume: 1 },
-			{ src: "/audio/soundEffects/grassClump_03.mp3", volume: 1 },
-		],
-	},
 
 	{
 		id: "darkFlower",
 		name: "Fleur terrifiante",
 		model: "darkFlowerModel",
 		vignet: "mushroom",
+		isActor: true,
 		shadow: "mushroom",
 		sound: [
 			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
@@ -265,6 +266,7 @@ const itemsList: MenuItemType[] = [
 		name: "Clem grande fleur",
 		model: "mushroomPaintedModel",
 		vignet: "mushroom",
+		isActor: true,
 		shadow: "mushroom",
 		sound: [
 			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
@@ -279,6 +281,7 @@ const itemsList: MenuItemType[] = [
 		name: "Champignon vénéneux",
 		model: "mushroomPaintedModel",
 		vignet: "mushroom",
+		isActor: true,
 		shadow: "mushroom",
 		sound: [
 			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
@@ -292,6 +295,7 @@ const itemsList: MenuItemType[] = [
 		name: "Bois mort",
 		model: "mushroomPaintedModel",
 		vignet: "dead_wood",
+		isActor: true,
 		shadow: "dead_wood_shadow",
 		sound: [
 			{ src: "/audio/soundEffects/deadwood_01.mp3", volume: 0.8 },

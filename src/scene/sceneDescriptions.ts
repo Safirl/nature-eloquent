@@ -13,7 +13,7 @@ export type DialogStep = {
 	dialogId?: string;
 	sounds?: { name: string; src: string }[];
 	sceneAudio?: {
-		type?: "ambient" | "sfx" | "onCompleted" | "sfxSpatial",
+		type?: "ambient" | "sfx" | "onCompleted" | "sfxSpatial";
 		src: string;
 		volume: number;
 		loop?: boolean;
@@ -318,6 +318,13 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "clearingExit",
 		id: 16,
+		sceneAudio: [
+			{
+				type: "ambient",
+				src: "",
+				volume: 0.1,
+			},
+		],
 		objectsRemoved: ["giantClemFlower", "giant_buttercup"],
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		dialogId: "clearingExit",
@@ -365,13 +372,13 @@ export const stepDescription: DialogStep[] = [
 		sceneAudio: [
 			{
 				type: "ambient",
-				src: "/audio/ambientSounds/Impro_modal_PP_non_functionnal_and_colors.mp3",
+				src: "",
 				volume: 0.1,
 			},
 			{
 				type: "sfx",
 				src: "/audio/soundEffects/orageWind.mp3",
-				volume: 0.8,
+				volume: 0.7,
 				loop: true,
 				startDelay: 800,
 			},
@@ -401,12 +408,12 @@ export const stepDescription: DialogStep[] = [
 			{ objectId: "bramble", count: 5, nextStepId: 20 },
 			{ objectId: "toxicMushroom", count: 5, nextStepId: 21 },
 		],
-		dialogId: "storm",
+		// dialogId: "storm",
 		sceneAudio: [
 			{
 				type: "sfx",
 				src: "/audio/soundEffects/slowBreathStress.mp3",
-				volume: 0.7,
+				volume: 0.5,
 				loop: true,
 			},
 		],
@@ -436,7 +443,7 @@ export const stepDescription: DialogStep[] = [
 			{
 				type: "sfx",
 				src: "/audio/soundEffects/fastBreathStress.mp3",
-				volume: 0.7,
+				volume: 0.6,
 				loop: true,
 			},
 		],
@@ -459,12 +466,12 @@ export const stepDescription: DialogStep[] = [
 
 	//Fire
 	{
-		name: "fire",
+		name: "lightening2",
 		id: 24,
 		objectsRemoved: ["bramble", "toxicMushroom"],
-		completionConditions: { delay: 1500, nextStepId: undefined },
+		completionConditions: { delay: 2500, nextStepId: 25 },
 		completionCallback: "onGameEnded",
-		dialogId: "fire",
+		// dialogId: "fire",
 		sceneAudio: [
 			{
 				type: "sfx",
@@ -473,6 +480,36 @@ export const stepDescription: DialogStep[] = [
 				loop: true,
 				startDelay: 0,
 			},
+			{
+				type: "sfx",
+				src: "/audio/soundEffects/oneLighting.mp3",
+				volume: 0.8,
+				loop: false,
+				startDelay: 0,
+			},
 		],
+	},
+	{
+		name: "fire",
+		id: 25,
+		completionConditions: { delay: 1500, nextStepId: undefined },
+		completionCallback: "onGameEnded",
+		dialogId: "fire",
+		// sceneAudio: [
+		// 	{
+		// 		type: "sfx",
+		// 		src: "/audio/soundEffects/fire_01.mp3",
+		// 		volume: 1,
+		// 		loop: true,
+		// 		startDelay: 0,
+		// 	},
+		// 	{
+		// 		type: "sfx",
+		// 		src: "/audio/soundEffects/oneLighting.mp3",
+		// 		volume: 1,
+		// 		loop: false,
+		// 		startDelay: 0,
+		// 	},
+		// ],
 	},
 ];

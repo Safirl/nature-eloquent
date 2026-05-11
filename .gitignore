@@ -202,3 +202,4 @@ Backups.backupdb
 MobileBackups.trash
 tmbootpicker.efi
 public/.DS_Store
+public/audio/.DS_Store
