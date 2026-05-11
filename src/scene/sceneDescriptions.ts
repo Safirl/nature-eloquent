@@ -430,7 +430,7 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "bramble1",
 		id: 22,
-		completionConditions: [{ objectId: "bramble", count: 10, nextStepId: 24 }],
+		completionConditions: [{ objectId: "bramble", count: 15, nextStepId: 24 }],
 		dialogId: "bramble_1",
 		sceneAudio: [
 			{
