@@ -54,20 +54,20 @@ export default class Playground extends World {
 			this.resources.items.forestModel as GLTF
 		);
 
-		// this.invisibleWallModel = new Actor(
-		// 	"invisibleWallModel",
-		// 	this.resources.items.invisibleWallModel as GLTF,
-		// 	true,
-		// 	false,
-		// 	this.resources.items.invisibleWallModel as GLTF
-		// );
+		this.invisibleWallModel = new Actor(
+			"invisibleWallModel",
+			this.resources.items.invisibleWallModel as GLTF,
+			true,
+			false,
+			this.resources.items.invisibleWallModel as GLTF
+		);
 
-		// this.invisibleWallModel.model.traverse((child) => {
-		// 	if (child instanceof THREE.Mesh) {
-		// 		child.material.transparent = true;
-		// 		child.material.opacity = 0;
-		// 	}
-		// });
+		this.invisibleWallModel.model.traverse((child) => {
+			if (child instanceof THREE.Mesh) {
+				child.material.transparent = true;
+				child.material.opacity = 0;
+			}
+		});
 
 		// Add colisions
 		const collisionManager = Experience.instance?.collisionManager;
@@ -75,7 +75,7 @@ export default class Playground extends World {
 			throw new Error("Playground initialization failed: CollisionManager is not available.");
 		collisionManager?.addCollisionObjects([this.floor]);
 		collisionManager?.addCollisionObjects([this.layout]);
-		// collisionManager?.addCollisionObjects([this.invisibleWallModel]);
+		collisionManager?.addCollisionObjects([this.invisibleWallModel]);
 	}
 
 	update() {
