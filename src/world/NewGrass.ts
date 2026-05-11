@@ -268,7 +268,6 @@ export default class Grass implements LifeTimeObject {
 		// Start hidden — updateChunks enables nearby chunks each frame
 		mesh.visible = false;
 
-		console.log("test")
 		this.scene.add(mesh);
 		this.chunks.set(key, mesh);
 	}
