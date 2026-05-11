@@ -22,7 +22,7 @@ export default class GameEnvironment extends Environment {
 	declare sky: Sky;
 	declare fog: THREE.Fog;
 	declare cloud: Cloud;
-	declare private grass: NewGrass;
+	declare public grass: NewGrass;
 	declare private pineTreesManager: InstancedMeshManager;
 
 	declare public sunMesh: THREE.Mesh;
