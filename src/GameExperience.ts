@@ -56,6 +56,8 @@ export default class GameExperience extends Experience {
 		if (this.triggerManager) {
 			this.triggerManager.update();
 		}
-		this.room.update();
+		if (this.room) {
+			this.room.update();
+		}
 	}
 }
