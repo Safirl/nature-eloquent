@@ -85,7 +85,7 @@ export default class Grass implements LifeTimeObject {
 
 		this.grassMaterial = new THREE.MeshLambertMaterial({
 			side: THREE.DoubleSide,
-			transparent: true,
+			transparent: false,
 			alphaTest: 0.1,
 		});
 
