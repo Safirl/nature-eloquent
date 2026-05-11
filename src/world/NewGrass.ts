@@ -215,7 +215,6 @@ export default class Grass implements LifeTimeObject {
 		this.xChuncksAmount = Math.floor(this.geoLegnthX / this.chunkSize);
 		this.zChuncksAmount = Math.floor(this.geoLegnthZ / this.chunkSize);
 
-		console.log(this.xChuncksAmount, this.zChuncksAmount)
 		for (let x = 0; x <= this.xChuncksAmount; x++) {
 			for (let z = 0; z <= this.zChuncksAmount; z++) {
 				this.createSingleChunk(bvh, x, z);
