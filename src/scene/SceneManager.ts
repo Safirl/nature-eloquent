@@ -155,6 +155,12 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 			else if (audio.type === "sfx") {
 				this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0, true);
 			}
+			else if (audio.type === "sfxSpatial") {
+				const sound = this.audioListenerManager.playSfx(audio.src, audio.loop ?? false, audio.volume);
+				if (audio.position) {
+					sound.position.copy(audio.position);
+				}
+			}
 		});
 	}
 

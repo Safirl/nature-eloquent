@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 export type DialogStep = {
 	name?: string;
 	id: number;
@@ -11,11 +13,12 @@ export type DialogStep = {
 	dialogId?: string;
 	sounds?: { name: string; src: string }[];
 	sceneAudio?: {
-		type?: "ambient" | "sfx" | "onCompleted";
+		type?: "ambient" | "sfx" | "onCompleted" | "sfxSpatial",
 		src: string;
 		volume: number;
 		loop?: boolean;
 		startDelay?: number;
+		position?: THREE.Vector3;
 	}[];
 	removeAudio?: string[];
 	cleanSteps?: boolean;
@@ -194,6 +197,7 @@ export const stepDescription: DialogStep[] = [
 				volume: 1,
 				loop: false,
 				startDelay: 2000,
+				position: new THREE.Vector3(1, 1, 1),
 			},
 		],
 	},
