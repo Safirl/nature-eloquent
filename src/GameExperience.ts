@@ -22,7 +22,7 @@ export default class GameExperience extends Experience {
 	declare public menu: Menu;
 	declare triggerManager: TriggerManager;
 	declare public atmosphereSwitcher: AtmosphereSwitcher;
-	declare room: Room
+	declare room: Room;
 	constructor(canvas: HTMLCanvasElement, sources: Source[], camera: Camera, world: World) {
 		super(canvas, sources, camera, world);
 	}
@@ -43,10 +43,10 @@ export default class GameExperience extends Experience {
 		this.sceneManager = new SceneManager(this.menu);
 		this.triggerManager = new TriggerManager(this.menu);
 		this.atmosphereSwitcher = new AtmosphereSwitcher(this.world.environment as GameEnvironment);
-		this.room = new Room()
-		this.sceneManager.init();
+		this.room = new Room();
 		this.menu.init();
-		this.room.init()
+		this.sceneManager.init();
+		this.room.init();
 		this.endSequence.init();
 	};
 
