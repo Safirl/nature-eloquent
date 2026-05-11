@@ -314,6 +314,14 @@ const sources: Source[] = [
 		path: "textures/perlinnoise.webp",
 	},
 
+	/** Room **/
+	{
+		name: "lava_lamp",
+		type: "gltfModel",
+		path: "models/room/lavalamp.glb",
+	},
+
+
 ];
 
 export default sources;
