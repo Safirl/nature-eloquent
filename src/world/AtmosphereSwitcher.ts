@@ -8,7 +8,7 @@ import FogVariables from "../common/Fog";
 import { exp } from "three/src/nodes/TSL.js";
 import GameExperience from "../GameExperience";
 import type { DialogStep } from "../scene/sceneDescriptions";
-
+import NewGrass from "./NewGrass"
 export default class AtmosphereSwitcher implements LifeTimeObject {
 	declare private experience: Experience;
 	declare private sun: THREE.DirectionalLight;
@@ -19,7 +19,7 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 	private duration: number = 6;
 	declare private debug: Debug;
 	declare private debugFolder: GUI;
-
+	declare grass: NewGrass;
 	private debugAtmosphereIndex: number = 0;
 
 	public atmospheres: {
@@ -29,35 +29,48 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 		sunColor: string;
 		skyIndex: number;
 		envMapIntensity: number;
+		tipColor1: string
+		tipColor2: string
+		baseColor: string
 	}[] = [
-		//daylight
-		{
-			sunIntensity: 3,
-			sunPosition: new THREE.Vector3(-17 * 0.75, 50 * 0.75, 24 * 0.75),
-			fogColor: FogVariables.color,
-			sunColor: "#fff",
-			skyIndex: 0,
-			envMapIntensity: 0.8,
-		},
-		//afternoon
-		{
-			sunIntensity: 2.5,
-			sunPosition: new THREE.Vector3(-46 * 2, 20 * 2, 15 * 2),
-			fogColor: "#010506",
-			sunColor: "#f19e00",
-			skyIndex: 1,
-			envMapIntensity: 0.3,
-		},
-		//night
-		{
-			sunIntensity: 0,
-			sunPosition: new THREE.Vector3(10, 15, -24),
-			fogColor: "#030a0c",
-			sunColor: "#94BFC4",
-			skyIndex: 7,
-			envMapIntensity: 0.04,
-		},
-	];
+			//daylight
+			{
+				sunIntensity: 3,
+				sunPosition: new THREE.Vector3(-17 * 0.75, 50 * 0.75, 24 * 0.75),
+				fogColor: FogVariables.color,
+				sunColor: "#fff",
+				skyIndex: 0,
+				envMapIntensity: 0.8,
+				tipColor1: "#5d713e",
+				tipColor2: "#5d713e",
+				baseColor: "#313f1b",
+
+			},
+			//afternoon
+			{
+				sunIntensity: 2.5,
+				sunPosition: new THREE.Vector3(-46 * 2, 20 * 2, 15 * 2),
+				fogColor: "#010506",
+				sunColor: "#f19e00",
+				skyIndex: 1,
+				envMapIntensity: 0.3,
+				tipColor1: "#5d713e",
+				tipColor2: "#5d713e",
+				baseColor: "#313f1b",
+			},
+			//night
+			{
+				sunIntensity: 0,
+				sunPosition: new THREE.Vector3(10, 15, -24),
+				fogColor: "#030a0c",
+				sunColor: "#94BFC4",
+				skyIndex: 7,
+				envMapIntensity: 0.1,
+				tipColor1: "#0d1306", //"#010905",
+				tipColor2: "#000000",//"#010204",
+				baseColor: "#000000",//"#144c2d",
+			},
+		];
 	constructor(environment: GameEnvironment) {
 		if (!Experience.instance)
 			throw new Error("Experience is not valid : can't construct atmosphere switcher");
@@ -68,6 +81,7 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 		this.sun = this.environment.sunLight;
 		this.sky = this.environment.sky;
 		this.debug = this.experience.debug;
+		this.grass = this.environment.grass
 
 		this.experience.sceneManager.on("onActiveStepAdded", this.onActiveStepAdded);
 
@@ -84,9 +98,9 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			this.setAtmosphere(2, 30);
 		}
 	};
-	init = () => {};
-	destroy = () => {};
-	update = () => {};
+	init = () => { };
+	destroy = () => { };
+	update = () => { };
 	setAtmosphere(index: number, duration?: number) {
 		if (duration === undefined) {
 			duration = this.duration;
@@ -132,6 +146,53 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			},
 			duration: duration,
 		});
+
+
+
+
+		const tipColor1 = new THREE.Color(atmosphere.tipColor1);
+
+		gsap.to(this.grass.uniforms.uTipColor1.value, {
+			r: tipColor1.r,
+			g: tipColor1.g,
+			b: tipColor1.b,
+			duration: duration,
+			ease: "power2.inOut",
+			// onUpdate: () => {
+			// 	this.environment.sunMesh.material.emissive = this.sun.color;
+			// },
+		});
+
+
+		const tipColor2 = new THREE.Color(atmosphere.tipColor2);
+
+		gsap.to(this.grass.uniforms.uTipColor2.value, {
+			r: tipColor2.r,
+			g: tipColor2.g,
+			b: tipColor2.b,
+			duration: duration,
+			ease: "power2.inOut",
+			// onUpdate: () => {
+			// 	this.environment.sunMesh.material.emissive = this.sun.color;
+			// },
+		});
+
+		const baseColor = new THREE.Color(atmosphere.baseColor);
+
+		gsap.to(this.grass.uniforms.uBaseColor.value, {
+			r: baseColor.r,
+			g: baseColor.g,
+			b: baseColor.b,
+			duration: duration,
+			ease: "power2.inOut",
+			// onUpdate: () => {
+			// 	this.environment.sunMesh.material.emissive = this.sun.color;
+			// },
+		});
+
+
+
+
 		this.sky.switchToNewSky(atmosphere.skyIndex, duration);
 	}
 

@@ -54,6 +54,10 @@ export default class Grass implements LifeTimeObject {
 		uDarkFactor: { value: new THREE.Color(0xffffff) },
 		uHeight: { value: 0.03 },
 		uHeightRandomness: { value: 1 },
+		uTipColor1: { value: new THREE.Color("#5d713e") },
+		uTipColor2: { value: new THREE.Color("#5d713e") },
+		uBaseColor: { value: new THREE.Color("#313f1b") },
+
 	};
 
 	constructor(count?: number, fieldSizeX?: number, fieldSizeZ?: number) {
@@ -97,16 +101,9 @@ export default class Grass implements LifeTimeObject {
 			shader.uniforms.uGrassAlphaTexture = { value: grassTexture };
 			shader.uniforms.uNoiseTexture = { value: noiseTexture };
 			shader.uniforms.uNoiseScale = { value: 1.5 };
-			shader.uniforms.uBaseColor = {
-				value: new THREE.Color("#313f1b",),
-			};
-			shader.uniforms.uTipColor1 = {
-				// value: new THREE.Color("#9bd38d"), Too light 
-				value: new THREE.Color("#2a7a48"),
-			};
-			shader.uniforms.uTipColor2 = {
-				value: new THREE.Color("#1f352a"),
-			};
+			shader.uniforms.uBaseColor = this.uniforms.uBaseColor
+			shader.uniforms.uTipColor1 = this.uniforms.uTipColor1
+			shader.uniforms.uTipColor2 = this.uniforms.uTipColor2
 
 			shader.vertexShader = shader.vertexShader.replace(
 				`#include <common>`,
@@ -189,7 +186,7 @@ export default class Grass implements LifeTimeObject {
 				vec4 grassAlpha = texture2D(uGrassAlphaTexture, vec2(vGrassUv.x, 1.0 - vGrassUv.y));
 				if (grassAlpha.r < 0.1) discard;
 				
-				vec3 grassColor = mix(uBaseColor, tipColor, vGrassUv.y);
+				vec3 grassColor = mix(tipColor, uBaseColor, vGrassUv.y);
 				diffuseColor = vec4(grassColor, 1.0);`
 			);
 		};
@@ -306,47 +303,26 @@ export default class Grass implements LifeTimeObject {
 	update = () => {
 		if (!Experience.instance) return;
 
+
+		// console.log(this.uniforms.uTipColor1.value.getHex())
+		// console.log(this.uniforms.uTipColor2.value.getHex())
+		// console.log(this.uniforms.uBaseColor.value.getHex())
 		this.uniforms.uTime.value = this.experience.time.elapsed / 1000;
 		const playerPos = this.experience.camera.instance.position;
 		this.updateChunks(playerPos);
 	};
 
 	setDebugObject = () => {
-		// if (!this.experience?.debug.active) return;
+		if (!this.experience?.debug.active) return;
 
-		// this.gridDebugger = new THREE.GridHelper(this.grassFieldSizes.x, this.grassFieldSizes.y);
-		// this.gridDebugger.layers.set(2);
-		// this.experience.scene.add(this.gridDebugger);
+		this.debugFolder = this.experience.debug.ui.addFolder("🌿 New grass");
 
-		// this.debugFolder
-		// 	.add(this.uniforms.uWindStrength, "value")
-		// 	.min(0.01)
-		// 	.max(1)
-		// 	.step(0.001)
-		// 	.name("wind strength");
-		// this.debugFolder
-		// 	.add(this.uniforms.uWindFrequency, "value")
-		// 	.min(0.0001)
-		// 	.max(0.01)
-		// 	.step(0.0001)
-		// 	.name("wind frequency");
-		// this.debugFolder
-		// 	.add(this.uniforms.uWindScale, "value")
-		// 	.min(0.01)
-		// 	.max(2)
-		// 	.step(0.01)
-		// 	.name("wind scale");
-		// this.debugFolder
-		// 	.add(this.uniforms.uHeight, "value")
-		// 	.min(0.01)
-		// 	.max(2)
-		// 	.step(0.01)
-		// 	.name("grass height");
-		// this.debugFolder
-		// 	.add(this.uniforms.uHeightRandomness, "value")
-		// 	.min(0)
-		// 	.max(2)
-		// 	.step(0.01)
-		// 	.name("grass height randomness");
+		this.debugFolder
+			.addColor(this.uniforms.uTipColor1, "value").name('tc1')
+		this.debugFolder
+			.addColor(this.uniforms.uTipColor2, "value").name("tc2")
+		this.debugFolder
+			.addColor(this.uniforms.uBaseColor, "value").name("bc")
+
 	};
 }
