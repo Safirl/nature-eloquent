@@ -200,7 +200,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "dinosaur",
 		name: "Dinosaure",
-		model: "asterModel",
+		model: "darkFlowerModel",
 		vignet: "dino",
 		shadow: "mushroom",
 		isActor: true,
@@ -208,6 +208,7 @@ const itemsList: MenuItemType[] = [
 			{ src: "/audio/soundEffects/roarDino_01.mp3", volume: 0.2 },
 			{ src: "/audio/soundEffects/roarDino_02.mp3", volume: 0.2 },
 		],
+		animationDuration: 1,
 	},
 	{
 		id: "postcard",
@@ -242,6 +243,20 @@ const itemsList: MenuItemType[] = [
 			{ src: "/audio/soundEffects/grassClump_01.mp3", volume: 1 },
 			{ src: "/audio/soundEffects/grassClump_02.mp3", volume: 1 },
 			{ src: "/audio/soundEffects/grassClump_03.mp3", volume: 1 },
+		],
+	},
+
+	{
+		id: "darkFlower",
+		name: "Fleur terrifiante",
+		model: "darkFlowerModel",
+		vignet: "mushroom",
+		shadow: "mushroom",
+		sound: [
+			{ src: "/audio/soundEffects/addNatureElements_01.mp3", volume: 1 },
+			{ src: "/audio/soundEffects/addNatureElements_02.mp3", volume: 4 },
+			{ src: "/audio/soundEffects/addNatureElements_03.mp3", volume: 1 },
+			{ src: "/audio/soundEffects/addNatureElements_04.mp3", volume: 4 },
 		],
 	},
 
@@ -296,4 +311,5 @@ export type MenuItemType = {
 	isActor?: boolean;
 	sound: { src: string; volume?: number; loop?: boolean }[];
 	animationSound?: { src: string; volume?: number; loop?: boolean };
+	animationDuration?: number;
 };

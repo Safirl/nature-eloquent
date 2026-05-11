@@ -37,13 +37,6 @@ export default class Playground extends World {
 		);
 		// this.layout.model;
 		this.layout.setScale(1, 1, 1);
-		this.aster = new Actor(
-			"edelweiss",
-			this.resources.items.edelweissModel as GLTF,
-			true,
-			false
-			// this.resources.items.aster as GLTF
-		);
 		// this.aster.setScale(10, 10, 10);
 
 		this.forestModel = new Actor(
