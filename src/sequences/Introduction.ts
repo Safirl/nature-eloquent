@@ -35,7 +35,8 @@ export default class Introduction implements LifeTimeObject {
 		) as HTMLDivElement;
 		document.addEventListener("click", this.launchExperience);
 		this.exp.audio2DManager.playAmbient(
-			"/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", 0.5
+			"/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3",
+			0.5
 		);
 		const camera = exp.camera as FirstPersonCameraOctree;
 		if (!camera) return;
@@ -94,9 +95,7 @@ export default class Introduction implements LifeTimeObject {
 		document.removeEventListener("click", this.launchExperience);
 		this.transitionForeground.style.display = "inherit";
 		this.transitionForeground.innerHTML = "";
-		this.exp.audio2DManager.stopAudio(
-			"/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", true
-		);
+		this.exp.audio2DManager.stopAudio("/audio/ambientSounds/EV_Impro_modal_PP_intro.mp3", true);
 		gsap.to(this.transitionForeground.style, {
 			opacity: 1,
 			duration: 2,
@@ -114,8 +113,10 @@ export default class Introduction implements LifeTimeObject {
 
 		const camera = this.exp.camera as FirstPersonCameraOctree;
 		if (!camera) return;
-		camera.enable = true;
 
+		setTimeout(() => {
+			camera.enable = true;
+		}, 1500);
 		document.body.removeChild(this.introductionContainer);
 		this.exp.sceneManager.on("onActiveStepAdded", (activeStep: DialogStep) => {
 			if (activeStep.id === GAME_STEP_ID) {
@@ -134,14 +135,14 @@ export default class Introduction implements LifeTimeObject {
 	initPlayerPosition() {
 		const camera = this.exp.camera as FirstPersonCameraOctree;
 		if (!camera || !(camera instanceof FirstPersonCameraOctree)) return;
-		camera.teleportPlayer(new THREE.Vector3(-0.26, 1.19, 0.45));
-		camera.instance.position.set(-0.26, 1.19, 0.45);
+		camera.teleportPlayer(new THREE.Vector3(-0.26, 2, 0.45));
+		camera.instance.position.set(-0.26, 2, 0.45);
 
 		camera.instance.rotation.set(-0.576, 8.11, 0);
 	}
-	init = () => { };
+	init = () => {};
 	update = () => {
 		if (this.grass) this.grass.update();
 	};
-	destroy = () => { };
+	destroy = () => {};
 }
