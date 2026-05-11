@@ -194,6 +194,16 @@ const sources: Source[] = [
 		path: "textures/stickers/butterfly.png",
 	},
 	{
+		name: "dino",
+		type: "texture",
+		path: "textures/stickers/dino.png",
+	},
+	{
+		name: "postcard",
+		type: "texture",
+		path: "textures/stickers/postcard.png",
+	},
+	{
 		name: "butterfly_shadow",
 		type: "texture",
 		path: "textures/stickers/butterfly_shadow.png",
@@ -291,12 +301,9 @@ const sources: Source[] = [
 
 	/***********/
 
-
-
 	/**
 	 * GRASS
 	 */
-
 
 	{
 		name: "grass_model_lods",

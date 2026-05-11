@@ -17,7 +17,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "buttercup",
 		name: "Boutton d'or",
-		model: "mushroomPaintedModel",
+		model: "asterModel",
 		vignet: "buttercup_flower",
 		shadow: "buttercup_flower_shadow",
 		sound: [
@@ -200,9 +200,10 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "dinosaur",
 		name: "Dinosaure",
-		model: "mushroomPaintedModel",
-		vignet: "mushroom",
+		model: "asterModel",
+		vignet: "dino",
 		shadow: "mushroom",
+		isActor: true,
 		sound: [
 			{ src: "/audio/soundEffects/roarDino_01.mp3", volume: 0.2 },
 			{ src: "/audio/soundEffects/roarDino_02.mp3", volume: 0.2 },
@@ -212,7 +213,7 @@ const itemsList: MenuItemType[] = [
 		id: "postcard",
 		name: "Carte postale",
 		model: "mushroomModel",
-		vignet: "mushroom",
+		vignet: "postcard",
 		shadow: "mushroom",
 		sound: [
 			{ src: "/audio/soundEffects/postcard_01.mp3", volume: 1 },

@@ -13,7 +13,9 @@ export default class EndSequence implements LifeTimeObject {
 		this.transitionForeground = document.getElementById(
 			"transition-foreground"
 		) as HTMLDivElement;
+		// this.setDebugObject();
 	}
+
 	init = () => {
 		const sceneManager = this.exp.sceneManager;
 		if (!sceneManager) return;
@@ -23,6 +25,7 @@ export default class EndSequence implements LifeTimeObject {
 				this.transitionForeground.style.backgroundColor = "black";
 				this.transitionForeground.style.opacity = "1";
 				this.transitionForeground.style.display = "inherit";
+				this.transitionForeground.innerHTML = "";
 				const dot = document.getElementById("camera-cursor");
 				dot.style.opacity = "0";
 			}
