@@ -142,6 +142,8 @@ vite.config.ts.timestamp-*
 # General
 public/.DS_Store
 .DS_Store
+*/.DS_Store
+*.DS_Store
 .localized
 __MACOSX/
 .AppleDouble
@@ -199,3 +201,4 @@ Backups.backupdb
 .MobileBackups.trash
 MobileBackups.trash
 tmbootpicker.efi
+public/.DS_Store
