@@ -3,6 +3,7 @@ import type GUI from "lil-gui";
 import * as THREE from "three";
 import { MeshSurfaceSampler } from "three/addons/math/MeshSurfaceSampler.js";
 import type { GLTF } from "three/examples/jsm/Addons.js";
+import { MeshBVH } from "three-mesh-bvh";
 
 export default class Grass implements LifeTimeObject {
 	declare private experience: Experience;
@@ -67,7 +68,7 @@ export default class Grass implements LifeTimeObject {
 		this.setMaterial();
 
 
-		this.createChunks(((this.experience.resources.items.layoutModel as any).scene.children.find((el: any) => el.name == "Plane006") as any) as any)
+		this.createChunks(((this.experience.resources.items.forestModel as any).scene.children.find((el: any) => el.name == "OK_TREE") as any) as any)
 
 	}
 
@@ -195,17 +196,18 @@ export default class Grass implements LifeTimeObject {
 	}
 
 	createChunks(grassSurface: THREE.Mesh) {
+
 		const geometry = grassSurface.geometry.clone();
 		geometry.computeBoundingBox();
 		geometry.applyMatrix4(grassSurface.matrixWorld);
 
-		// World-space mesh used for raycasting only — not added to the scene
-		const gs = new THREE.Mesh(geometry);
+		// Build BVH directly — no global prototype patch needed
+		const bvh = new MeshBVH(geometry);
 
-		this.geoMinX = gs.geometry.boundingBox?.min.x || 0;
-		this.geoMaxX = gs.geometry.boundingBox?.max.x || 0;
-		this.geoMinZ = gs.geometry.boundingBox?.min.z || 0;
-		this.geoMaxZ = gs.geometry.boundingBox?.max.z || 0;
+		this.geoMinX = geometry.boundingBox?.min.x || 0;
+		this.geoMaxX = geometry.boundingBox?.max.x || 0;
+		this.geoMinZ = geometry.boundingBox?.min.z || 0;
+		this.geoMaxZ = geometry.boundingBox?.max.z || 0;
 
 		this.geoLegnthX = Math.abs(this.geoMinX) + Math.abs(this.geoMaxX);
 		this.geoLegnthZ = Math.abs(this.geoMinZ) + Math.abs(this.geoMaxZ);
@@ -215,11 +217,11 @@ export default class Grass implements LifeTimeObject {
 
 		for (let x = 0; x <= this.xChuncksAmount; x++) {
 			for (let z = 0; z <= this.zChuncksAmount; z++) {
-				this.createSingleChunk(gs, x, z);
+				this.createSingleChunk(bvh, x, z);
 			}
 		}
 	}
-	createSingleChunk(grassSurface: THREE.Mesh, chunkX: number, chunkZ: number) {
+	createSingleChunk(bvh: MeshBVH, chunkX: number, chunkZ: number) {
 		const key = `${chunkX}_${chunkZ}`;
 		const grassDensity = 70;
 
@@ -237,8 +239,10 @@ export default class Grass implements LifeTimeObject {
 		const offsetX = this.geoMinX + chunkX * this.chunkSize;
 		const offsetZ = this.geoMinZ + chunkZ * this.chunkSize;
 
-		const raycaster = new THREE.Raycaster();
-		raycaster.ray.direction.set(0, -1, 0);
+		const ray = new THREE.Ray(
+			new THREE.Vector3(),
+			new THREE.Vector3(0, -1, 0)
+		);
 
 		let count = 0;
 		for (let x = 0; x < grassDensity; x++) {
@@ -246,13 +250,13 @@ export default class Grass implements LifeTimeObject {
 				const px = offsetX + (x / grassDensity) * this.chunkSize;
 				const pz = offsetZ + (z / grassDensity) * this.chunkSize;
 
-				raycaster.ray.origin.set(px, 100, pz);
-				const hits = raycaster.intersectObject(grassSurface);
+				ray.origin.set(px, 100, pz);
+				const hit = bvh.raycastFirst(ray, THREE.DoubleSide);
 
-				if (hits.length === 0) continue;
+				if (!hit) continue;
 
 				quaternion.setFromAxisAngle(yAxis, Math.random() * Math.PI * 2);
-				matrix.compose(hits[0].point, quaternion, scale);
+				matrix.compose(hit.point, quaternion, scale);
 				mesh.setMatrixAt(count, matrix);
 				count++;
 			}
@@ -264,6 +268,7 @@ export default class Grass implements LifeTimeObject {
 		// Start hidden — updateChunks enables nearby chunks each frame
 		mesh.visible = false;
 
+		console.log("test")
 		this.scene.add(mesh);
 		this.chunks.set(key, mesh);
 	}
