@@ -114,14 +114,13 @@ export default class Sky implements LifeTimeObject {
 		this.scene.add(this.skyMesh);
 	}
 
-	init = () => { };
-	destroy = () => { };
-	update = () => { };
+	init = () => {};
+	destroy = () => {};
+	update = () => {};
 
 	switchToNewSky(index: number, duration: number) {
 		const newGradient = this.getGradient(index);
 		if (!newGradient) return;
-		console.log("new gradient", newGradient);
 		this.currentGradientIndex = index;
 
 		[0, 1, 2].forEach((i) => {

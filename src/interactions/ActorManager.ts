@@ -25,7 +25,6 @@ export default class ActorManager implements LifeTimeObject {
 			console.warn("maxium instances reached !");
 			return;
 		}
-		console.log("resource", this.resource);
 		const actor = new PlaceableObject("managed actor", this.resource);
 		actor.setPosition(position.x, position.y, position.z);
 		actor.model.rotateY(Math.random() * 2 * Math.PI);

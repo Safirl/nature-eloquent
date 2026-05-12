@@ -94,6 +94,12 @@ export default class Actor implements LifeTimeObject {
 			}
 			const material = child.material as THREE.Material;
 			if (!material) return;
+			if (material instanceof THREE.MeshStandardMaterial) {
+				const envMap = this.experience.world.environment.environmentMap;
+				child.material.envMap = envMap.texture;
+				child.material.envMapIntensity = envMap.intensity;
+				child.material.needsUpdate = true;
+			}
 			if (material.transparent) {
 				material.transparent = false;
 				material.alphaTest = 0.5;

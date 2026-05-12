@@ -1,8 +1,4 @@
-import {
-	Experience,
-	OrbitCamera,
-	type InputEventArgs,
-} from "@plugins/baseExperience";
+import { Experience, OrbitCamera, type InputEventArgs } from "@plugins/baseExperience";
 import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import type InteractableObject from "../interactable/InteractableObject";
 import type BlockingWorld from "../world/Blocking";
@@ -25,15 +21,11 @@ export default class Player extends FirstPersonCameraOctree {
 
 	setClosestObject = (object: InteractableObject) => {
 		if (!Experience.instance)
-			throw new Error(
-				"Can't set closest object: Experience is not valid"
-			);
+			throw new Error("Can't set closest object: Experience is not valid");
 
 		if (this.closestObject === object) return;
 		if (this.closestObject) {
-			const newDistance = this.instance.position.distanceTo(
-				object.model.position
-			);
+			const newDistance = this.instance.position.distanceTo(object.model.position);
 			const oldDistance = this.instance.position.distanceTo(
 				this.closestObject.model.position
 			);
@@ -43,10 +35,7 @@ export default class Player extends FirstPersonCameraOctree {
 			this.clearClosestObject(this.closestObject);
 		}
 		const world = Experience.instance.world as BlockingWorld;
-		if (!world)
-			throw new Error(
-				"Can't set closest object: Blocking world is not valid"
-			);
+		if (!world) throw new Error("Can't set closest object: Blocking world is not valid");
 		this.closestObject = object;
 		world.outlineManager.addObjectOutline(this.closestObject.model);
 		this.trigger("onSelectedObjectChanged", [this.closestObject]);
@@ -54,17 +43,12 @@ export default class Player extends FirstPersonCameraOctree {
 
 	clearClosestObject = (object: InteractableObject) => {
 		if (!Experience.instance)
-			throw new Error(
-				"Can't set closest object: Experience is not valid"
-			);
+			throw new Error("Can't set closest object: Experience is not valid");
 
 		if (this.closestObject !== object) return;
 
 		const world = Experience.instance.world as BlockingWorld;
-		if (!world)
-			throw new Error(
-				"Can't set closest object: Blocking world is not valid"
-			);
+		if (!world) throw new Error("Can't set closest object: Blocking world is not valid");
 
 		this.closestObject = null;
 		world.outlineManager.removeObjectOutline(object.model);
@@ -94,17 +78,10 @@ export default class Player extends FirstPersonCameraOctree {
 	}
 
 	removePointerLock = () => {
-		console.log("coucou");
-		Experience.instance?.canvas.removeEventListener(
-			"mousedown",
-			this.lockPointer
-		);
+		Experience.instance?.canvas.removeEventListener("mousedown", this.lockPointer);
 	};
 
 	addPointerLock = () => {
-		Experience.instance?.canvas.addEventListener(
-			"mousedown",
-			this.lockPointer
-		);
+		Experience.instance?.canvas.addEventListener("mousedown", this.lockPointer);
 	};
 }

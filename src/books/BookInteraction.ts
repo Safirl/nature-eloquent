@@ -1,8 +1,4 @@
-import {
-	EventEmitter,
-	Experience,
-	type InputEventArgs,
-} from "@plugins/baseExperience";
+import { EventEmitter, Experience, type InputEventArgs } from "@plugins/baseExperience";
 import type InteractableObject from "../interactable/InteractableObject";
 import BookDrawing from "./BookDrawing";
 
@@ -32,24 +28,13 @@ export default class BookInteraction extends EventEmitter {
 	constructor() {
 		super();
 
-		const bookSelectorInterface = document.getElementById(
-			"book-selector-interface"
-		);
-		const bookDrawingInterface = document.getElementById(
-			"book-drawing-interface"
-		);
+		const bookSelectorInterface = document.getElementById("book-selector-interface");
+		const bookDrawingInterface = document.getElementById("book-drawing-interface");
 		const bookInterface = document.getElementById("book-interface");
-		const closeBookSelectorButton = document.getElementById(
-			"close-book-selector"
-		);
-		const closeBookDrawingButton =
-			document.getElementById("close-book-drawing");
-		const nameObjectSelectedElement = document.querySelector(
-			".name-object-selected"
-		);
-		const bookDrawingInterfaceValidate = document.querySelector(
-			".validate-book-drawing"
-		);
+		const closeBookSelectorButton = document.getElementById("close-book-selector");
+		const closeBookDrawingButton = document.getElementById("close-book-drawing");
+		const nameObjectSelectedElement = document.querySelector(".name-object-selected");
+		const bookDrawingInterfaceValidate = document.querySelector(".validate-book-drawing");
 
 		if (
 			!bookSelectorInterface ||
@@ -66,14 +51,10 @@ export default class BookInteraction extends EventEmitter {
 		this.bookSelectorInterface = bookSelectorInterface;
 		this.bookDrawingInterface = bookDrawingInterface;
 		this.bookInterface = bookInterface;
-		this.nameObjectSelectedElement =
-			nameObjectSelectedElement as HTMLElement;
-		this.closeBookSelectorButton =
-			closeBookSelectorButton as HTMLButtonElement;
-		this.closeBookDrawingButton =
-			closeBookDrawingButton as HTMLButtonElement;
-		this.bookDrawingInterfaceValidate =
-			bookDrawingInterfaceValidate as HTMLButtonElement;
+		this.nameObjectSelectedElement = nameObjectSelectedElement as HTMLElement;
+		this.closeBookSelectorButton = closeBookSelectorButton as HTMLButtonElement;
+		this.closeBookDrawingButton = closeBookDrawingButton as HTMLButtonElement;
+		this.bookDrawingInterfaceValidate = bookDrawingInterfaceValidate as HTMLButtonElement;
 
 		this.isFullOpenBookDrawing = false;
 		this.isHalfOpenBookDrawing = false;
@@ -93,7 +74,7 @@ export default class BookInteraction extends EventEmitter {
 		this.renderCollectedObjects();
 	}
 
-	/* 
+	/*
 		REGISTER BIND INPUT EVENTS
 	*/
 
@@ -105,49 +86,34 @@ export default class BookInteraction extends EventEmitter {
 	}
 
 	registerEventsUI(): void {
-		this.closeBookSelectorButton.addEventListener(
-			"click",
-			this.onCloseBookSelector
-		);
-		this.closeBookDrawingButton.addEventListener(
-			"click",
-			this.onCloseBookDrawing
-		);
-		this.bookDrawingInterfaceValidate.addEventListener(
-			"click",
-			this.validateDropObject
-		);
+		this.closeBookSelectorButton.addEventListener("click", this.onCloseBookSelector);
+		this.closeBookDrawingButton.addEventListener("click", this.onCloseBookDrawing);
+		this.bookDrawingInterfaceValidate.addEventListener("click", this.validateDropObject);
 	}
 
 	registerEventsBookCollectControls(instance: Experience): void {
-		instance.camera.on(
-			"onInteractionPressed",
-			(args: (InteractableObject | null)[]) => {
-				if (this.isHalfOpenBookDrawing) {
-					this.fullOpenBookDrawing(args);
-				} else {
-					this.halfOpenBookDrawing(args);
-				}
+		instance.camera.on("onInteractionPressed", (args: (InteractableObject | null)[]) => {
+			if (this.isHalfOpenBookDrawing) {
+				this.fullOpenBookDrawing(args);
+			} else {
+				this.halfOpenBookDrawing(args);
 			}
-		);
+		});
 		instance.inputSystem.on("interact", this.onOpenBookSelector);
 	}
 
 	registerEventsProximityDetection(instance: Experience): void {
-		instance.camera.on(
-			"onSelectedObjectChanged",
-			(args: (InteractableObject | null)[]) => {
-				const object = Array.isArray(args) ? args[0] : args;
-				this.isCloseToInteractable = object;
+		instance.camera.on("onSelectedObjectChanged", (args: (InteractableObject | null)[]) => {
+			const object = Array.isArray(args) ? args[0] : args;
+			this.isCloseToInteractable = object;
 
-				if (!object) {
-					this.onCloseBookDrawing();
-					return;
-				}
-				if (this.isOpenBookSelector) this.setBookSelectorOpen(false);
-				this.halfOpenBookDrawing(args);
+			if (!object) {
+				this.onCloseBookDrawing();
+				return;
 			}
-		);
+			if (this.isOpenBookSelector) this.setBookSelectorOpen(false);
+			this.halfOpenBookDrawing(args);
+		});
 	}
 
 	validateDropObject = (): void => {
@@ -160,7 +126,6 @@ export default class BookInteraction extends EventEmitter {
 			this.objectsCollected.push(this.isCloseToInteractable);
 		}
 
-		console.log("Le tableau d'objet :", this.objectsCollected);
 		this.onCloseBookDrawing();
 		this.renderCollectedObjects();
 	};

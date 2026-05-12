@@ -33,8 +33,8 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		this.bindToDialogEvents();
 		this.addActiveStep(exp.debug.active ? 1 : 0);
 	};
-	update = () => { };
-	destroy = () => { };
+	update = () => {};
+	destroy = () => {};
 
 	bindToDialogEvents() {
 		this.menu.subtitle.on("dialogFinished.sceneManager", () => {
@@ -107,7 +107,6 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 	onStepTimeoutCompleted = (newActiveStep: DialogStep) => {
 		if (newActiveStep.completionCallback) {
 			this.trigger(newActiveStep.completionCallback);
-			console.log("triggered", newActiveStep.completionCallback);
 		}
 		this.addActiveStep(newActiveStep.completionConditions.nextStepId);
 		this.menu.subtitle.off(".condition");
@@ -124,15 +123,20 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		if (!Array.isArray(newActiveStep.completionConditions)) {
 			if (!newActiveStep.dialogId) {
 				this.playOnCompletedAudio(newActiveStep);
-				setTimeout(() => this.onStepTimeoutCompleted(newActiveStep), newActiveStep.completionConditions.delay);
+				setTimeout(
+					() => this.onStepTimeoutCompleted(newActiveStep),
+					newActiveStep.completionConditions.delay
+				);
 			} else {
 				this.menu.subtitle.on("dialogFinished.condition", () => {
 					this.playOnCompletedAudio(newActiveStep);
-					setTimeout(() => this.onStepTimeoutCompleted(newActiveStep), newActiveStep.completionConditions.delay);
+					setTimeout(
+						() => this.onStepTimeoutCompleted(newActiveStep),
+						newActiveStep.completionConditions.delay
+					);
 				});
 			}
 		}
-		console.log("step:", newActiveStep);
 
 		// S'il y a des bruits d'ambiance dans la scène
 		this.playStepAudio(newActiveStep);
@@ -151,12 +155,20 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 		step.sceneAudio?.forEach((audio) => {
 			if (audio.type === "ambient") {
 				this.audio2DManager.playAmbient(audio.src, audio.volume);
-			}
-			else if (audio.type === "sfx") {
-				this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0, true);
-			}
-			else if (audio.type === "sfxSpatial") {
-				const sound = this.audioListenerManager.playSfx(audio.src, audio.loop ?? false, audio.volume);
+			} else if (audio.type === "sfx") {
+				this.audio2DManager.playAudio(
+					audio.src,
+					audio.loop ?? false,
+					audio.volume,
+					audio.startDelay ?? 0,
+					true
+				);
+			} else if (audio.type === "sfxSpatial") {
+				const sound = this.audioListenerManager.playSfx(
+					audio.src,
+					audio.loop ?? false,
+					audio.volume
+				);
 				if (audio.position) {
 					sound.position.copy(audio.position);
 				}
@@ -165,8 +177,15 @@ export default class SceneManager extends EventEmitter implements LifeTimeObject
 	}
 
 	private playOnCompletedAudio(step: DialogStep) {
-		step.sceneAudio?.filter(a => a.type === "onCompleted").forEach((audio) => {
-			this.audio2DManager.playAudio(audio.src, audio.loop ?? false, audio.volume, audio.startDelay ?? 0);
-		});
+		step.sceneAudio
+			?.filter((a) => a.type === "onCompleted")
+			.forEach((audio) => {
+				this.audio2DManager.playAudio(
+					audio.src,
+					audio.loop ?? false,
+					audio.volume,
+					audio.startDelay ?? 0
+				);
+			});
 	}
 }
