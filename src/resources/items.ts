@@ -20,7 +20,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "buttercup",
 		name: "Boutton d'or",
-		model: "asterModel",
+		model: "buttercupModel",
 		vignet: "buttercup_flower",
 		shadow: "buttercup_flower_shadow",
 		isActor: true,
@@ -35,7 +35,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "giant_iris",
 		name: "Iris Géante",
-		model: "mushroomPaintedModel",
+		model: "giantIrisModel",
 		vignet: "iris_stem_flower",
 		shadow: "iris_stem_flower_shadow",
 		isActor: true,
@@ -45,7 +45,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "giant_buttercup",
 		name: "Boutton d'or Géant",
-		model: "mushroomPaintedModel",
+		model: "giantButtercupModel",
 		vignet: "buttercup_stem_flower",
 		shadow: "buttercup_stem_flower_shadow",
 		isActor: true,
@@ -55,7 +55,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "iris",
 		name: "Iris",
-		model: "mushroomPaintedModel",
+		model: "irisModel",
 		vignet: "iris_flower",
 		shadow: "iris_flower_shadow",
 		isActor: true,
@@ -70,7 +70,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "lys",
 		name: "Lys",
-		model: "mushroomPaintedModel",
+		model: "lysModel",
 		vignet: "lys_flower",
 		shadow: "lys_flower_shadow",
 		isActor: true,
@@ -85,7 +85,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "giant_lys",
 		name: "Lys géant",
-		model: "mushroomPaintedModel",
+		model: "giantLysModel",
 		vignet: "lys_stem_flower",
 		shadow: "lys_stem_flower_shadow",
 		isActor: true,
@@ -265,7 +265,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "giantClemFlower",
 		name: "Clem grande fleur",
-		model: "mushroomPaintedModel",
+		model: "giantLysModel",
 		vignet: "mushroom",
 		isActor: true,
 		shadow: "mushroom",
