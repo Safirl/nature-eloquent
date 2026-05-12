@@ -368,7 +368,7 @@ export const stepDescription: DialogStep[] = [
 		objectsRemoved: ["butterfly"],
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		completionCallback: "onStormStarted",
-		dialogId: "storm",
+		// dialogId: "storm",
 		sceneAudio: [
 			{
 				type: "ambient",
