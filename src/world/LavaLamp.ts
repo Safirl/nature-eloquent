@@ -153,7 +153,7 @@ export default class LavaLamp implements LifeTimeObject {
 	private cylinderRadius = 0.15;
 	private cylinderHeight = 0.8;
 	private cylinderY = 0;
-	private position = new THREE.Vector3(0, 1.3, 0)
+	private position = new THREE.Vector3(0, 0.85, 0)
 	constructor() {
 		if (!Experience.instance) return;
 
@@ -163,41 +163,39 @@ export default class LavaLamp implements LifeTimeObject {
 	}
 
 	init() {
-		const gltf = this.experience.resources.items.lava_lamp as GLTF;
+		const gltf = (this.experience.resources.items.room as GLTF).scene.children.find((item) => item.name === "Cylinder");
+		// gltf.scene.traverse((child) => {
+		// 	child.position.copy(this.position);
+		// 	child.scale.setScalar(0.5);
+		// });
 
-		gltf.scene.traverse((child) => {
-			child.position.copy(this.position);
-			child.scale.setScalar(0.5);
-		});
+		// this.scene.add(gltf.scene);
 
-		this.scene.add(gltf.scene);
 
-		gltf.scene.traverse((child) => {
-			if (child.name === "Cylinder" && child instanceof THREE.Mesh) {
+		if (gltf instanceof THREE.Mesh) {
 
-				this.cylinderMaterial = new THREE.MeshPhysicalMaterial({
-					color: new THREE.Color('#bc2f2f'),
-					transmission: 1,
-					roughness: 0,
-					metalness: 0,
-					opacity: 0.28,
-					thickness: 2.355,
-					transparent: true
-				});
-				child.material = this.cylinderMaterial;
+			this.cylinderMaterial = new THREE.MeshPhysicalMaterial({
+				color: new THREE.Color('#bc2f2f'),
+				transmission: 1,
+				roughness: 0,
+				metalness: 0,
+				opacity: 0.28,
+				thickness: 2.355,
+				transparent: true
+			});
+			gltf.material = this.cylinderMaterial;
 
-				const worldBox = new THREE.Box3().setFromObject(child);
-				const size = new THREE.Vector3();
-				console.log(worldBox)
-				worldBox.getCenter(this.cylinderCenter);
-				worldBox.getSize(size);
+			const worldBox = new THREE.Box3().setFromObject(gltf);
+			const size = new THREE.Vector3();
+			console.log(worldBox)
+			worldBox.getCenter(this.cylinderCenter);
+			worldBox.getSize(size);
 
-				this.cylinderRadius = (size.x * 0.5 + size.z * 0.5) / 4;
-				this.cylinderHeight = size.y * 0.5;
-				this.cylinderY = worldBox.min.y + this.position.y / 2
-				this.createLavaMesh();
-			}
-		});
+			this.cylinderRadius = (size.x + size.z) / 4;
+			this.cylinderHeight = size.y;
+			this.cylinderY = worldBox.min.y + this.position.y / 2
+			this.createLavaMesh();
+		}
 	}
 
 	private createLavaMesh() {
@@ -239,7 +237,7 @@ export default class LavaLamp implements LifeTimeObject {
 
 		this.lavaMesh = new THREE.Mesh(geometry, material);
 		this.lavaMesh.position.copy(this.cylinderCenter);
-		this.lavaMesh.scale.set(0.7, 1, 0.7);
+		this.lavaMesh.scale.set(0.62, 1, 0.62);
 		// this.lavaMesh.renderOrder = 1;
 		this.lavaMesh.position.y = this.cylinderY;
 		this.scene.add(this.lavaMesh);

@@ -342,6 +342,13 @@ const sources: Source[] = [
 		type: "gltfModel",
 		path: "models/room/lavalamp.glb",
 	},
+	{
+		name: "room",
+		type: "gltfModel",
+		path: "models/room/room.glb",
+	},
+
+
 ];
 
 export default sources;

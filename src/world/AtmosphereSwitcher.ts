@@ -195,9 +195,6 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			b: baseColor.b,
 			duration: duration,
 			ease: "power2.inOut",
-			// onUpdate: () => {
-			// 	console.log(this.grass.uniforms.uBaseColor.value);
-			// },
 		});
 
 		this.sky.switchToNewSky(atmosphere.skyIndex, duration);
