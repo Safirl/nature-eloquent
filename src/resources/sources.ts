@@ -93,7 +93,7 @@ const sources: Source[] = [
 	{
 		name: "tRexModel",
 		type: "gltfModel",
-		path: "models/t-rex/t-rex.glb",
+		path: "models/edelweiss/grass_edelweiss/grass.glb",
 	},
 	{
 		name: "fernModel",
@@ -129,6 +129,11 @@ const sources: Source[] = [
 		name: "levelDesignModel",
 		type: "gltfModel",
 		path: "models/LD/blocking.glb",
+	},
+	{
+		name: "grassClumpModel",
+		type: "gltfModel",
+		path: "models/grass/grassClump.glb"
 	},
 
 	/**
