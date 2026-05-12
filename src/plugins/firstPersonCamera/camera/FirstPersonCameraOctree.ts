@@ -104,7 +104,6 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("forward", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveForward = true;
-					this.playFootStepAudio();
 				} else if (args.type === "released") {
 					this.moveForward = false;
 				}
@@ -112,7 +111,6 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("backward", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveBackward = true;
-					this.playFootStepAudio();
 				} else if (args.type === "released") {
 					this.moveBackward = false;
 				}
@@ -120,7 +118,6 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("left", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveLeft = true;
-					this.playFootStepAudio();
 				} else if (args.type === "released") {
 					this.moveLeft = false;
 				}
@@ -128,7 +125,6 @@ export default class FirstPersonCameraOctree extends Camera {
 			Experience.instance.inputSystem.on("right", (args: InputEventArgs) => {
 				if (args.type === "pressed") {
 					this.moveRight = true;
-					this.playFootStepAudio();
 				} else if (args.type === "released") {
 					this.moveRight = false;
 				}
@@ -148,7 +144,7 @@ export default class FirstPersonCameraOctree extends Camera {
 		this.isPlayingFootstep = true;
 		await this.gameExperience.audio2DManager.playFootStepAudio(
 			"/audio/soundEffects/grassWalk.mp3",
-			0.4
+			0.2
 		);
 		this.isPlayingFootstep = false;
 	}
@@ -217,6 +213,11 @@ export default class FirstPersonCameraOctree extends Camera {
 		}
 
 		this.velocity.addScaledVector(this.velocity, damping);
+
+		const soundVelocity = new THREE.Vector3(this.velocity.x, 0, this.velocity.z);
+		if (soundVelocity.length() > 0.2) {
+			this.playFootStepAudio();
+		}
 
 		// Fait bouger le player en fonction de sa vélocité
 		const deltaPosition = this.velocity.clone().multiplyScalar(delta);
