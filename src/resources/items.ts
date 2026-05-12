@@ -103,7 +103,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "grassClump",
 		name: "Herbe",
-		model: "mushroomPaintedModel",
+		model: "grassClumpModel",
 		vignet: "grass",
 		isActor: true,
 		shadow: "grass_shadow",
