@@ -41,7 +41,7 @@ export default class Placement {
 			manager = new InstancedMeshManager(baseMesh);
 		} else {
 			const item = itemsList.find((it) => it.id === id);
-			manager = new ActorManager(baseMesh, 20, item?.animationDuration);
+			manager = new ActorManager(baseMesh, 100, item?.animationDuration);
 		}
 		this.managers.set(id, manager);
 	}
