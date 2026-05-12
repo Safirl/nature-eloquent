@@ -176,7 +176,7 @@ export default class LavaLamp implements LifeTimeObject {
 			if (child.name === "Cylinder" && child instanceof THREE.Mesh) {
 
 				this.cylinderMaterial = new THREE.MeshPhysicalMaterial({
-					color: 0xFFAAAA,
+					color: new THREE.Color('#bc2f2f'),
 					transmission: 1,
 					roughness: 0,
 					metalness: 0,
