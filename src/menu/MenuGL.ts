@@ -131,6 +131,7 @@ export default class MenuView {
 
 		// Struggle
 		if (this.walkIntensity > 0.001) {
+			console.log("coucou");
 			const amp = 0.005 * this.walkIntensity;
 
 			this._shakeVec

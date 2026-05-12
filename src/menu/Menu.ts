@@ -78,7 +78,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 			this.state.pushItems(newItems);
 		}
 		if (dialogueStep.dialogId) {
-			this.playDialog(dialogueStep.dialogId);
+			this.playDialog(dialogueStep.dialogId, dialogueStep.dialogVolume);
 		}
 	};
 
@@ -108,7 +108,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 		this.trigger("onObjectPlaced", [currentId]);
 	};
 
-	private playDialog(itemId: string) {
+	private playDialog(itemId: string, volume: number = 1) {
 		const dialogData = this.dialogsAudio[itemId];
 		this.subtitle.displayDialog(dialogData);
 	}

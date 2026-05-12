@@ -31,7 +31,7 @@ export default class SubtitleManager extends EventEmitter {
 
 	init() {}
 
-	showSubtitle(text: string, characterName: string, audioSrc: string) {
+	showSubtitle(text: string, characterName: string, audioSrc: string, volume: string) {
 		if (audioSrc === undefined) return;
 		if (!this.subtitleElement) return;
 		// this.subtitleElement.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
@@ -66,7 +66,7 @@ export default class SubtitleManager extends EventEmitter {
 	}
 
 	// Changement de dialogue automatique
-	async displayDialog(dialogData: DialogInteraction, relatedStep?: DialogStep) {
+	async displayDialog(dialogData: DialogInteraction, relatedStep?: DialogStep, volume: number) {
 		const entries = Object.entries(dialogData);
 		if (entries.length === 0) return;
 		this.trigger("dialogStarted");
