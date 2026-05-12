@@ -63,7 +63,7 @@ const sources: Source[] = [
 	{
 		name: "forestModel",
 		type: "gltfModel",
-		path: "models/layout/forestModel.glb",
+		path: "models/layout/Terrain12.glb",
 	},
 	{
 		name: "invisibleWallModel",
@@ -348,9 +348,9 @@ const sources: Source[] = [
 
 	/** Room **/
 	{
-		name: "lava_lamp",
+		name: "post_card",
 		type: "gltfModel",
-		path: "models/room/lavalamp.glb",
+		path: "models/room/post_card.glb",
 	},
 	{
 		name: "room",

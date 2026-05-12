@@ -194,7 +194,18 @@ const itemsList: MenuItemType[] = [
 			{ src: "/audio/soundEffects/grassClump_03.mp3", volume: 1 },
 		],
 	},
-
+	{
+		id: "postcard",
+		name: "Carte postale",
+		model: "post_card",
+		isActor: true,
+		vignet: "postcard",
+		shadow: "mushroom",
+		sound: [
+			{ src: "/audio/soundEffects/postcard_01.mp3", volume: 1 },
+			{ src: "/audio/soundEffects/postcard_02.mp3", volume: 1 },
+		],
+	},
 	/**
 	 * Doesn't exist
 	 */
