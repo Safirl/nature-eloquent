@@ -18,7 +18,7 @@ export default class Grass implements LifeTimeObject {
 	declare private grassAlphaMap: THREE.Texture;
 	declare private sampler: MeshSurfaceSampler
 	private grassFieldSizes = { x: 10, y: 10 };
-	public heightRandomness = 1;
+	public heightRandomness = 0.5;
 	private count: number = 100000;
 	private declare scene: THREE.Scene
 
@@ -52,12 +52,11 @@ export default class Grass implements LifeTimeObject {
 		uGrassMapTexture: { value: new THREE.Texture() },
 		uGrassAlphaMap: { value: new THREE.Texture() },
 		uDarkFactor: { value: new THREE.Color(0xffffff) },
-		uHeight: { value: 0.03 },
-		uHeightRandomness: { value: 1 },
+		uHeight: { value: 0.01 },
+		uHeightRandomness: { value: 0.5 },
 		uTipColor1: { value: new THREE.Color("#5d713e") },
 		uTipColor2: { value: new THREE.Color("#5d713e") },
 		uBaseColor: { value: new THREE.Color("#313f1b") },
-
 	};
 
 	constructor(count?: number, fieldSizeX?: number, fieldSizeZ?: number) {
