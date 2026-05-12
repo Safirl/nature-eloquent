@@ -110,7 +110,7 @@ export default class Menu extends EventEmitter implements LifeTimeObject {
 
 	private playDialog(itemId: string, volume: number = 1) {
 		const dialogData = this.dialogsAudio[itemId];
-		this.subtitle.displayDialog(dialogData);
+		this.subtitle.displayDialog(dialogData, volume);
 	}
 
 	update = () => {

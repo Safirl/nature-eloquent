@@ -24,8 +24,6 @@ export type DialogStep = {
 	cleanSteps?: boolean;
 	completionCallback?: string;
 	dialogVolume?: number;
-	// C'était un weekend
-	// Je métais mis en tête
 };
 
 export type ObjectCountCondition = {
@@ -42,6 +40,7 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "introduction",
 		id: 0,
+		// dialogVolume: 1.5,
 		completionConditions: { delay: 1500, nextStepId: 1 },
 		dialogId: "introduction",
 		sceneAudio: [
@@ -153,7 +152,7 @@ export const stepDescription: DialogStep[] = [
 		],
 		completionConditions: [{ objectId: "ivy_leaf", count: 5, nextStepId: 7 }],
 		dialogId: "herbarium_0",
-		dialogVolume: 1.5,
+		// dialogVolume: 1.5,
 	},
 	// a posé 5 objets --> dialogue suivant
 	{
@@ -193,7 +192,7 @@ export const stepDescription: DialogStep[] = [
 		// pas de next step, la suivante est trigger par une triggerbox
 		completionConditions: { delay: 1500, nextStepId: undefined },
 		dialogId: "herbarium_3",
-		dialogVolume: 1.5,
+		// dialogVolume: 1.5,
 		completionCallback: "onIntroCompleted",
 		sceneAudio: [
 			{
@@ -219,7 +218,7 @@ export const stepDescription: DialogStep[] = [
 		// ],
 		completionConditions: { delay: 2500, nextStepId: undefined },
 		dialogId: "forestIntro",
-		dialogVolume: 1.5,
+		// dialogVolume: 1.5,
 		sceneAudio: [
 			{
 				type: "ambient",
@@ -438,7 +437,7 @@ export const stepDescription: DialogStep[] = [
 		id: 21,
 		completionConditions: [{ objectId: "toxicMushroom", count: 10, nextStepId: 24 }],
 		dialogId: "poisonousMushroom",
-		dialogVolume: 2,
+		// dialogVolume: 2,
 	},
 
 	{
@@ -446,7 +445,7 @@ export const stepDescription: DialogStep[] = [
 		id: 22,
 		completionConditions: [{ objectId: "bramble", count: 15, nextStepId: 24 }],
 		dialogId: "bramble_1",
-		dialogVolume: 1.5,
+		// dialogVolume: 1.5,
 		sceneAudio: [
 			{
 				type: "sfx",
@@ -503,7 +502,7 @@ export const stepDescription: DialogStep[] = [
 		completionConditions: { delay: 2500, nextStepId: undefined },
 		completionCallback: "onGameEnded",
 		dialogId: "fire",
-		dialogVolume: 2,
+		// dialogVolume: 2,
 
 		// sceneAudio: [
 		// 	{
