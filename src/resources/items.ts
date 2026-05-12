@@ -216,8 +216,8 @@ const itemsList: MenuItemType[] = [
 		shadow: "mushroom",
 		isActor: true,
 		sound: [
-			{ src: "/audio/soundEffects/roarDino_01.mp3", volume: 0.2 },
-			{ src: "/audio/soundEffects/roarDino_02.mp3", volume: 0.2 },
+			{ src: "/audio/soundEffects/roarDino_01.mp3", volume: 0.08 },
+			{ src: "/audio/soundEffects/roarDino_02.mp3", volume: 0.08 },
 		],
 		animationDuration: 1,
 	},
