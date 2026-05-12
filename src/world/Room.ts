@@ -27,6 +27,15 @@ export default class Room {
 
             walls.material.side = THREE.DoubleSide
         }
+
+        gltf.scene.traverse(child => {
+            if (child instanceof THREE.Mesh) {
+                if (child.material) {
+                    child.material.emissiveIntensity = 0
+                    // console.log(child.material)
+                }
+            }
+        })
         gltf.scene.position.copy(this.position);
         this.scene.add(gltf.scene);
     }
