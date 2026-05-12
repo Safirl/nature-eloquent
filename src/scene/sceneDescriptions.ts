@@ -63,9 +63,20 @@ export const stepDescription: DialogStep[] = [
 				// objectId: "bramble",
 				// resourceName: "mushroomPaintedModel",
 			},
-			{
-				objectId: "grassClump",
-			}
+			// TEST NEW PLANTS
+			// {
+			// 	objectId: "grassClump",
+			// },
+			// {
+			// 	objectId: "edeilweiss",
+			// },
+			// {
+			// 	objectId: "lys",
+			// },
+
+			// {
+			// 	objectId: "giant_lys",
+			// }
 		],
 		completionConditions: [{ objectId: "dinosaur", count: 1, nextStepId: 2 }],
 

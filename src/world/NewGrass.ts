@@ -291,7 +291,7 @@ export default class Grass implements LifeTimeObject {
 		}
 	}
 
-	init = () => {};
+	init = () => { };
 	destroy = () => {
 		// this.mesh.geometry.dispose();
 		// for (const key in this.mesh.material) {
