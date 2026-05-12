@@ -151,43 +151,33 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 
 
 		const tipColor1 = new THREE.Color(atmosphere.tipColor1);
-
+		gsap.killTweensOf(this.grass.uniforms.uTipColor1.value);
 		gsap.to(this.grass.uniforms.uTipColor1.value, {
 			r: tipColor1.r,
 			g: tipColor1.g,
 			b: tipColor1.b,
 			duration: duration,
 			ease: "power2.inOut",
-			// onUpdate: () => {
-			// 	this.environment.sunMesh.material.emissive = this.sun.color;
-			// },
 		});
 
-
 		const tipColor2 = new THREE.Color(atmosphere.tipColor2);
-
+		gsap.killTweensOf(this.grass.uniforms.uTipColor2.value);
 		gsap.to(this.grass.uniforms.uTipColor2.value, {
 			r: tipColor2.r,
 			g: tipColor2.g,
 			b: tipColor2.b,
 			duration: duration,
 			ease: "power2.inOut",
-			// onUpdate: () => {
-			// 	this.environment.sunMesh.material.emissive = this.sun.color;
-			// },
 		});
 
 		const baseColor = new THREE.Color(atmosphere.baseColor);
-
+		gsap.killTweensOf(this.grass.uniforms.uBaseColor.value);
 		gsap.to(this.grass.uniforms.uBaseColor.value, {
 			r: baseColor.r,
 			g: baseColor.g,
 			b: baseColor.b,
 			duration: duration,
 			ease: "power2.inOut",
-			// onUpdate: () => {
-			// 	this.environment.sunMesh.material.emissive = this.sun.color;
-			// },
 		});
 
 
