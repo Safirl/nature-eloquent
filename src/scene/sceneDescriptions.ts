@@ -492,7 +492,7 @@ export const stepDescription: DialogStep[] = [
 	{
 		name: "fire",
 		id: 25,
-		completionConditions: { delay: 1500, nextStepId: undefined },
+		completionConditions: { delay: 2500, nextStepId: undefined },
 		completionCallback: "onGameEnded",
 		dialogId: "fire",
 		// sceneAudio: [

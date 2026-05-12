@@ -29,17 +29,17 @@ export default class SubtitleManager extends EventEmitter {
 		this.typingInterval = null;
 	}
 
-	init() { }
+	init() {}
 
 	showSubtitle(text: string, characterName: string, audioSrc: string) {
-		if (audioSrc === undefined) return
+		if (audioSrc === undefined) return;
 		if (!this.subtitleElement) return;
 		// this.subtitleElement.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
 		// this.subtitleElement.style.transition = "opacity 0.1s ease-in-out";
 		this.subtitleElement.style.opacity = "1";
 		this.typeText(text);
 		this.characterElement.textContent = characterName;
-		this.characterElement.style.color = characterName === "Clémentine:" ? "#FF9500" : "#00596F";
+		this.characterElement.style.color = characterName === "Clémentine:" ? "#FFB650" : "#6CC7DE";
 		// this.audioManager.playAudio(audioSrc, false, 1);
 		return this.audioManager.playAudio(audioSrc, false, 1);
 	}

@@ -92,10 +92,10 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 	}
 	onActiveStepAdded = (step: DialogStep) => {
 		if (step.id === 10) {
-			this.setAtmosphere(1, 30);
+			this.setAtmosphere(1, 20);
 		}
 		if (step.id === 16) {
-			this.setAtmosphere(2, 30);
+			this.setAtmosphere(2, 20);
 		}
 	};
 	init = () => { };

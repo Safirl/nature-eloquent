@@ -78,7 +78,7 @@ const sources: Source[] = [
 	{
 		name: "brambleModel",
 		type: "gltfModel",
-		path: "models/bramble/bramble.gltf",
+		path: "models/bramble/bramble.glb",
 	},
 	{
 		name: "asterModel",
@@ -94,6 +94,11 @@ const sources: Source[] = [
 		name: "tRexModel",
 		type: "gltfModel",
 		path: "models/t-rex/t-rex.glb",
+	},
+	{
+		name: "fernModel",
+		type: "gltfModel",
+		path: "models/fern/fern.glb",
 	},
 	{
 		name: "darkFlowerModel",
@@ -337,8 +342,6 @@ const sources: Source[] = [
 		type: "gltfModel",
 		path: "models/room/lavalamp.glb",
 	},
-
-
 ];
 
 export default sources;

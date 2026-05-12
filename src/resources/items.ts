@@ -182,7 +182,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "fern",
 		name: "Fougère",
-		model: "mushroomModel",
+		model: "fernModel",
 		vignet: "fern",
 		isActor: true,
 		shadow: "fern_shadow",
