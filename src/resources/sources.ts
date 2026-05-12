@@ -348,9 +348,9 @@ const sources: Source[] = [
 
 	/** Room **/
 	{
-		name: "lava_lamp",
+		name: "post_card",
 		type: "gltfModel",
-		path: "models/room/lavalamp.glb",
+		path: "models/room/post_card.glb",
 	},
 	{
 		name: "room",
