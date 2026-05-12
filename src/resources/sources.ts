@@ -111,6 +111,16 @@ const sources: Source[] = [
 		path: "models/champignon/1/champignon-painted.gltf",
 	},
 	{
+		name: "vineModel",
+		type: "gltfModel",
+		path: "models/vine/vine.glb",
+	},
+	{
+		name: "postcardModel",
+		type: "gltfModel",
+		path: "models/postcard/postcard.glb",
+	},
+	{
 		name: "mushroomCollider",
 		type: "gltfModel",
 		path: "models/champignon/champginon.gltf",
@@ -347,8 +357,6 @@ const sources: Source[] = [
 		type: "gltfModel",
 		path: "models/room/room.glb",
 	},
-
-
 ];
 
 export default sources;

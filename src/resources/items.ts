@@ -126,7 +126,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "ivy_leaf",
 		name: "Feuille de lierre",
-		model: "mushroomPaintedModel",
+		model: "vineModel",
 		vignet: "ivy_leaf",
 		isActor: true,
 		shadow: "ivy_leaf_shadow",
@@ -224,7 +224,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "postcard",
 		name: "Carte postale",
-		model: "mushroomModel",
+		model: "postcardModel",
 		vignet: "postcard",
 		isActor: true,
 		shadow: "mushroom",
@@ -236,8 +236,8 @@ const itemsList: MenuItemType[] = [
 	// {
 	// 	id: "vine",
 	// 	name: "Liane",
-	// 	model: "mushroomModel",
-	// 	vignet: "mushroom",
+	// 	model: "vineModel",
+	// 	vignet: "vine",
 	// 	shadow: "mushroom",
 	// 	sound: [
 	// 		{ src: "/audio/soundEffects/vine_01.mp3", volume: 2 },
