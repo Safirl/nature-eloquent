@@ -29,9 +29,9 @@ export default class PlaceableObject extends Actor {
 			const material = child.material.clone() as THREE.Material;
 			if (material instanceof THREE.MeshStandardMaterial) {
 				const envMap = this.experience.world.environment.environmentMap;
-				child.material.envMap = envMap.texture;
-				child.material.envMapIntensity = envMap.intensity;
-				child.material.needsUpdate = true;
+				material.envMap = envMap.texture;
+				material.envMapIntensity = envMap.intensity;
+				material.needsUpdate = true;
 			}
 			child.material = material;
 			child.material.transparent = true;
