@@ -16,32 +16,29 @@ export default class Grass implements LifeTimeObject {
 
 	declare private grassMap: THREE.Texture;
 	declare private grassAlphaMap: THREE.Texture;
-	declare private sampler: MeshSurfaceSampler
+	declare private sampler: MeshSurfaceSampler;
 	private grassFieldSizes = { x: 10, y: 10 };
 	public heightRandomness = 0.5;
 	private count: number = 100000;
-	private declare scene: THREE.Scene
+	declare private scene: THREE.Scene;
 
-	private geoMinX = 0 // init in createChunks
-	private geoMaxX = 0 // init in createChunks
-	private geoMinZ = 0 // init in createChunks
-	private geoMaxZ = 0 // init in createChunks
-	private geoLegnthX = 0 // init in createChunks
-	private geoLegnthZ = 0 // init in createChunks
-	private xChuncksAmount = 0 // init in createChunks
-	private zChuncksAmount = 0 // init in createChunks
+	private geoMinX = 0; // init in createChunks
+	private geoMaxX = 0; // init in createChunks
+	private geoMinZ = 0; // init in createChunks
+	private geoMaxZ = 0; // init in createChunks
+	private geoLegnthX = 0; // init in createChunks
+	private geoLegnthZ = 0; // init in createChunks
+	private xChuncksAmount = 0; // init in createChunks
+	private zChuncksAmount = 0; // init in createChunks
 
 	private chunkSize = 10; // chunck width
-
-
 
 	private chunks: Map<string, THREE.InstancedMesh> = new Map();
 
 	private worldChunkRange = 10; // how many chunks in X/Z
-	declare private grassGeometry: THREE.BufferGeometry
-	declare private grassMaterial: any
-	private grassCount = 1990000
-
+	declare private grassGeometry: THREE.BufferGeometry;
+	declare private grassMaterial: any;
+	private grassCount = 1990000;
 
 	public uniforms = {
 		uTime: { value: 0 },
@@ -70,16 +67,19 @@ export default class Grass implements LifeTimeObject {
 		this.setGeometry();
 		this.setMaterial();
 
-
-		this.createChunks(((this.experience.resources.items.forestModel as any).scene.children.find((el: any) => el.name == "floor_m") as any) as any)
-
+		this.createChunks(
+			(this.experience.resources.items.forestModel as any).scene.children.find(
+				(el: any) => el.name == "floor_m"
+			) as any as any
+		);
 	}
 
-
 	setGeometry() {
-
-		this.grassGeometry = ((this.experience.resources.items.grass_model_lods as GLTF).scene.children.find((ch: any) => ch.name === "GrassLOD00") as any).geometry
-
+		this.grassGeometry = (
+			(this.experience.resources.items.grass_model_lods as GLTF).scene.children.find(
+				(ch: any) => ch.name === "GrassLOD00"
+			) as any
+		).geometry;
 	}
 
 	setMaterial() {
@@ -100,9 +100,9 @@ export default class Grass implements LifeTimeObject {
 			shader.uniforms.uGrassAlphaTexture = { value: grassTexture };
 			shader.uniforms.uNoiseTexture = { value: noiseTexture };
 			shader.uniforms.uNoiseScale = { value: 1.5 };
-			shader.uniforms.uBaseColor = this.uniforms.uBaseColor
-			shader.uniforms.uTipColor1 = this.uniforms.uTipColor1
-			shader.uniforms.uTipColor2 = this.uniforms.uTipColor2
+			shader.uniforms.uBaseColor = this.uniforms.uBaseColor;
+			shader.uniforms.uTipColor1 = this.uniforms.uTipColor1;
+			shader.uniforms.uTipColor2 = this.uniforms.uTipColor2;
 
 			shader.vertexShader = shader.vertexShader.replace(
 				`#include <common>`,
@@ -158,7 +158,8 @@ export default class Grass implements LifeTimeObject {
         		vec4 viewPosition = viewMatrix * modelPosition;
         		vec4 projectedPosition = projectionMatrix * viewPosition;
         		gl_Position = projectedPosition;
-`);
+`
+			);
 
 			shader.fragmentShader = shader.fragmentShader.replace(
 				`#include <common>`,
@@ -178,13 +179,13 @@ export default class Grass implements LifeTimeObject {
 			shader.fragmentShader = shader.fragmentShader.replace(
 				`#include <map_fragment>`,
 				`
-				
+
 				vec4 grassVariation = texture2D(uNoiseTexture, vGlobalUV * uNoiseScale);
         		vec3 tipColor = mix(uTipColor1,uTipColor2,grassVariation.r);
-				
+
 				vec4 grassAlpha = texture2D(uGrassAlphaTexture, vec2(vGrassUv.x, 1.0 - vGrassUv.y));
 				if (grassAlpha.r < 0.1) discard;
-				
+
 				vec3 grassColor = mix(tipColor, uBaseColor, vGrassUv.y);
 				diffuseColor = vec4(grassColor, 1.0);`
 			);
@@ -192,7 +193,6 @@ export default class Grass implements LifeTimeObject {
 	}
 
 	createChunks(grassSurface: THREE.Mesh) {
-
 		const geometry = grassSurface.geometry.clone();
 		geometry.computeBoundingBox();
 		geometry.applyMatrix4(grassSurface.matrixWorld);
@@ -219,7 +219,7 @@ export default class Grass implements LifeTimeObject {
 	}
 	createSingleChunk(bvh: MeshBVH, chunkX: number, chunkZ: number) {
 		const key = `${chunkX}_${chunkZ}`;
-		const grassDensity = 70;
+		const grassDensity = 15;
 
 		const mesh = new THREE.InstancedMesh(
 			this.grassGeometry,
@@ -235,10 +235,7 @@ export default class Grass implements LifeTimeObject {
 		const offsetX = this.geoMinX + chunkX * this.chunkSize;
 		const offsetZ = this.geoMinZ + chunkZ * this.chunkSize;
 
-		const ray = new THREE.Ray(
-			new THREE.Vector3(),
-			new THREE.Vector3(0, -1, 0)
-		);
+		const ray = new THREE.Ray(new THREE.Vector3(), new THREE.Vector3(0, -1, 0));
 
 		let count = 0;
 		for (let x = 0; x < grassDensity; x++) {
@@ -274,9 +271,8 @@ export default class Grass implements LifeTimeObject {
 		return `${cx}_${cz}`;
 	}
 
-
 	updateChunks(playerPos: THREE.Vector3) {
-		const maxDist = 30;
+		const maxDist = 80;
 
 		for (const [key, mesh] of this.chunks) {
 			const [cx, cz] = key.split("_").map(Number);
@@ -295,7 +291,7 @@ export default class Grass implements LifeTimeObject {
 		}
 	}
 
-	init = () => { };
+	init = () => {};
 	destroy = () => {
 		// this.mesh.geometry.dispose();
 		// for (const key in this.mesh.material) {
@@ -308,7 +304,6 @@ export default class Grass implements LifeTimeObject {
 	};
 	update = () => {
 		if (!Experience.instance) return;
-
 
 		// console.log(this.uniforms.uTipColor1.value.getHex())
 		// console.log(this.uniforms.uTipColor2.value.getHex())
@@ -323,12 +318,8 @@ export default class Grass implements LifeTimeObject {
 
 		this.debugFolder = this.experience.debug.ui.addFolder("🌿 New grass");
 
-		this.debugFolder
-			.addColor(this.uniforms.uTipColor1, "value").name('tc1')
-		this.debugFolder
-			.addColor(this.uniforms.uTipColor2, "value").name("tc2")
-		this.debugFolder
-			.addColor(this.uniforms.uBaseColor, "value").name("bc")
-
+		this.debugFolder.addColor(this.uniforms.uTipColor1, "value").name("tc1");
+		this.debugFolder.addColor(this.uniforms.uTipColor2, "value").name("tc2");
+		this.debugFolder.addColor(this.uniforms.uBaseColor, "value").name("bc");
 	};
 }

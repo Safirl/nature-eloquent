@@ -149,6 +149,8 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			duration: duration,
 		});
 
+		this.sky.switchToNewSky(atmosphere.skyIndex, duration);
+
 		//Grass
 		if (!atmosphere.tipColor1 || !atmosphere.tipColor2 || !atmosphere.baseColor) return;
 
@@ -196,8 +198,6 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			duration: duration,
 			ease: "power2.inOut",
 		});
-
-		this.sky.switchToNewSky(atmosphere.skyIndex, duration);
 	}
 
 	switchToNextAtmosphere() {
