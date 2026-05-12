@@ -19,7 +19,7 @@ export default class Playground extends World {
 	declare aster: Actor;
 	declare forestModel: Actor;
 	declare invisibleWallModel: Actor;
-
+	declare flowerTerrainModel: Actor;
 	init() {
 		super.init();
 		this.floor = new Floor();
@@ -45,6 +45,14 @@ export default class Playground extends World {
 			true,
 			false,
 			this.resources.items.forestModel as GLTF
+		);
+
+		this.flowerTerrainModel = new Actor(
+			"flowerTerrainModel",
+			this.resources.items.flowerTerrainModel as GLTF,
+			true,
+			false,
+			this.resources.items.flowerTerrainModel as GLTF
 		);
 
 		this.invisibleWallModel = new Actor(

@@ -71,6 +71,11 @@ const sources: Source[] = [
 		path: "models/layout/blockingForestModel.glb",
 	},
 	{
+		name: "flowerTerrainModel",
+		type: "gltfModel",
+		path: "models/layout/add_flower_terrain.glb",
+	},
+	{
 		name: "mushroomModel",
 		type: "gltfModel",
 		path: "models/champignon/champginon.gltf",
