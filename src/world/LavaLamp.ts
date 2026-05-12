@@ -144,26 +144,27 @@ void main() {
 export default class LavaLamp implements LifeTimeObject {
 	declare private experience: Experience;
 	declare private debugFolder: GUI;
-	private declare scene: THREE.Scene;
-	private declare lavaMesh: THREE.Mesh;
-	private declare cylinderMaterial: THREE.MeshPhysicalMaterial;
-	private declare bottomLight: THREE.PointLight;
-	private declare uniforms: Record<string, THREE.IUniform>
+	declare private scene: THREE.Scene;
+	declare private lavaMesh: THREE.Mesh;
+	declare private cylinderMaterial: THREE.MeshPhysicalMaterial;
+	declare private bottomLight: THREE.PointLight;
+	declare private uniforms: Record<string, THREE.IUniform>;
 	private cylinderCenter = new THREE.Vector3();
 	private cylinderRadius = 0.15;
 	private cylinderHeight = 0.8;
 	private cylinderY = 0;
-	private position = new THREE.Vector3(0, 0.85, 0)
+	private position = new THREE.Vector3(0, 0.85, 0);
 	constructor() {
 		if (!Experience.instance) return;
 
 		this.experience = Experience.instance;
 		this.scene = this.experience.scene;
-
 	}
 
 	init() {
-		const gltf = (this.experience.resources.items.room as GLTF).scene.children.find((item) => item.name === "Cylinder");
+		const gltf = (this.experience.resources.items.room as GLTF).scene.children.find(
+			(item) => item.name === "Cylinder"
+		);
 		// gltf.scene.traverse((child) => {
 		// 	child.position.copy(this.position);
 		// 	child.scale.setScalar(0.5);
@@ -171,29 +172,26 @@ export default class LavaLamp implements LifeTimeObject {
 
 		// this.scene.add(gltf.scene);
 
-
 		if (gltf instanceof THREE.Mesh) {
-
 			this.cylinderMaterial = new THREE.MeshPhysicalMaterial({
-				color: new THREE.Color('#bc2f2f'),
+				color: new THREE.Color("#bc2f2f"),
 				transmission: 1,
 				roughness: 0,
 				metalness: 0,
 				opacity: 0.28,
 				thickness: 2.355,
-				transparent: true
+				transparent: true,
 			});
 			gltf.material = this.cylinderMaterial;
 
 			const worldBox = new THREE.Box3().setFromObject(gltf);
 			const size = new THREE.Vector3();
-			console.log(worldBox)
 			worldBox.getCenter(this.cylinderCenter);
 			worldBox.getSize(size);
 
 			this.cylinderRadius = (size.x + size.z) / 4;
 			this.cylinderHeight = size.y;
-			this.cylinderY = worldBox.min.y + this.position.y / 2
+			this.cylinderY = worldBox.min.y + this.position.y / 2;
 			this.createLavaMesh();
 		}
 	}
@@ -243,15 +241,10 @@ export default class LavaLamp implements LifeTimeObject {
 		this.scene.add(this.lavaMesh);
 
 		this.bottomLight = new THREE.PointLight(0xff7700, 2.0, this.cylinderHeight * 4);
-		this.bottomLight.position.set(
-			this.cylinderCenter.x,
-			this.cylinderY,
-			this.cylinderCenter.z
-		);
+		this.bottomLight.position.set(this.cylinderCenter.x, this.cylinderY, this.cylinderCenter.z);
 		this.scene.add(this.bottomLight);
 
-		this.setDebugObject()
-
+		this.setDebugObject();
 	}
 
 	update = () => {
@@ -292,23 +285,26 @@ export default class LavaLamp implements LifeTimeObject {
 
 		this.debugFolder = this.experience.debug.ui.addFolder("🌋 Lava Lamp");
 
+		this.debugFolder.addColor(this.uniforms.uColor1, "value").name("color1");
+		this.debugFolder.addColor(this.uniforms.uColor2, "value").name("color2");
 		this.debugFolder
-			.addColor(this.uniforms.uColor1, "value").name("color1");
-		this.debugFolder
-			.addColor(this.uniforms.uColor2, "value").name("color2");
-		this.debugFolder
-			.addColor(this.uniforms.uLightColor, "value").name("lightColor")
+			.addColor(this.uniforms.uLightColor, "value")
+			.name("lightColor")
 			.onChange((v: THREE.Color) => this.bottomLight.color.copy(v));
 
 		const glassFolder = this.debugFolder.addFolder("Glass");
 		const colorProxy = { color: "#" + this.cylinderMaterial.color.getHexString() };
-		glassFolder.addColor(colorProxy, "color").name("color")
+		glassFolder
+			.addColor(colorProxy, "color")
+			.name("color")
 			.onChange((v: string) => this.cylinderMaterial.color.set(v));
 		glassFolder.add(this.cylinderMaterial, "transmission", 0, 1).name("transmission");
 		glassFolder.add(this.cylinderMaterial, "roughness", 0, 1).name("roughness");
 		glassFolder.add(this.cylinderMaterial, "metalness", 0, 1).name("metalness");
 		glassFolder.add(this.cylinderMaterial, "thickness", 0, 5).name("thickness");
-		glassFolder.add(this.cylinderMaterial, "emissiveIntensity", 0, 10).name("emissiveIntensity");
+		glassFolder
+			.add(this.cylinderMaterial, "emissiveIntensity", 0, 10)
+			.name("emissiveIntensity");
 		glassFolder.add(this.cylinderMaterial, "transparent").name("transparent");
 		glassFolder.add(this.cylinderMaterial, "opacity", 0, 1).name("opacity");
 

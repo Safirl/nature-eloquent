@@ -166,9 +166,6 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			b: tipColor1.b,
 			duration: duration,
 			ease: "power2.inOut",
-			onUpdate: () => {
-				console.log("progress", this.grass.uniforms.uTipColor1.value);
-			},
 		});
 
 		const tipColor2 = new THREE.Color().setRGB(

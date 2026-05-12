@@ -188,7 +188,6 @@ export default class BookInteraction extends EventEmitter {
 			return;
 		}
 		if (this.isCloseToInteractable === null) {
-			console.log("le joueur n'est pas proche de l'objet");
 			this.setBookSelectorOpen(!this.isOpenBookSelector);
 		}
 	};
@@ -261,7 +260,6 @@ export default class BookInteraction extends EventEmitter {
 				img.addEventListener("click", () => {
 					this.trigger("onCollectedObjectSelected", [obj]);
 					this.fullOpenBookDrawing([obj]);
-					console.log("objet a ete clique", obj.name);
 				});
 			}
 		}
