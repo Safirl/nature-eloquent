@@ -3,7 +3,7 @@ import type GUI from "lil-gui";
 import * as THREE from "three";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 
-const BLOB_COUNT = 6;
+const BLOB_COUNT = 7;
 
 const vertexShader = /* glsl */ `
 varying vec3 vWorldPos;
@@ -29,6 +29,7 @@ uniform vec3 uColor1;
 uniform vec3 uColor2;
 uniform float uNoiseAmp;
 uniform float uNoiseFreq;
+uniform vec3 uLightColor;
 
 varying vec3 vWorldPos;
 
@@ -60,6 +61,12 @@ float sdCylinder(vec3 p) {
 	vec3 q = p - uCylCenter;
 	vec2 d = abs(vec2(length(q.xz), q.y)) - vec2(uCylRadius, uCylHeight * 0.5);
 	return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
+}
+
+float bottomLightSDF(vec3 p) {
+	vec3 q = p - vec3(uCylCenter.x, uCylCenter.y - uCylHeight * 0.5 + 0.007, uCylCenter.z);
+	float disc = max(length(q.xz) - uCylRadius * 0.82, abs(q.y) - 0.005);
+	return max(disc, sdCylinder(p));
 }
 
 float sceneSDF(vec3 p) {
@@ -96,6 +103,13 @@ void main() {
 	for (int i = 0; i < 96; i++) {
 		vec3 p = ro + rd * t;
 		float d = sceneSDF(p);
+		float dLight = bottomLightSDF(p);
+
+		if (dLight < 0.001) {
+			float pulse = 0.9 + 0.1 * sin(uTime * 3.0);
+			color = vec4(uLightColor * pulse * 1.8, 1.0);
+			break;
+		}
 
 		if (d < 0.0008) {
 			vec3 n = calcNormal(p);
@@ -106,17 +120,23 @@ void main() {
 			// Blend color from bottom to top of cylinder
 			float tBlend = (p.y - (uCylCenter.y - uCylHeight * 0.5)) / uCylHeight;
 			vec3 col = mix(uColor1, uColor2, clamp(tBlend, 0.0, 1.0));
-			col = col * (0.3 + 0.7 * diff) + vec3(fresnel * 0.45);
+			col = col * (0.35 + 0.65 * diff) + col * (fresnel * 0.4);
+
+			// Bottom light upward contribution
+			float lightDist = p.y - (uCylCenter.y - uCylHeight * 0.5);
+			float lightAtten = 1.0 / (1.0 + lightDist * lightDist * 25.0);
+			col += uLightColor * lightAtten * 0.4;
 
 			color = vec4(col, 0.93);
 			break;
 		}
 
-		t += max(d * 0.6, 0.001);
+		t += max(min(d, dLight) * 0.6, 0.001);
 		if (t > tMax) break;
 	}
 
-	// if (color.a < 0.01) discard;
+	if (color.a < 0.01) discard;
+
 	gl_FragColor = color;
 }
 `;
@@ -126,24 +146,26 @@ export default class LavaLamp implements LifeTimeObject {
 	declare private debugFolder: GUI;
 	private declare scene: THREE.Scene;
 	private declare lavaMesh: THREE.Mesh;
-	private declare uniforms: Record<string, THREE.IUniform>;
+	private declare bottomLight: THREE.PointLight;
+	private declare uniforms: Record<string, THREE.IUniform>
 	private cylinderCenter = new THREE.Vector3();
 	private cylinderRadius = 0.15;
 	private cylinderHeight = 0.8;
 	private cylinderY = 0;
-
+	private position = new THREE.Vector3(0, 1.3, 0)
 	constructor() {
 		if (!Experience.instance) return;
 
 		this.experience = Experience.instance;
 		this.scene = this.experience.scene;
+
 	}
 
 	init() {
 		const gltf = this.experience.resources.items.lava_lamp as GLTF;
 
 		gltf.scene.traverse((child) => {
-			child.position.set(0, 0, 0);
+			child.position.copy(this.position);
 			child.scale.setScalar(0.5);
 		});
 
@@ -169,7 +191,7 @@ export default class LavaLamp implements LifeTimeObject {
 
 				this.cylinderRadius = (size.x * 0.5 + size.z * 0.5) / 4;
 				this.cylinderHeight = size.y * 0.5;
-				this.cylinderY = worldBox.min.y
+				this.cylinderY = worldBox.min.y + this.position.y / 2
 				this.createLavaMesh();
 			}
 		});
@@ -189,8 +211,9 @@ export default class LavaLamp implements LifeTimeObject {
 			uCylCenter: { value: this.cylinderCenter.clone() },
 			uCylRadius: { value: this.cylinderRadius * 0.9 },
 			uCylHeight: { value: this.cylinderHeight * 1 },
-			uColor1: { value: new THREE.Color("#ff4400") },
-			uColor2: { value: new THREE.Color("#ff0066") },
+			uColor1: { value: new THREE.Color("#8a0700") },
+			uColor2: { value: new THREE.Color("#790101") },
+			uLightColor: { value: new THREE.Color("#ff7700") },
 			uNoiseAmp: { value: this.cylinderRadius * 0.35 },
 			uNoiseFreq: { value: 5.0 },
 		};
@@ -214,8 +237,19 @@ export default class LavaLamp implements LifeTimeObject {
 		this.lavaMesh = new THREE.Mesh(geometry, material);
 		this.lavaMesh.position.copy(this.cylinderCenter);
 		// this.lavaMesh.renderOrder = 1;
-		this.lavaMesh.position.y = this.cylinderY
+		this.lavaMesh.position.y = this.cylinderY;
 		this.scene.add(this.lavaMesh);
+
+		this.bottomLight = new THREE.PointLight(0xff7700, 2.0, this.cylinderHeight * 4);
+		this.bottomLight.position.set(
+			this.cylinderCenter.x,
+			this.cylinderY,
+			this.cylinderCenter.z
+		);
+		this.scene.add(this.bottomLight);
+
+		this.setDebugObject()
+
 	}
 
 	update = () => {
@@ -235,6 +269,9 @@ export default class LavaLamp implements LifeTimeObject {
 		const cy = meshWorldPos.y;
 		const cz = meshWorldPos.z;
 
+		this.bottomLight.position.set(meshWorldPos.x, meshWorldPos.y, meshWorldPos.z);
+		this.bottomLight.intensity = 1.5 + 0.5 * Math.sin(t * 3.0);
+
 		for (let i = 0; i < BLOB_COUNT; i++) {
 			const phase = (i / BLOB_COUNT) * Math.PI * 2;
 			const riseSpeed = 0.18 + i * 0.05;
@@ -248,9 +285,25 @@ export default class LavaLamp implements LifeTimeObject {
 		}
 	};
 
+	setDebugObject = () => {
+		if (!this.experience?.debug.active) return;
+
+		this.debugFolder = this.experience.debug.ui.addFolder("🌋 New grass");
+
+		this.debugFolder
+			.addColor(this.uniforms.uColor1, "value").name('color1');
+		this.debugFolder
+			.addColor(this.uniforms.uColor2, "value").name("color2");
+		this.debugFolder
+			.addColor(this.uniforms.uLightColor, "value").name("lightColor")
+			.onChange((v: THREE.Color) => this.bottomLight.color.copy(v));
+	};
+
 	destroy = () => {
 		this.lavaMesh?.geometry.dispose();
 		(this.lavaMesh?.material as THREE.Material)?.dispose();
 		this.scene.remove(this.lavaMesh);
+		this.bottomLight?.dispose();
+		this.scene.remove(this.bottomLight);
 	};
 }
