@@ -24,8 +24,11 @@ export default class Room {
         const gltf = this.experience.resources.items.room as GLTF;
         const walls = gltf.scene.children.find((o: any) => o.name === "walls")
         if (walls) {
-
-            walls.material.side = THREE.DoubleSide
+            if (walls instanceof THREE.Mesh) {
+                if (walls.material) {
+                    walls.material.side = THREE.DoubleSide
+                }
+            }
         }
 
         gltf.scene.traverse(child => {

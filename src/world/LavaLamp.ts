@@ -241,7 +241,7 @@ export default class LavaLamp implements LifeTimeObject {
 		this.scene.add(this.lavaMesh);
 
 		this.bottomLight = new THREE.PointLight(0xff7700, 2.0, this.cylinderHeight * 4);
-		this.bottomLight.position.set(this.cylinderCenter.x, this.cylinderY, this.cylinderCenter.z);
+		this.bottomLight.position.set(this.cylinderCenter.x, this.cylinderY + this.cylinderHeight, this.cylinderCenter.z);
 		this.scene.add(this.bottomLight);
 
 		this.setDebugObject();
