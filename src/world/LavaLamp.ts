@@ -146,6 +146,7 @@ export default class LavaLamp implements LifeTimeObject {
 	declare private debugFolder: GUI;
 	private declare scene: THREE.Scene;
 	private declare lavaMesh: THREE.Mesh;
+	private declare cylinderMaterial: THREE.MeshPhysicalMaterial;
 	private declare bottomLight: THREE.PointLight;
 	private declare uniforms: Record<string, THREE.IUniform>
 	private cylinderCenter = new THREE.Vector3();
@@ -174,14 +175,16 @@ export default class LavaLamp implements LifeTimeObject {
 		gltf.scene.traverse((child) => {
 			if (child.name === "Cylinder" && child instanceof THREE.Mesh) {
 
-				child.material = new THREE.MeshPhysicalMaterial({
+				this.cylinderMaterial = new THREE.MeshPhysicalMaterial({
 					color: 0xFFAAAA,
 					transmission: 1,
-					roughness: 0.2,
+					roughness: 0,
 					metalness: 0,
-					thickness: 0.5,
-					emissive: 6
-				})
+					opacity: 0.28,
+					thickness: 2.355,
+					transparent: true
+				});
+				child.material = this.cylinderMaterial;
 
 				const worldBox = new THREE.Box3().setFromObject(child);
 				const size = new THREE.Vector3();
@@ -222,7 +225,7 @@ export default class LavaLamp implements LifeTimeObject {
 			vertexShader,
 			fragmentShader,
 			uniforms: this.uniforms,
-			transparent: true,
+			transparent: false,
 			depthWrite: true,
 			side: THREE.FrontSide,
 		});
@@ -236,6 +239,7 @@ export default class LavaLamp implements LifeTimeObject {
 
 		this.lavaMesh = new THREE.Mesh(geometry, material);
 		this.lavaMesh.position.copy(this.cylinderCenter);
+		this.lavaMesh.scale.set(0.7, 1, 0.7);
 		// this.lavaMesh.renderOrder = 1;
 		this.lavaMesh.position.y = this.cylinderY;
 		this.scene.add(this.lavaMesh);
@@ -288,15 +292,32 @@ export default class LavaLamp implements LifeTimeObject {
 	setDebugObject = () => {
 		if (!this.experience?.debug.active) return;
 
-		this.debugFolder = this.experience.debug.ui.addFolder("🌋 New grass");
+		this.debugFolder = this.experience.debug.ui.addFolder("🌋 Lava Lamp");
 
 		this.debugFolder
-			.addColor(this.uniforms.uColor1, "value").name('color1');
+			.addColor(this.uniforms.uColor1, "value").name("color1");
 		this.debugFolder
 			.addColor(this.uniforms.uColor2, "value").name("color2");
 		this.debugFolder
 			.addColor(this.uniforms.uLightColor, "value").name("lightColor")
 			.onChange((v: THREE.Color) => this.bottomLight.color.copy(v));
+
+		const glassFolder = this.debugFolder.addFolder("Glass");
+		const colorProxy = { color: "#" + this.cylinderMaterial.color.getHexString() };
+		glassFolder.addColor(colorProxy, "color").name("color")
+			.onChange((v: string) => this.cylinderMaterial.color.set(v));
+		glassFolder.add(this.cylinderMaterial, "transmission", 0, 1).name("transmission");
+		glassFolder.add(this.cylinderMaterial, "roughness", 0, 1).name("roughness");
+		glassFolder.add(this.cylinderMaterial, "metalness", 0, 1).name("metalness");
+		glassFolder.add(this.cylinderMaterial, "thickness", 0, 5).name("thickness");
+		glassFolder.add(this.cylinderMaterial, "emissiveIntensity", 0, 10).name("emissiveIntensity");
+		glassFolder.add(this.cylinderMaterial, "transparent").name("transparent");
+		glassFolder.add(this.cylinderMaterial, "opacity", 0, 1).name("opacity");
+
+		const scaleFolder = this.debugFolder.addFolder("Scale");
+		scaleFolder.add(this.lavaMesh.scale, "x", 0, 3, 0.01).name("scale X");
+		scaleFolder.add(this.lavaMesh.scale, "y", 0, 3, 0.01).name("scale Y");
+		scaleFolder.add(this.lavaMesh.scale, "z", 0, 3, 0.01).name("scale Z");
 	};
 
 	destroy = () => {
