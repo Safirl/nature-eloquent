@@ -281,11 +281,18 @@ export default class Grass implements LifeTimeObject {
 
 		for (const [key, mesh] of this.chunks) {
 			const [cx, cz] = key.split("_").map(Number);
-			const chunkCenterX = this.geoMinX + (cx + 0.5) * this.chunkSize;
-			const chunkCenterZ = this.geoMinZ + (cz + 0.5) * this.chunkSize;
-			const dx = chunkCenterX - playerPos.x;
-			const dz = chunkCenterZ - playerPos.z;
-			mesh.visible = dx * dx + dz * dz <= maxDist * maxDist;
+			const minX = this.geoMinX + cx * this.chunkSize;
+			const maxX = minX + this.chunkSize;
+			const minZ = this.geoMinZ + cz * this.chunkSize;
+			const maxZ = minZ + this.chunkSize;
+
+			// Distance from player to closest point on chunk AABB
+			const dx = Math.max(minX - playerPos.x, 0, playerPos.x - maxX);
+			const dz = Math.max(minZ - playerPos.z, 0, playerPos.z - maxZ);
+			const visible = dx * dx + dz * dz <= maxDist * maxDist;
+
+			mesh.visible = visible;
+			mesh.receiveShadow = visible;
 		}
 	}
 
