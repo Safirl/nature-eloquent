@@ -71,6 +71,11 @@ const sources: Source[] = [
 		path: "models/layout/blockingForestModel.glb",
 	},
 	{
+		name: "flowerTerrainModel",
+		type: "gltfModel",
+		path: "models/layout/add_flower_terrain.glb",
+	},
+	{
 		name: "mushroomModel",
 		type: "gltfModel",
 		path: "models/champignon/champginon.gltf",
@@ -88,7 +93,7 @@ const sources: Source[] = [
 	{
 		name: "edelweissModel",
 		type: "gltfModel",
-		path: "models/edelweiss/Edelweiss.glb",
+		path: "models/edelweiss/edelweiss_grass.glb",
 	},
 	{
 		name: "tRexModel",
@@ -130,6 +135,42 @@ const sources: Source[] = [
 		type: "gltfModel",
 		path: "models/LD/blocking.glb",
 	},
+	{
+		name: "grassClumpModel",
+		type: "gltfModel",
+		path: "models/grass/grassClump.glb"
+	},
+	{
+		name: "buttercupModel",
+		type: "gltfModel",
+		path: "models/buttercup/bouton-or_grass.glb"
+	},
+	{
+		name: "giantButtercupModel",
+		type: "gltfModel",
+		path: "models/buttercup/bouton-or_grass_bigger.glb"
+	},
+	{
+		name: "irisModel",
+		type: "gltfModel",
+		path: "models/iris/iris.glb"
+	},
+	{
+		name: "giantIrisModel",
+		type: "gltfModel",
+		path: "models/iris/iris_bigger.glb"
+	},
+	{
+		name: "lysModel",
+		type: "gltfModel",
+		path: "models/lys/lys.glb"
+	},
+	{
+		name: "giantLysModel",
+		type: "gltfModel",
+		path: "models/lys/lys_bigger.glb"
+	},
+
 
 	/**
 	 * Menu assets
