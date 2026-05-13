@@ -100,7 +100,7 @@ void main() {
 
 	vec4 color = vec4(0.0);
 
-	for (int i = 0; i < 96; i++) {
+	for (int i = 0; i < 64; i++) {
 		vec3 p = ro + rd * t;
 		float d = sceneSDF(p);
 		float dLight = bottomLightSDF(p);
@@ -154,6 +154,7 @@ export default class LavaLamp implements LifeTimeObject {
 	private cylinderHeight = 0.8;
 	private cylinderY = 0;
 	private position = new THREE.Vector3(0, 0.85, 0);
+	private _meshWorldPos = new THREE.Vector3();
 	constructor() {
 		if (!Experience.instance) return;
 
@@ -253,7 +254,7 @@ export default class LavaLamp implements LifeTimeObject {
 		const t = this.experience.time.elapsed * 0.001;
 		this.uniforms.uTime.value = t;
 
-		const meshWorldPos = new THREE.Vector3();
+		const meshWorldPos = this._meshWorldPos;
 		this.lavaMesh.getWorldPosition(meshWorldPos);
 		this.uniforms.uCylCenter.value.copy(meshWorldPos);
 
