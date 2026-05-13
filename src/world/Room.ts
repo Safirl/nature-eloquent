@@ -9,7 +9,7 @@ export default class Room {
     declare private experience: Experience;
     declare private debugFolder: GUI;
     private declare scene: THREE.Scene;
-    private position = new THREE.Vector3(0, 0.3, 0)
+    private position = new THREE.Vector3(0, 0.37, 0)
 
 
     constructor() {
