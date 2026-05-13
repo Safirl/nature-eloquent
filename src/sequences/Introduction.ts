@@ -135,10 +135,10 @@ export default class Introduction implements LifeTimeObject {
 	initPlayerPosition() {
 		const camera = this.exp.camera as FirstPersonCameraOctree;
 		if (!camera || !(camera instanceof FirstPersonCameraOctree)) return;
-		camera.teleportPlayer(new THREE.Vector3(-0.26, 2, 0.45));
-		camera.instance.position.set(-0.26, 2, 0.45);
-
-		camera.instance.rotation.set(-0.576, 8.11, 0);
+		// -0.09785124401748459, y: 1.6309381543945252, z: -0.20477382942330832 }
+		camera.teleportPlayer(new THREE.Vector3(-0.097, 1.63, -0.204));
+		camera.instance.position.set(-0.097, 1.63, -0.204);
+		camera.instance.rotation.set(-1.4360000000000006, 8.224, 0);
 	}
 	init = () => {};
 	update = () => {

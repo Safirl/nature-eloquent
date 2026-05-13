@@ -266,7 +266,7 @@ const itemsList: MenuItemType[] = [
 		id: "giantClemFlower",
 		name: "Clem grande fleur",
 		model: "giantLysModel",
-		vignet: "mushroom",
+		vignet: "iris_flower",
 		isActor: true,
 		shadow: "mushroom",
 		sound: [
@@ -280,7 +280,7 @@ const itemsList: MenuItemType[] = [
 	{
 		id: "toxicMushroom",
 		name: "Champignon vénéneux",
-		model: "mushroomPaintedModel",
+		model: "mushroomModel",
 		vignet: "mushroom",
 		isActor: true,
 		shadow: "mushroom",
