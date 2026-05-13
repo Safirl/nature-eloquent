@@ -160,7 +160,6 @@ export default class TriggerManager extends EventEmitter {
 	update() {
 		const camera = this.experience.camera as FirstPersonCameraOctree;
 		for (const trigger of this.allTriggers) {
-			trigger.box.setFromObject(trigger.mesh);
 			this.checkTrigger(camera.playerBox, trigger);
 		}
 	}
