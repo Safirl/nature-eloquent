@@ -40,6 +40,7 @@ export default class Room {
 
         gltf.scene.traverse(child => {
             if (child instanceof THREE.Mesh) {
+                child.receiveShadow = true
                 if (child.material) {
                     child.material.emissiveIntensity = 0
                     // console.log(child.material)
