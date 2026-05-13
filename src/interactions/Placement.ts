@@ -5,7 +5,7 @@ import InstancedMeshManager from "./InstancedMeshManager";
 import InteractableInstancedMesh from "./InteractableInstancedMesh";
 import AudioListenerManager from "../audio/AudioListenerManager";
 import type { GLTF } from "three/examples/jsm/Addons.js";
-import ActorManager from "./ActorManager";
+import InstancedPlaceableManager from "./InstancedPlaceableManager";
 import type Menu from "../menu";
 import type MenuInput from "../menu/MenuInput";
 import itemsList, { type MenuItemType } from "../resources/items";
@@ -21,7 +21,7 @@ import itemsList, { type MenuItemType } from "../resources/items";
  */
 export default class Placement {
 	private experience: Experience;
-	private managers: Map<string, InstancedMeshManager | ActorManager> = new Map();
+	private managers: Map<string, InstancedMeshManager | InstancedPlaceableManager> = new Map();
 	private markerPosition: Vector3 | undefined;
 	private debugSphere: THREE.Mesh | undefined;
 	declare audioListenerManager: AudioListenerManager;
@@ -41,7 +41,7 @@ export default class Placement {
 			manager = new InstancedMeshManager(baseMesh);
 		} else {
 			const item = itemsList.find((it) => it.id === id);
-			manager = new ActorManager(baseMesh, 100, item?.animationDuration);
+			manager = new InstancedPlaceableManager(baseMesh, 100, item?.animationDuration);
 		}
 		this.managers.set(id, manager);
 	}

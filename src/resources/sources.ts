@@ -88,7 +88,7 @@ const sources: Source[] = [
 	{
 		name: "edelweissModel",
 		type: "gltfModel",
-		path: "models/edelweiss/Edelweiss.glb",
+		path: "models/edelweiss/edelweiss_grass.glb",
 	},
 	{
 		name: "tRexModel",
@@ -111,6 +111,11 @@ const sources: Source[] = [
 		path: "models/champignon/1/champignon-painted.gltf",
 	},
 	{
+		name: "mushroomModel",
+		type: "gltfModel",
+		path: "models/mushroom/mushroomModel.glb",
+	},
+	{
 		name: "vineModel",
 		type: "gltfModel",
 		path: "models/vine/vine.glb",
@@ -129,6 +134,41 @@ const sources: Source[] = [
 		name: "levelDesignModel",
 		type: "gltfModel",
 		path: "models/LD/blocking.glb",
+	},
+	{
+		name: "grassClumpModel",
+		type: "gltfModel",
+		path: "models/grass/grassClump.glb",
+	},
+	{
+		name: "buttercupModel",
+		type: "gltfModel",
+		path: "models/buttercup/bouton-or_grass.glb",
+	},
+	{
+		name: "giantButtercupModel",
+		type: "gltfModel",
+		path: "models/buttercup/bouton-or_grass_bigger.glb",
+	},
+	{
+		name: "irisModel",
+		type: "gltfModel",
+		path: "models/iris/iris.glb",
+	},
+	{
+		name: "giantIrisModel",
+		type: "gltfModel",
+		path: "models/iris/iris_bigger.glb",
+	},
+	{
+		name: "lysModel",
+		type: "gltfModel",
+		path: "models/lys/lys.glb",
+	},
+	{
+		name: "giantLysModel",
+		type: "gltfModel",
+		path: "models/lys/lys_bigger.glb",
 	},
 
 	/**
