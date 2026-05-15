@@ -5,7 +5,7 @@ import sources from "./resources/sources";
 import Playground from "./world/PlaygroundWorld";
 import { FirstPersonCameraOctree } from "@plugins/firstPersonCamera";
 import GameExperience from "./GameExperience";
-import { keyboardProfile } from "./resources/inputProfiles";
+import { keyboardProfile, BitControllerProfile } from "./resources/inputProfiles";
 import gsap from "gsap";
 import { exp } from "three/src/nodes/TSL.js";
 
@@ -24,7 +24,7 @@ const startLoading = () => {
 	const camera = new FirstPersonCameraOctree();
 	const world = new Playground();
 	const experience = new GameExperience(canvas, sources, camera, world);
-	const profiles: InputProfile[] = [keyboardProfile];
+	const profiles: InputProfile[] = [keyboardProfile, BitControllerProfile];
 	experience.inputSystem.addInputProfiles(profiles);
 
 	experience.resources.on("ready", () => {
