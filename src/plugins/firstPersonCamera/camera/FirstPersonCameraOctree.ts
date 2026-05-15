@@ -101,76 +101,58 @@ export default class FirstPersonCameraOctree extends Camera {
 
 	bindInputs() {
 		if (Experience.instance) {
-			Experience.instance.inputSystem.on(
-				"horizontalMovement",
-				(args: number) => {
-					if (args === 0 && this.lastInputSource === "keyboard") {
-						return;
-					}
-					// args positif = droite, négatif = gauche
-					this.moveRight = Math.max(0, args);
-					this.moveLeft = Math.max(0, -args);
+			Experience.instance.inputSystem.on("horizontalMovement", (args: number) => {
+				if (args === 0 && this.lastInputSource === "keyboard") {
+					return;
 				}
-			);
-			Experience.instance.inputSystem.on(
-				"verticalMovement",
-				(args: number) => {
-					if (args === 0 && this.lastInputSource === "keyboard") {
-						return;
-					}
-					// args négatif = forward (joystick vers le haut = axe négatif)
-					this.moveForward = Math.max(0, -args);
-					this.moveBackward = Math.max(0, args);
-					if (args !== 0) {
-						this.lastInputSource = "gamepad";
-					}
+				// args positif = droite, négatif = gauche
+				this.moveRight = Math.max(0, args);
+				this.moveLeft = Math.max(0, -args);
+			});
+			Experience.instance.inputSystem.on("verticalMovement", (args: number) => {
+				if (args === 0 && this.lastInputSource === "keyboard") {
+					return;
 				}
-			);
+				// args négatif = forward (joystick vers le haut = axe négatif)
+				this.moveForward = Math.max(0, -args);
+				this.moveBackward = Math.max(0, args);
+				if (args !== 0) {
+					this.lastInputSource = "gamepad";
+				}
+			});
 
 			/* Movements */
-			Experience.instance.inputSystem.on(
-				"forward",
-				(args: InputEventArgs) => {
-					if (args.type === "pressed") {
-						this.moveForward = 1;
-					} else if (args.type === "released") {
-						this.moveForward = 0;
-					}
-					this.lastInputSource = "keyboard";
+			Experience.instance.inputSystem.on("forward", (args: InputEventArgs) => {
+				if (args.type === "pressed") {
+					this.moveForward = 1;
+				} else if (args.type === "released") {
+					this.moveForward = 0;
 				}
-			);
-			Experience.instance.inputSystem.on(
-				"backward",
-				(args: InputEventArgs) => {
-					if (args.type === "pressed") {
-						this.moveBackward = 1;
-					} else if (args.type === "released") {
-						this.moveBackward = 0;
-					}
-					this.lastInputSource = "keyboard";
+				this.lastInputSource = "keyboard";
+			});
+			Experience.instance.inputSystem.on("backward", (args: InputEventArgs) => {
+				if (args.type === "pressed") {
+					this.moveBackward = 1;
+				} else if (args.type === "released") {
+					this.moveBackward = 0;
 				}
-			);
-			Experience.instance.inputSystem.on(
-				"left",
-				(args: InputEventArgs) => {
-					if (args.type === "pressed") {
-						this.moveLeft = 1;
-					} else if (args.type === "released") {
-						this.moveLeft = 0;
-					}
-					this.lastInputSource = "keyboard";
+				this.lastInputSource = "keyboard";
+			});
+			Experience.instance.inputSystem.on("left", (args: InputEventArgs) => {
+				if (args.type === "pressed") {
+					this.moveLeft = 1;
+				} else if (args.type === "released") {
+					this.moveLeft = 0;
 				}
-			);
-			Experience.instance.inputSystem.on(
-				"right",
-				(args: InputEventArgs) => {
-					if (args.type === "pressed") {
-						this.moveRight = 1;
-					} else if (args.type === "released") {
-						this.moveRight = 0;
-					}
-					this.lastInputSource = "keyboard";
+				this.lastInputSource = "keyboard";
+			});
+			Experience.instance.inputSystem.on("right", (args: InputEventArgs) => {
+				if (args.type === "pressed") {
+					this.moveRight = 1;
+				} else if (args.type === "released") {
+					this.moveRight = 0;
 				}
+				this.lastInputSource = "keyboard";
 			});
 			Experience.instance.inputSystem.on("jump", (args: InputEventArgs) => {
 				if (args.type === "pressed" && this.canJump) {
@@ -212,24 +194,16 @@ export default class FirstPersonCameraOctree extends Camera {
 		const speedDelta = delta * (this.canJump ? this.speed : 8);
 
 		this.velocity.add(
-			this.getForwardVector()
-				.multiplyScalar(speedDelta)
-				.multiplyScalar(this.moveForward)
+			this.getForwardVector().multiplyScalar(speedDelta).multiplyScalar(this.moveForward)
 		);
 		this.velocity.add(
-			this.getForwardVector()
-				.multiplyScalar(-speedDelta)
-				.multiplyScalar(this.moveBackward)
+			this.getForwardVector().multiplyScalar(-speedDelta).multiplyScalar(this.moveBackward)
 		);
 		this.velocity.add(
-			this.getSideVector()
-				.multiplyScalar(-speedDelta)
-				.multiplyScalar(this.moveLeft)
+			this.getSideVector().multiplyScalar(-speedDelta).multiplyScalar(this.moveLeft)
 		);
 		this.velocity.add(
-			this.getSideVector()
-				.multiplyScalar(speedDelta)
-				.multiplyScalar(this.moveRight)
+			this.getSideVector().multiplyScalar(speedDelta).multiplyScalar(this.moveRight)
 		);
 	}
 
