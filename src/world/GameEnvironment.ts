@@ -22,7 +22,7 @@ export default class GameEnvironment extends Environment {
 	declare sky: Sky;
 	declare fog: THREE.Fog;
 	declare cloud: Cloud;
-	declare private grass: NewGrass;
+	declare public grass: NewGrass;
 	declare private pineTreesManager: InstancedMeshManager;
 
 	declare public sunMesh: THREE.Mesh;
@@ -81,7 +81,7 @@ export default class GameEnvironment extends Environment {
 
 		this.sunLight = new THREE.DirectionalLight("#ffffff", 3);
 		this.sunLight.castShadow = true;
-		this.sunLight.shadow.mapSize.set(2048, 2048);
+		this.sunLight.shadow.mapSize.set(1024, 1024);
 		this.sunLight.shadow.radius = 1;
 		this.sunLight.shadow.normalBias = 0.05;
 		this.sunlightOffset = new THREE.Vector3(-17 * 0.75, 50 * 0.75, 24 * 0.75);
@@ -93,12 +93,12 @@ export default class GameEnvironment extends Environment {
 		this.scene.add(this.sunLight);
 		// this.sunLight.castShadow = false;
 
-		this.sunLight.shadow.camera.near = 1;
-		this.sunLight.shadow.camera.far = 1000;
-		this.sunLight.shadow.camera.top = 60;
-		this.sunLight.shadow.camera.right = 60;
-		this.sunLight.shadow.camera.left = -60;
-		this.sunLight.shadow.camera.bottom = -60;
+		this.sunLight.shadow.camera.near = 30;
+		this.sunLight.shadow.camera.far = 200;
+		this.sunLight.shadow.camera.top = 40;
+		this.sunLight.shadow.camera.right = 40;
+		this.sunLight.shadow.camera.left = -40;
+		this.sunLight.shadow.camera.bottom = -40;
 		this.sunLight.target = this.camera;
 
 		this.setSunPlane();

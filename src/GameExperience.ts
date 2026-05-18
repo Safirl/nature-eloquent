@@ -8,6 +8,8 @@ import Menu from "./menu";
 import AudioManager from "./audio/Audio2DManager";
 import AtmosphereSwitcher from "./world/AtmosphereSwitcher";
 import type GameEnvironment from "./world/GameEnvironment";
+import Room from "./world/Room";
+import EndSequence from "./sequences/End";
 
 export default class GameExperience extends Experience {
 	declare public sceneManager: SceneManager;
@@ -16,10 +18,11 @@ export default class GameExperience extends Experience {
 	declare audioManager: AudioListenerManager;
 	declare audio2DManager: AudioManager;
 	declare private introductionSequence: Introduction;
+	declare private endSequence: EndSequence;
 	declare public menu: Menu;
 	declare triggerManager: TriggerManager;
 	declare public atmosphereSwitcher: AtmosphereSwitcher;
-
+	declare room: Room;
 	constructor(canvas: HTMLCanvasElement, sources: Source[], camera: Camera, world: World) {
 		super(canvas, sources, camera, world);
 	}
@@ -28,6 +31,7 @@ export default class GameExperience extends Experience {
 		super.onResourcesLoaded();
 		this.audioListenerManager = new AudioListenerManager();
 		this.audio2DManager = new AudioManager();
+		this.endSequence = new EndSequence();
 		this.introductionSequence = new Introduction();
 
 		// this.subtitleManager.init();
@@ -39,9 +43,11 @@ export default class GameExperience extends Experience {
 		this.sceneManager = new SceneManager(this.menu);
 		this.triggerManager = new TriggerManager(this.menu);
 		this.atmosphereSwitcher = new AtmosphereSwitcher(this.world.environment as GameEnvironment);
-
+		this.room = new Room();
 		this.menu.init();
 		this.sceneManager.init();
+		this.room.init();
+		this.endSequence.init();
 	};
 
 	update(): void {
@@ -52,6 +58,9 @@ export default class GameExperience extends Experience {
 		this.introductionSequence.update();
 		if (this.triggerManager) {
 			this.triggerManager.update();
+		}
+		if (this.room) {
+			this.room.update();
 		}
 	}
 }

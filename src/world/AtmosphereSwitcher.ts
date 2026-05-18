@@ -8,7 +8,7 @@ import FogVariables from "../common/Fog";
 import { exp } from "three/src/nodes/TSL.js";
 import GameExperience from "../GameExperience";
 import type { DialogStep } from "../scene/sceneDescriptions";
-
+import NewGrass from "./NewGrass";
 export default class AtmosphereSwitcher implements LifeTimeObject {
 	declare private experience: Experience;
 	declare private sun: THREE.DirectionalLight;
@@ -19,7 +19,7 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 	private duration: number = 6;
 	declare private debug: Debug;
 	declare private debugFolder: GUI;
-
+	declare grass: NewGrass;
 	private debugAtmosphereIndex: number = 0;
 
 	public atmospheres: {
@@ -29,6 +29,9 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 		sunColor: string;
 		skyIndex: number;
 		envMapIntensity: number;
+		tipColor1?: { r: number; g: number; b: number };
+		tipColor2?: { r: number; g: number; b: number };
+		baseColor?: { r: number; g: number; b: number };
 	}[] = [
 		//daylight
 		{
@@ -38,6 +41,9 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			sunColor: "#fff",
 			skyIndex: 0,
 			envMapIntensity: 0.8,
+			tipColor1: { r: 93 / 255, g: 113 / 255, b: 62 / 255 },
+			tipColor2: { r: 93 / 255, g: 113 / 255, b: 62 / 255 },
+			baseColor: { r: 49 / 255, g: 63 / 255, b: 27 / 255 },
 		},
 		//afternoon
 		{
@@ -47,6 +53,12 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			sunColor: "#f19e00",
 			skyIndex: 1,
 			envMapIntensity: 0.3,
+			// tipColor1: { r: 23 / 255, g: 43 / 255, b: 15 / 255 },
+			// tipColor2: { r: 60 / 255, g: 60 / 255, b: 1 / 255 },
+			// baseColor: { r: 37 / 255, g: 22 / 255, b: 0 / 255 },
+			// tipColor1: { r: 93 / 255, g: 113 / 255, b: 62 / 255 },
+			// tipColor2: { r: 93 / 255, g: 113 / 255, b: 62 / 255 },
+			// baseColor: { r: 49 / 255, g: 63 / 255, b: 27 / 255 },
 		},
 		//night
 		{
@@ -55,7 +67,10 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			fogColor: "#030a0c",
 			sunColor: "#94BFC4",
 			skyIndex: 7,
-			envMapIntensity: 0.04,
+			envMapIntensity: 0.17,
+			tipColor1: { r: 7 / 255, g: 15 / 255, b: 8 / 255 }, //"#010905",
+			tipColor2: { r: 0 / 255, g: 0 / 255, b: 0 / 255 }, //"#010204",
+			baseColor: { r: 0 / 255, g: 0 / 255, b: 0 / 255 }, //"#144c2d",
 		},
 	];
 	constructor(environment: GameEnvironment) {
@@ -68,6 +83,7 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 		this.sun = this.environment.sunLight;
 		this.sky = this.environment.sky;
 		this.debug = this.experience.debug;
+		this.grass = this.environment.grass;
 
 		this.experience.sceneManager.on("onActiveStepAdded", this.onActiveStepAdded);
 
@@ -78,10 +94,10 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 	}
 	onActiveStepAdded = (step: DialogStep) => {
 		if (step.id === 10) {
-			this.setAtmosphere(1, 30);
+			this.setAtmosphere(1, 20);
 		}
 		if (step.id === 16) {
-			this.setAtmosphere(2, 30);
+			this.setAtmosphere(2, 20);
 		}
 	};
 	init = () => {};
@@ -132,7 +148,53 @@ export default class AtmosphereSwitcher implements LifeTimeObject {
 			},
 			duration: duration,
 		});
+
 		this.sky.switchToNewSky(atmosphere.skyIndex, duration);
+
+		//Grass
+		if (!atmosphere.tipColor1 || !atmosphere.tipColor2 || !atmosphere.baseColor) return;
+
+		const tipColor1 = new THREE.Color().setRGB(
+			atmosphere.tipColor1.r,
+			atmosphere.tipColor1.g,
+			atmosphere.tipColor1.b
+		);
+
+		gsap.to(this.grass.uniforms.uTipColor1.value, {
+			r: tipColor1.r,
+			g: tipColor1.g,
+			b: tipColor1.b,
+			duration: duration,
+			ease: "power2.inOut",
+		});
+
+		const tipColor2 = new THREE.Color().setRGB(
+			atmosphere.tipColor2.r,
+			atmosphere.tipColor2.g,
+			atmosphere.tipColor2.b
+		);
+
+		gsap.to(this.grass.uniforms.uTipColor2.value, {
+			r: tipColor2.r,
+			g: tipColor2.g,
+			b: tipColor2.b,
+			duration: duration,
+			ease: "power2.inOut",
+		});
+
+		const baseColor = new THREE.Color().setRGB(
+			atmosphere.baseColor.r,
+			atmosphere.baseColor.g,
+			atmosphere.baseColor.b
+		);
+
+		gsap.to(this.grass.uniforms.uBaseColor.value, {
+			r: baseColor.r,
+			g: baseColor.g,
+			b: baseColor.b,
+			duration: duration,
+			ease: "power2.inOut",
+		});
 	}
 
 	switchToNextAtmosphere() {

@@ -6,6 +6,7 @@ import Menu from "../menu";
 import type GameExperience from "../GameExperience";
 
 type TriggerZone = {
+	name?: string;
 	box: THREE.Box3;
 	mesh: THREE.Mesh;
 	helper?: THREE.Box3Helper;
@@ -31,30 +32,56 @@ export default class TriggerManager extends EventEmitter {
 
 	init() {
 		// La porte de la chambre
-		this.createTriggerZone({ x: 6, y: 1.9, z: 0 }, { width: 1, height: 3, depth: 2 }, () =>
-			this.sceneManager.addActiveStep(10)
+		this.createTriggerZone(
+			"chamberDoor",
+			{ x: 6, y: 1.9, z: 0 },
+			{ width: 1, height: 3, depth: 2 },
+			() => this.sceneManager.addActiveStep(10)
 		);
 		// Entrée de la première clairière
-		this.createTriggerZone({ x: 9, y: 2, z: -61 }, { width: 1, height: 5, depth: 2 }, () =>
-			this.sceneManager.addActiveStep(11)
+		this.createTriggerZone(
+			"firstClearingEntry",
+			{ x: 9, y: 2, z: -61 },
+			{ width: 5, height: 5, depth: 5 },
+			() => this.sceneManager.addActiveStep(11)
 		);
 		// Exit clairière
-		this.createTriggerZone({ x: 44, y: 2, z: -59 }, { width: 1, height: 5, depth: 2 }, () =>
-			this.sceneManager.addActiveStep(16)
+		this.createTriggerZone(
+			"firstClearingExit",
+			{ x: 44, y: 2, z: -59 },
+			{ width: 3, height: 5, depth: 3 },
+			() => this.sceneManager.addActiveStep(16)
 		);
 		// orage chemin droite
-		this.createTriggerZone({ x: 79, y: 9, z: -44 }, { width: 1, height: 5, depth: 2 }, () =>
-			this.sceneManager.addActiveStep(99)
+		this.createTriggerZone(
+			"storm",
+			{ x: 79, y: 9, z: -44 },
+			{ width: 3, height: 5, depth: 3 },
+			() => this.sceneManager.addActiveStep(99)
 		);
 
 		// orage chemin gauche
-		this.createTriggerZone({ x: 74, y: 8, z: -79 }, { width: 1, height: 5, depth: 2 }, () =>
-			this.sceneManager.addActiveStep(99)
+		this.createTriggerZone(
+			"storm",
+			{ x: 74, y: 8, z: -79 },
+			{ width: 3, height: 5, depth: 3 },
+			() => this.sceneManager.addActiveStep(99)
 		);
 
 		// Entrée de la deuxième clairière
-		this.createTriggerZone({ x: 100, y: 11, z: -12 }, { width: 1, height: 5, depth: 2 }, () =>
-			this.sceneManager.addActiveStep(19)
+		this.createTriggerZone(
+			"secondClearingEntry",
+			{ x: 100, y: 11, z: -12 },
+			{ width: 3, height: 5, depth: 3 },
+			() => this.sceneManager.addActiveStep(19)
+		);
+
+		// Deuxième entrée de la deuxième clairière
+		this.createTriggerZone(
+			"secondClearingEntry",
+			{ x: 114, y: 12, z: -13 },
+			{ width: 3, height: 5, depth: 3 },
+			() => this.sceneManager.addActiveStep(19)
 		);
 
 		// // **** OLD - Entrée des deux chemins (lighting -> storm)
@@ -63,6 +90,7 @@ export default class TriggerManager extends EventEmitter {
 	}
 
 	createTriggerZone(
+		name = "",
 		position: { x: number; y: number; z: number },
 		size: { width: number; height: number; depth: number },
 		callbackOnEnter: () => void
@@ -77,8 +105,10 @@ export default class TriggerManager extends EventEmitter {
 		this.experience.scene.add(triggerZone);
 
 		const triggerZoneBox = new THREE.Box3().setFromObject(triggerZone);
+		triggerZone.layers.set(2);
 
 		this.allTriggers.push({
+			name,
 			box: triggerZoneBox,
 			mesh: triggerZone,
 			isInZone: false,
@@ -103,6 +133,25 @@ export default class TriggerManager extends EventEmitter {
 			triggerBox.onEnter();
 			this.removeTriggerZone(triggerBox.mesh);
 			this.allTriggers = this.allTriggers.filter((t) => t !== triggerBox);
+
+			if (triggerBox.name === "storm") {
+				this.allTriggers
+					.filter((t) => t.name === "storm")
+					.forEach((t) => {
+						this.removeTriggerZone(t.mesh);
+					});
+				this.allTriggers = this.allTriggers.filter((t) => t.name !== "storm");
+			}
+			if (triggerBox.name === "secondClearingEntry") {
+				this.allTriggers
+					.filter((t) => t.name === "secondClearingEntry")
+					.forEach((t) => {
+						this.removeTriggerZone(t.mesh);
+					});
+				this.allTriggers = this.allTriggers.filter(
+					(t) => t.name !== "secondaryClearingEntry"
+				);
+			}
 		} else if (!isIntersecting && triggerBox.isInZone) {
 			triggerBox.isInZone = false;
 		}
@@ -111,7 +160,6 @@ export default class TriggerManager extends EventEmitter {
 	update() {
 		const camera = this.experience.camera as FirstPersonCameraOctree;
 		for (const trigger of this.allTriggers) {
-			trigger.box.setFromObject(trigger.mesh);
 			this.checkTrigger(camera.playerBox, trigger);
 		}
 	}

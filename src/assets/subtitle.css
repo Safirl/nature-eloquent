@@ -3,7 +3,7 @@
 	bottom: 15%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background-color: rgba(255, 255, 255, 0.3);
+	/*background-color: rgba(255, 255, 255, 0.3);*/
 	transition: opacity 0.1s ease-in-out;
 	/*backdrop-filter: blur(2px);*/
 	padding: 8px;
@@ -15,16 +15,21 @@
 	z-index: 100000;
 	opacity: 0;
 	font-size: 16px;
-	font-weight: 500;
 	text-align: left;
+	border-radius: 6px;
+	background: rgba(23, 23, 23, 0.4);
 
 	#dialog {
+		font-weight: 700;
+		color: #fff;
 		/*padding-right: 4px;*/
 		/*border-right: 2px solid #0000003d;*/
 		/*animation: caret-blink 0.75s infinite;*/
 	}
 
 	#character {
+		min-width: 88px;
+		font-weight: 400;
 	}
 }
 

@@ -58,12 +58,12 @@ const sources: Source[] = [
 	{
 		name: "layoutModel",
 		type: "gltfModel",
-		path: "models/layout/_layout.glb",
+		path: "models/layout/path_layout.glb",
 	},
 	{
 		name: "forestModel",
 		type: "gltfModel",
-		path: "models/layout/forestModel_tree.glb",
+		path: "models/layout/Terrain12.glb",
 	},
 	{
 		name: "invisibleWallModel",
@@ -78,7 +78,7 @@ const sources: Source[] = [
 	{
 		name: "brambleModel",
 		type: "gltfModel",
-		path: "models/bramble/bramble.gltf",
+		path: "models/bramble/bramble.glb",
 	},
 	{
 		name: "asterModel",
@@ -88,12 +88,42 @@ const sources: Source[] = [
 	{
 		name: "edelweissModel",
 		type: "gltfModel",
-		path: "models/edelweiss/Edelweiss.glb",
+		path: "models/edelweiss/edelweiss_grass.glb",
+	},
+	{
+		name: "tRexModel",
+		type: "gltfModel",
+		path: "models/t-rex/t-rex.glb",
+	},
+	{
+		name: "fernModel",
+		type: "gltfModel",
+		path: "models/fern/fern.glb",
+	},
+	{
+		name: "darkFlowerModel",
+		type: "gltfModel",
+		path: "models/darkFlower/dark-flower.glb",
 	},
 	{
 		name: "mushroomPaintedModel",
 		type: "gltfModel",
 		path: "models/champignon/1/champignon-painted.gltf",
+	},
+	{
+		name: "mushroomModel",
+		type: "gltfModel",
+		path: "models/mushroom/mushroomModel.glb",
+	},
+	{
+		name: "vineModel",
+		type: "gltfModel",
+		path: "models/vine/vine.glb",
+	},
+	{
+		name: "postcardModel",
+		type: "gltfModel",
+		path: "models/postcard/postcard.glb",
 	},
 	{
 		name: "mushroomCollider",
@@ -104,6 +134,41 @@ const sources: Source[] = [
 		name: "levelDesignModel",
 		type: "gltfModel",
 		path: "models/LD/blocking.glb",
+	},
+	{
+		name: "grassClumpModel",
+		type: "gltfModel",
+		path: "models/grass/grassClump.glb",
+	},
+	{
+		name: "buttercupModel",
+		type: "gltfModel",
+		path: "models/buttercup/bouton-or_grass.glb",
+	},
+	{
+		name: "giantButtercupModel",
+		type: "gltfModel",
+		path: "models/buttercup/bouton-or_grass_bigger.glb",
+	},
+	{
+		name: "irisModel",
+		type: "gltfModel",
+		path: "models/iris/iris.glb",
+	},
+	{
+		name: "giantIrisModel",
+		type: "gltfModel",
+		path: "models/iris/iris_bigger.glb",
+	},
+	{
+		name: "lysModel",
+		type: "gltfModel",
+		path: "models/lys/lys.glb",
+	},
+	{
+		name: "giantLysModel",
+		type: "gltfModel",
+		path: "models/lys/lys_bigger.glb",
 	},
 
 	/**
@@ -192,6 +257,16 @@ const sources: Source[] = [
 		name: "butterfly",
 		type: "texture",
 		path: "textures/stickers/butterfly.png",
+	},
+	{
+		name: "dino",
+		type: "texture",
+		path: "textures/stickers/dino.png",
+	},
+	{
+		name: "postcard",
+		type: "texture",
+		path: "textures/stickers/postcard.png",
 	},
 	{
 		name: "butterfly_shadow",
@@ -291,12 +366,9 @@ const sources: Source[] = [
 
 	/***********/
 
-
-
 	/**
 	 * GRASS
 	 */
-
 
 	{
 		name: "grass_model_lods",
@@ -314,6 +386,17 @@ const sources: Source[] = [
 		path: "textures/perlinnoise.webp",
 	},
 
+	/** Room **/
+	{
+		name: "post_card",
+		type: "gltfModel",
+		path: "models/room/post_card.glb",
+	},
+	{
+		name: "room",
+		type: "gltfModel",
+		path: "models/room/room.glb",
+	},
 ];
 
 export default sources;
